@@ -63,7 +63,7 @@ export const TransportControls: React.FC<TransportControlsProps> = ({
         <button
           type="button"
           onClick={onReset}
-          className="border border-border rounded-[10px] bg-transparent text-xs hover:bg-surface-2 transition-colors inline-flex items-center gap-1.5 px-3 py-1.5 text-text"
+          className="border border-border rounded-[10px] bg-transparent text-xs hover:bg-surface-2 transition-colors inline-flex items-center gap-1.5 px-3 py-1.5 text-text focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
           title="Reset to start (R)"
           aria-label="Reset scenario"
         >
@@ -75,7 +75,7 @@ export const TransportControls: React.FC<TransportControlsProps> = ({
           type="button"
           onClick={onStepPrev}
           disabled={isAtStart}
-          className="border border-border rounded-[10px] bg-transparent text-xs hover:bg-surface-2 transition-colors inline-flex items-center gap-1.5 px-3 py-1.5 text-text disabled:opacity-40 disabled:cursor-not-allowed"
+          className="border border-border rounded-[10px] bg-transparent text-xs hover:bg-surface-2 transition-colors inline-flex items-center gap-1.5 px-3 py-1.5 text-text disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
           title="Previous step (Left Arrow)"
           aria-label="Previous step"
         >
@@ -87,7 +87,7 @@ export const TransportControls: React.FC<TransportControlsProps> = ({
           <button
             type="button"
             onClick={onPause}
-            className="border border-border rounded-[10px] bg-transparent text-xs hover:bg-surface-2 transition-colors inline-flex items-center gap-1.5 px-3.5 py-1.5 text-text font-medium"
+            className="border border-border rounded-[10px] bg-transparent text-xs hover:bg-surface-2 transition-colors inline-flex items-center gap-1.5 px-3.5 py-1.5 text-text font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
             title="Pause playback (Space)"
             aria-label="Pause playback"
           >
@@ -99,7 +99,7 @@ export const TransportControls: React.FC<TransportControlsProps> = ({
             type="button"
             onClick={onPlay}
             disabled={isGateBlocked}
-            className="border border-border rounded-[10px] bg-transparent text-xs hover:bg-surface-2 transition-colors inline-flex items-center gap-1.5 px-3.5 py-1.5 text-text font-medium disabled:opacity-40 disabled:cursor-not-allowed"
+            className="border border-border rounded-[10px] bg-transparent text-xs hover:bg-surface-2 transition-colors inline-flex items-center gap-1.5 px-3.5 py-1.5 text-text font-medium disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
             title={isGateBlocked ? "Attention gate resolution required" : "Play playback (Space)"}
             aria-label="Play playback"
           >
@@ -112,7 +112,7 @@ export const TransportControls: React.FC<TransportControlsProps> = ({
           type="button"
           onClick={onStepNext}
           disabled={isAtEnd || isGateBlocked}
-          className="border border-border rounded-[10px] bg-transparent text-xs hover:bg-surface-2 transition-colors inline-flex items-center gap-1.5 px-3 py-1.5 text-text disabled:opacity-40 disabled:cursor-not-allowed"
+          className="border border-border rounded-[10px] bg-transparent text-xs hover:bg-surface-2 transition-colors inline-flex items-center gap-1.5 px-3 py-1.5 text-text disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
           title="Next step (Right Arrow)"
           aria-label="Next step"
         >

@@ -35,7 +35,7 @@ export const Simulator: React.FC = () => {
     >
       {/* Simulator Container */}
       <div
-        className={`max-w-[1120px] mx-auto border rounded-[14px] bg-surface p-6 flex flex-col gap-6 transition-colors duration-200 ${
+        className={`max-w-[1120px] mx-auto border rounded-[14px] bg-surface p-4 sm:p-6 flex flex-col gap-6 transition-colors duration-200 motion-reduce:transition-none ${
           isGateActive ? 'border-warning' : 'border-border'
         }`}
       >

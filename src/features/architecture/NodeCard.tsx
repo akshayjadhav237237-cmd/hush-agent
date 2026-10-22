@@ -9,7 +9,8 @@ import {
   Globe,
   Code2,
   Lock,
-  Sparkles
+  Sparkles,
+  Network
 } from 'lucide-react';
 import { ArchitectureNodeData } from './types';
 
@@ -35,6 +36,8 @@ const getNodeIcon = (id: ArchitectureNodeData['id']) => {
       return <Globe className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={1.5} aria-hidden="true" />;
     case 'antigravity':
       return <Code2 className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={1.5} aria-hidden="true" />;
+    case 'graphify':
+      return <Network className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={1.5} aria-hidden="true" />;
     default:
       return <Cpu className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={1.5} aria-hidden="true" />;
   }
@@ -48,6 +51,9 @@ const getCategoryBadgeClass = (category: ArchitectureNodeData['category']) => {
       return 'bg-warning/10 text-warning border-warning/30 font-medium';
     case 'input':
       return 'bg-surface-2 text-text border-border font-medium';
+    case 'service':
+    case 'graphify':
+      return 'bg-accent/10 text-accent border-accent/20 font-medium';
     case 'subagent':
       return 'bg-surface-2 text-text-muted border-border font-medium';
     default:
@@ -64,6 +70,7 @@ export const NodeCard: React.FC<NodeCardProps> = ({
 }) => {
   const isOrchestrator = node.category === 'orchestrator';
   const isGate = node.category === 'safety';
+  const isGraphify = node.id === 'graphify';
 
   const getNodeCardClasses = () => {
     const base = 'group relative text-left transition-all duration-150 outline-none rounded-[14px]';
@@ -81,6 +88,16 @@ export const NodeCard: React.FC<NodeCardProps> = ({
         return `${base} ${size} border-dashed border-warning bg-warning/10 ring-2 ring-warning text-warning shadow-sm`;
       }
       return `${base} ${size} border border-dashed border-warning/60 bg-warning/5 text-warning hover:border-warning hover:bg-warning/10`;
+    }
+
+    if (isGraphify) {
+      if (isSelected) {
+        return `${base} ${size} border border-accent bg-accent/10 ring-2 ring-accent text-accent shadow-sm`;
+      }
+      if (isActiveInScenario) {
+        return `${base} ${size} border border-accent/40 bg-surface text-text hover:border-accent`;
+      }
+      return `${base} ${size} border border-border/60 bg-surface/80 text-text opacity-70 hover:opacity-100 hover:border-border`;
     }
 
     if (isSelected) {
@@ -114,6 +131,7 @@ export const NodeCard: React.FC<NodeCardProps> = ({
               >
                 {isOrchestrator && <Sparkles className="w-2.5 h-2.5 text-accent" strokeWidth={1.5} />}
                 {isGate && <Lock className="w-2.5 h-2.5 text-warning" strokeWidth={1.5} />}
+                {isGraphify && <Network className="w-2.5 h-2.5 text-accent" strokeWidth={1.5} />}
                 {node.categoryLabel}
               </span>
 
@@ -138,6 +156,8 @@ export const NodeCard: React.FC<NodeCardProps> = ({
                     ? 'bg-accent/15 border-accent/30 text-accent'
                     : isGate
                     ? 'bg-warning/15 border-warning/30 text-warning'
+                    : isGraphify
+                    ? 'bg-accent/10 border-accent/20 text-accent'
                     : isSelected
                     ? 'bg-accent/10 border-accent/30 text-accent'
                     : 'bg-surface-2 border-border text-text'

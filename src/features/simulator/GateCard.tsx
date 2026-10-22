@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { AlertTriangle, CheckCircle, ArrowRight } from 'lucide-react';
-import type { Step } from '@/data/types';
+import type { Step } from '@/data/scenario';
 
 interface GateCardProps {
   step: Step;
@@ -119,7 +119,7 @@ export const GateCard: React.FC<GateCardProps> = ({ step, isResolved = false, on
         <button
           type="button"
           onClick={onResolve}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-[10px] border border-warning bg-transparent hover:bg-surface-2 text-warning text-xs font-medium transition-colors"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-[10px] border border-warning bg-transparent hover:bg-surface-2 text-warning text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
         >
           <span>Resolve and continue ({selectedOption === 'stripe' ? 'Stripe' : 'Square'})</span>
           <ArrowRight className="w-3.5 h-3.5 text-warning" strokeWidth={1.5} aria-hidden="true" />

@@ -4,9 +4,10 @@ export type ArchitectureNodeId =
   | 'claude'
   | 'gemini'
   | 'antigravity'
+  | 'graphify'
   | 'gate';
 
-export type NodeCategory = 'input' | 'orchestrator' | 'safety' | 'subagent';
+export type NodeCategory = 'input' | 'orchestrator' | 'safety' | 'subagent' | 'service' | 'graphify';
 
 export type PrivacyTier = 'local-only' | 'sandboxed' | 'cloud-vetted' | 'human-gated';
 
@@ -19,11 +20,12 @@ export interface ArchitectureNodeData {
   categoryLabel: string;
   privacyTier: PrivacyTier;
   privacyLabel: string;
-  executionDomain: 'Cloud API' | 'Human Checkpoint' | 'External API' | 'Sandboxed Container';
+  executionDomain: 'Cloud API' | 'Human Checkpoint' | 'External API' | 'Sandboxed Container' | 'Local Process' | 'Local CLI';
   description: string;
   detailedFunction: string;
   capabilities: string[];
   securityProtocol: string;
+  implementation?: string;
   coordinates: {
     x: number;
     y: number;

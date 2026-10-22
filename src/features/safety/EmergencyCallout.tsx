@@ -13,20 +13,24 @@ import {
 
 export const EmergencyCallout: React.FC = () => {
   const allowedCommands = [
-    'npm run *',
-    'python *',
-    'vite build',
-    'node *',
-    'git status/diff',
-    'tsc --noEmit',
+    'git',
+    'npm',
+    'node',
+    'python',
+    'pip',
+    'dir',
+    'type',
+    'echo',
+    'mkdir',
+    'cd',
   ];
   const blockedCommands = [
-    'rm -rf',
-    'sudo *',
-    'chmod *',
-    'curl | bash',
-    '../.. (path traversal)',
-    'kill -9 *',
+    'rm -rf / rmdir /s',
+    'curl / wget',
+    'powershell -enc',
+    'format / diskpart',
+    'reg delete / shutdown',
+    'Pipes & redirects (|, ;, &&, >)',
   ];
 
   return (
@@ -67,7 +71,7 @@ export const EmergencyCallout: React.FC = () => {
               </h4>
             </div>
             <p className="text-xs text-text-muted leading-relaxed mb-4">
-              Hardware interrupts provide immediate human intervention. Mouse-corner abort is the only active emergency stop in the current release. Key shortcuts and daemon handlers are planned extensions.
+              Hardware interrupts provide immediate human intervention. Mouse-corner abort is the active emergency stop in the current release. Key shortcuts and daemon handlers are planned extensions.
             </p>
 
             <div className="space-y-3">
@@ -84,7 +88,7 @@ export const EmergencyCallout: React.FC = () => {
                   </span>
                 </div>
                 <p className="text-xs text-text-muted leading-relaxed">
-                  Moving the pointer into any screen corner triggers an immediate hardware interrupt. It stops automation loops and releases input control.
+                  Moving the pointer into the top-left screen corner triggers an immediate hardware interrupt via pyautogui.FAILSAFE = True. It stops automation loops and releases input control.
                 </p>
                 <div className="mt-2 pt-2 border-t border-border/60 text-[11px] font-mono text-success">
                   Active failsafe in current release
@@ -134,7 +138,7 @@ export const EmergencyCallout: React.FC = () => {
               </h4>
             </div>
             <p className="text-xs text-text-muted leading-relaxed mb-4">
-              All shell commands pass through AST policy parsing before execution. Allowed toolchains run silently. Unrecognized or destructive commands are blocked at the sandbox boundary.
+              All shell commands pass through validation in run_cmd before execution. Allowed binaries execute inside WORKDIR and PROJECT_DIR. Disallowed patterns or binaries are rejected at the sandbox boundary.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -142,7 +146,7 @@ export const EmergencyCallout: React.FC = () => {
               <div className="p-3.5 rounded-lg bg-surface-2 border border-border">
                 <div className="text-xs font-mono font-semibold text-success flex items-center gap-1.5 mb-2">
                   <Check className="w-3.5 h-3.5 text-success shrink-0" strokeWidth={1.5} aria-hidden="true" />
-                  <span>Whitelisted</span>
+                  <span>Whitelisted (10)</span>
                 </div>
                 <ul className="space-y-1 font-mono text-xs text-text-muted list-none p-0 m-0">
                   {allowedCommands.map((cmd) => (
@@ -171,7 +175,7 @@ export const EmergencyCallout: React.FC = () => {
           </div>
 
           <div className="mt-4 pt-3 border-t border-border/70 text-xs font-mono text-text-muted">
-            Enforcement: <span className="text-accent font-semibold">Child-process sandbox layer</span>
+            Enforcement: <span className="text-accent font-semibold">run_cmd sandbox boundary</span>
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import { ArchitectureNodeId, Scenario } from './types';
 import { NodeCard } from './NodeCard';
 import { ARCHITECTURE_NODES } from './architectureData';
-import { ShieldAlert, Cpu } from 'lucide-react';
+import { ShieldAlert, Cpu, Network } from 'lucide-react';
 
 interface StackedFlowProps {
   selectedNodeId: ArchitectureNodeId;
@@ -91,7 +91,7 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
       <div className="w-full">
         <div className="text-[11px] font-mono tracking-wide text-accent font-medium mb-1 px-1 flex items-center justify-between">
           <span>Stage 2: Central Orchestrator</span>
-          <span className="text-[10px] text-text-muted font-normal">Local Privacy</span>
+          <span className="text-[10px] text-text-muted font-normal">Task Coordination</span>
         </div>
         <NodeCard
           node={ARCHITECTURE_NODES.gemma}
@@ -190,6 +190,69 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
             strokeWidth="1"
             strokeDasharray="3 3"
           />
+          {isNodeActive('graphify') && (
+            <motion.line
+              x1="12"
+              y1="0"
+              x2="12"
+              y2="28"
+              stroke="var(--accent)"
+              strokeWidth="1.5"
+              strokeDasharray="5 5"
+              animate={
+                effectiveReducedMotion || !isPlaying
+                  ? undefined
+                  : { strokeDashoffset: [-20, 0] }
+              }
+              transition={{
+                duration: 1.6 / playbackSpeed,
+                repeat: Infinity,
+                ease: 'linear'
+              }}
+            />
+          )}
+          {isNodeActive('graphify') && !effectiveReducedMotion && isPlaying && (
+            <circle r="3" fill="var(--accent)" stroke="var(--accent)" strokeWidth="1">
+              <animateMotion
+                path="M 12 0 L 12 28"
+                dur={`${1.8 / playbackSpeed}s`}
+                repeatCount="indefinite"
+              />
+            </circle>
+          )}
+        </svg>
+      </div>
+
+      {/* 4. Code Graph Memory: Graphify */}
+      <div className="w-full">
+        <div className="text-[11px] font-mono tracking-wide text-accent font-medium mb-1 px-1 flex items-center justify-between">
+          <span className="flex items-center gap-1.5">
+            <Network className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} />
+            <span>Stage 4: Code Graph Memory</span>
+          </span>
+          <span className="text-[10px] text-text-muted font-normal">Local Analysis</span>
+        </div>
+        <NodeCard
+          node={ARCHITECTURE_NODES.graphify}
+          isSelected={selectedNodeId === 'graphify'}
+          isActiveInScenario={isNodeActive('graphify')}
+          onSelect={onSelectNode}
+          isCompact
+        />
+      </div>
+
+      {/* Vertical Hairline Connector 4 */}
+      <div className="relative w-full flex items-center justify-center h-7">
+        <svg className="w-6 h-7" viewBox="0 0 24 28" role="img" aria-hidden="true">
+          <line
+            x1="12"
+            y1="0"
+            x2="12"
+            y2="28"
+            stroke="var(--border)"
+            strokeWidth="1"
+            strokeDasharray="3 3"
+          />
           {isNodeActive('gate') && (
             <motion.line
               x1="12"
@@ -223,12 +286,12 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
         </svg>
       </div>
 
-      {/* 4. Safety Intercept: Attention Gate */}
+      {/* 5. Safety Intercept: Attention Gate */}
       <div className="w-full">
         <div className="text-[11px] font-mono tracking-wide text-warning font-medium mb-1 px-1 flex items-center justify-between">
           <span className="flex items-center gap-1">
             <ShieldAlert className="w-3.5 h-3.5" strokeWidth={1.5} />
-            Stage 4: Attention Gate Checkpoint
+            <span>Stage 5: Attention Gate Checkpoint</span>
           </span>
           <span className="text-[10px] text-text-muted font-normal">Policy Guard</span>
         </div>

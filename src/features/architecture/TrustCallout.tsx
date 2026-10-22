@@ -7,7 +7,9 @@ import {
   Zap,
   AlertOctagon,
   ShieldCheck,
-  Cpu
+  Cpu,
+  Network,
+  Terminal
 } from 'lucide-react';
 
 export const TrustCallout: React.FC = () => {
@@ -23,8 +25,8 @@ export const TrustCallout: React.FC = () => {
         </p>
       </div>
 
-      {/* Two Pillars Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Three Pillars Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Pillar 1: Google Gemma 4 */}
         <div className="p-5 rounded-[14px] bg-surface border border-border space-y-3 shadow-sm">
           <div className="flex items-center gap-3">
@@ -78,7 +80,60 @@ export const TrustCallout: React.FC = () => {
           </div>
         </div>
 
-        {/* Pillar 2: Attention Gate */}
+        {/* Pillar 2: Graphify: Local Code Analysis */}
+        <div className="p-5 rounded-[14px] bg-surface border border-border space-y-3 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-[10px] bg-accent/10 text-accent border border-accent/20">
+              <Network className="w-5 h-5" strokeWidth={1.5} />
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-text">
+                Graphify: Local Code Analysis
+              </h4>
+              <p className="text-xs text-text-muted font-mono">
+                Tree-Sitter AST &amp; Graph Memory
+              </p>
+            </div>
+          </div>
+
+          <p className="text-xs text-text-muted leading-relaxed">
+            Graphify extracts AST structure locally using tree-sitter without uploading source code to external servers. It maps file and symbol relationships into graph memory.
+          </p>
+
+          <div className="space-y-2.5 pt-3 border-t border-border">
+            <div className="flex items-start gap-2.5 text-xs">
+              <ShieldCheck className="w-4 h-4 text-success shrink-0 mt-0.5" strokeWidth={1.5} />
+              <div>
+                <span className="font-medium text-text">Local AST parsing: </span>
+                <span className="text-text-muted">
+                  Tree-sitter extracts source syntax trees directly on the workstation into graphify-out/.
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-2.5 text-xs">
+              <Network className="w-4 h-4 text-accent shrink-0 mt-0.5" strokeWidth={1.5} />
+              <div>
+                <span className="font-medium text-text">Community clustering: </span>
+                <span className="text-text-muted">
+                  Detects modular codebase topology and symbol relationships via Louvain community clustering.
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-2.5 text-xs">
+              <Terminal className="w-4 h-4 text-accent shrink-0 mt-0.5" strokeWidth={1.5} />
+              <div>
+                <span className="font-medium text-text">CLI tool endpoints: </span>
+                <span className="text-text-muted">
+                  Gemma orchestrates graph_build, graph_update, graph_report, graph_query, graph_explain, and graph_path.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Pillar 3: Attention Gate */}
         <div className="p-5 rounded-[14px] bg-surface border border-border space-y-3 shadow-sm">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-[10px] bg-warning/10 text-warning border border-warning/30">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Copy, Check, Terminal as TerminalIcon } from 'lucide-react';
-import type { Step } from '@/data/types';
+import type { Step } from '@/data/scenario';
 
 interface TerminalProps {
   step: Step;
@@ -120,13 +120,14 @@ export const Terminal: React.FC<TerminalProps> = ({ step, stepIndex, totalSteps 
         aria-live="polite"
         aria-atomic="false"
         tabIndex={0}
-        className="p-4 font-mono text-[13px] leading-relaxed overflow-x-auto overflow-y-auto max-h-[380px] min-h-[260px] text-text space-y-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
+        className="p-3 sm:p-4 font-mono text-xs sm:text-[13px] leading-relaxed overflow-x-auto overflow-y-auto max-h-[380px] min-h-[260px] text-text space-y-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
       >
         {step.terminal.slice(0, visibleCount).map((line, idx) => {
           const isCommand = line.startsWith('$');
           const isSecurityBlocked = line.includes('SECURITY GATE BLOCKED');
           const isGateAttention = line.includes('GATE TRIGGERED') || line.includes('NEEDS_HUMAN') || line.includes('[Reason]') || line.includes('[Action]') || line.includes('[Operator Alert]');
           const isSuccess = line.includes('SUCCESS') || line.includes('succeeded') || line.includes('certified');
+          const isOmittedNote = line.includes('output omitted');
 
           let lineClass = 'text-text';
           if (isSecurityBlocked) {
@@ -138,6 +139,8 @@ export const Terminal: React.FC<TerminalProps> = ({ step, stepIndex, totalSteps 
             lineClass = 'text-accent font-medium';
           } else if (isSuccess) {
             lineClass = 'text-success font-medium';
+          } else if (isOmittedNote) {
+            lineClass = 'text-text-muted italic';
           }
 
           return (

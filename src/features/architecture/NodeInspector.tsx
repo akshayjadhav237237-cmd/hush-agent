@@ -13,7 +13,8 @@ import {
   Terminal,
   ShieldCheck,
   Eye,
-  Sparkles
+  Sparkles,
+  Network
 } from 'lucide-react';
 import { ArchitectureNodeId } from './types';
 import { ARCHITECTURE_NODES } from './architectureData';
@@ -37,6 +38,8 @@ const getNodeIcon = (id: ArchitectureNodeId) => {
       return <Globe className="w-5 h-5 text-text" strokeWidth={1.5} />;
     case 'antigravity':
       return <Code2 className="w-5 h-5 text-text" strokeWidth={1.5} />;
+    case 'graphify':
+      return <Network className="w-5 h-5 text-accent" strokeWidth={1.5} />;
     default:
       return <Cpu className="w-5 h-5 text-text" strokeWidth={1.5} />;
   }
@@ -49,6 +52,7 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
   const node = ARCHITECTURE_NODES[nodeId] || ARCHITECTURE_NODES.gemma;
   const isOrchestrator = node.category === 'orchestrator';
   const isGate = node.category === 'safety';
+  const isGraphify = node.id === 'graphify';
 
   return (
     <div
@@ -64,6 +68,8 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
                 ? 'bg-accent/10 border-accent/30 text-accent'
                 : isGate
                 ? 'bg-warning/10 border-warning/30 text-warning'
+                : isGraphify
+                ? 'bg-accent/10 border-accent/20 text-accent'
                 : 'bg-surface-2 border-border text-text'
             }`}
           >
@@ -159,6 +165,18 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
           <p className="text-text-muted leading-relaxed">{node.detailedFunction}</p>
         </div>
 
+        {/* Implementation Details */}
+        {node.implementation && (
+          <div>
+            <h4 className="font-medium text-text text-xs uppercase font-mono tracking-wide mb-1">
+              Implementation
+            </h4>
+            <p className="text-text-muted leading-relaxed font-mono text-[11px] p-2.5 rounded-[10px] bg-surface-2/40 border border-border">
+              {node.implementation}
+            </p>
+          </div>
+        )}
+
         {/* Highlighted Trust/Security Boundary */}
         <div
           className={`p-3 rounded-[10px] border ${
@@ -166,6 +184,8 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
               ? 'bg-accent/5 border-accent/20 text-text'
               : isGate
               ? 'border-dashed border-warning/40 bg-warning/5 text-text'
+              : isGraphify
+              ? 'bg-accent/5 border-accent/20 text-text'
               : 'bg-surface-2/40 border-border text-text'
           }`}
         >
@@ -174,6 +194,8 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
               <ShieldAlert className="w-4 h-4 text-warning shrink-0 mt-0.5" strokeWidth={1.5} />
             ) : isOrchestrator ? (
               <Eye className="w-4 h-4 text-accent shrink-0 mt-0.5" strokeWidth={1.5} />
+            ) : isGraphify ? (
+              <ShieldCheck className="w-4 h-4 text-accent shrink-0 mt-0.5" strokeWidth={1.5} />
             ) : (
               <Lock className="w-4 h-4 text-text-muted shrink-0 mt-0.5" strokeWidth={1.5} />
             )}

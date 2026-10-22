@@ -94,9 +94,16 @@ export const StepTimeline: React.FC<StepTimelineProps> = ({
                     </span>
                   )}
 
-                  {/* Quiet actor chip: Claude, Gemma 4, Gemini Deep Research, Antigravity, Human */}
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[10px] border border-border bg-surface text-[11px] text-text-muted font-mono">
-                    <ActorIcon className="w-3 h-3 text-text-muted" strokeWidth={1.5} aria-hidden="true" />
+                  <span
+                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[10px] text-[11px] font-mono ${
+                      actorMeta.badgeClassName || 'border border-border bg-surface text-text-muted'
+                    }`}
+                  >
+                    <ActorIcon
+                      className={`w-3 h-3 ${actorMeta.id === 'graphify' ? 'text-accent' : 'text-text-muted'}`}
+                      strokeWidth={1.5}
+                      aria-hidden="true"
+                    />
                     <span>{actorMeta.label}</span>
                   </span>
                 </div>
@@ -110,7 +117,17 @@ export const StepTimeline: React.FC<StepTimelineProps> = ({
       <div className="p-3.5 rounded-[10px] border border-border bg-surface-2 text-xs flex flex-col gap-1.5 mt-1">
         <div className="flex items-center justify-between font-mono text-text-muted text-[11px]">
           <span>Active step detail</span>
-          <span>{activeActorMeta.role}</span>
+          <span className="flex items-center gap-1.5">
+            <span
+              className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[6px] text-[10px] ${
+                activeActorMeta.badgeClassName || 'border border-border bg-surface text-text-muted'
+              }`}
+            >
+              {activeActorMeta.label}
+            </span>
+            <span aria-hidden="true">·</span>
+            <span>{activeActorMeta.role}</span>
+          </span>
         </div>
         <p className="text-text leading-relaxed">
           {currentStep.detail}

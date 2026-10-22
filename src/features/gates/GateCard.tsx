@@ -33,7 +33,7 @@ const GATE_CATEGORIES: Record<string, { tag: string; layer: string }> = {
   'gate-missing-credentials': { tag: 'Secrets & Quotas', layer: 'Environment Provider' },
   'gate-ambiguous-requirement': { tag: 'Architecture', layer: 'Reasoning Engine' },
   'gate-destructive-command': { tag: 'Sandbox', layer: 'Child Process OS' },
-  'gate-repeated-failure': { tag: 'Circuit Breaker', layer: 'Loop Detector' },
+  'gate-repeated-failure': { tag: 'Circuit Breaker', layer: 'Progress & Graph Monitor' },
   'gate-scope-drift': { tag: 'Specification', layer: 'Scope Boundary' },
 };
 

@@ -82,6 +82,27 @@ export const Footer: React.FC = () => {
               Hush is MIT licensed. Gemma 4 is released by Google under the Apache 2.0 license.
             </p>
             <p className="text-xs text-text-muted leading-relaxed">
+              Graphify is a separate open-source project by{' '}
+              <a
+                href="https://graphify.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:text-text transition-colors"
+              >
+                Graphify Labs
+              </a>
+              , used under its Apache 2.0 license (
+              <a
+                href="https://github.com/Graphify-Labs/graphify"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:text-text transition-colors"
+              >
+                GitHub
+              </a>
+              ).
+            </p>
+            <p className="text-xs text-text-muted leading-relaxed">
               {isHackathonConfigured
                 ? `Built for ${HACKATHON_NAME}.`
                 : 'Built at a hackathon with Gemma 4.'}{' '}

@@ -12,6 +12,31 @@ interface TopologyGraphProps {
   playbackSpeed: number;
 }
 
+const getStaticIndicatorPos = (connId: string): { cx: number; cy: number } => {
+  switch (connId) {
+    case 'conn-user-gemma':
+      return { cx: 335, cy: 185 };
+    case 'conn-gemma-gate':
+      return { cx: 330, cy: 360 };
+    case 'conn-gate-user':
+      return { cx: 132, cy: 315 };
+    case 'conn-gemma-claude':
+      return { cx: 665, cy: 170 };
+    case 'conn-gemma-gemini':
+      return { cx: 665, cy: 265 };
+    case 'conn-gemma-antigravity':
+      return { cx: 665, cy: 360 };
+    case 'conn-antigravity-graphify':
+      return { cx: 665, cy: 480 };
+    case 'conn-graphify-claude':
+      return { cx: 655, cy: 300 };
+    case 'conn-gemma-graphify':
+      return { cx: 500, cy: 350 };
+    default:
+      return { cx: 500, cy: 310 };
+  }
+};
+
 export const TopologyGraph: React.FC<TopologyGraphProps> = ({
   selectedNodeId,
   onSelectNode,
@@ -41,8 +66,8 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
         >
           <title>Multi-Agent Architecture Topology</title>
           <desc>
-            Vector diagram showing Google Gemma 4 at the center, communicating with the Operator,
-            Attention Gate, Claude, Gemini Deep Research, and Antigravity.
+            Vector diagram showing Google Gemma 4 orchestrating agents, Attention Gate, Claude,
+            Gemini Deep Research, Antigravity, and Graphify code graph memory.
           </desc>
 
           <defs>
@@ -69,18 +94,36 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
           {/* Center Orchestrator Aura */}
           <circle
             cx="500"
-            cy="310"
-            r="130"
+            cy="220"
+            r="120"
             fill="var(--accent)"
             opacity="0.03"
             className="transition-opacity duration-300"
           />
           <circle
             cx="500"
-            cy="310"
-            r="80"
+            cy="220"
+            r="75"
             fill="var(--accent)"
             opacity="0.05"
+            className="transition-opacity duration-300"
+          />
+
+          {/* Graphify Local Memory Aura */}
+          <circle
+            cx="500"
+            cy="480"
+            r="110"
+            fill="var(--accent)"
+            opacity="0.02"
+            className="transition-opacity duration-300"
+          />
+          <circle
+            cx="500"
+            cy="480"
+            r="70"
+            fill="var(--accent)"
+            opacity="0.04"
             className="transition-opacity duration-300"
           />
 
@@ -96,8 +139,12 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
                 : 'var(--accent)'
               : 'var(--border)';
 
+            const staticPos = getStaticIndicatorPos(conn.id);
+
             return (
               <g key={conn.id} className="transition-opacity duration-300">
+                <title>{`${conn.label}: ${conn.description}`}</title>
+
                 {/* Hairline base path */}
                 <path
                   d={conn.pathD}
@@ -165,8 +212,8 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
                 {/* Static indicator for reduced motion or paused state */}
                 {active && (effectiveReducedMotion || !isPlaying) && (
                   <circle
-                    cx={conn.pathD.includes('L') ? 665 : 485}
-                    cy={310}
+                    cx={staticPos.cx}
+                    cy={staticPos.cy}
                     r="3"
                     fill={strokeColor}
                   />
@@ -182,7 +229,7 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
           className="absolute z-10 transition-transform duration-150"
           style={{
             left: '17%',
-            top: '25%',
+            top: '24%',
             transform: 'translate(-50%, -50%)'
           }}
         >
@@ -199,7 +246,7 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
           className="absolute z-10 transition-transform duration-150"
           style={{
             left: '17%',
-            top: '75%',
+            top: '77%',
             transform: 'translate(-50%, -50%)'
           }}
         >
@@ -216,7 +263,7 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
           className="absolute z-20 transition-transform duration-150"
           style={{
             left: '50%',
-            top: '50%',
+            top: '35.5%',
             transform: 'translate(-50%, -50%)'
           }}
         >
@@ -228,12 +275,29 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
           />
         </div>
 
-        {/* 4. Claude Subagent (Top-Right) */}
+        {/* 4. Graphify - Code Graph Memory (Bottom-Center) */}
+        <div
+          className="absolute z-10 transition-transform duration-150"
+          style={{
+            left: '50%',
+            top: '77%',
+            transform: 'translate(-50%, -50%)'
+          }}
+        >
+          <NodeCard
+            node={ARCHITECTURE_NODES.graphify}
+            isSelected={selectedNodeId === 'graphify'}
+            isActiveInScenario={isNodeActive('graphify')}
+            onSelect={onSelectNode}
+          />
+        </div>
+
+        {/* 5. Claude Subagent (Top-Right) */}
         <div
           className="absolute z-10 transition-transform duration-150"
           style={{
             left: '83%',
-            top: '22%',
+            top: '22.5%',
             transform: 'translate(-50%, -50%)'
           }}
         >
@@ -245,7 +309,7 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
           />
         </div>
 
-        {/* 5. Gemini Deep Research Subagent (Mid-Right) */}
+        {/* 6. Gemini Deep Research Subagent (Mid-Right) */}
         <div
           className="absolute z-10 transition-transform duration-150"
           style={{
@@ -262,12 +326,12 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
           />
         </div>
 
-        {/* 6. Antigravity Subagent (Bottom-Right) */}
+        {/* 7. Antigravity Subagent (Bottom-Right) */}
         <div
           className="absolute z-10 transition-transform duration-150"
           style={{
             left: '83%',
-            top: '78%',
+            top: '77%',
             transform: 'translate(-50%, -50%)'
           }}
         >

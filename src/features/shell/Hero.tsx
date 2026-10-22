@@ -43,6 +43,10 @@ export const Hero: React.FC = () => {
           {COPY.hero.subhead}
         </p>
 
+        <p className="mt-4 text-xs font-mono text-text-muted">
+          Works with Graphify for codebase memory.
+        </p>
+
         {/* CTAs */}
         <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5">
           <a

@@ -3,6 +3,7 @@ import { Header } from '@/features/shell/Header';
 import { Hero } from '@/features/shell/Hero';
 import { Simulator } from '@/features/simulator/Simulator';
 import { Architecture } from '@/features/architecture/Architecture';
+import { GraphSection } from '@/features/graph/GraphSection';
 import { Gates } from '@/features/gates/Gates';
 import { GemmaFacts } from '@/features/gemma/GemmaFacts';
 import { Safety } from '@/features/safety/Safety';
@@ -18,6 +19,7 @@ export const App: React.FC = () => {
         <Hero />
         <Simulator />
         <Architecture />
+        <GraphSection />
         <Gates />
         <GemmaFacts />
         <Safety />

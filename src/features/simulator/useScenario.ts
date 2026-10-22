@@ -1,6 +1,5 @@
 import { useReducer, useEffect, useCallback, useMemo } from 'react';
-import { SCENARIO_STEPS } from '@/data/scenario';
-import type { Step } from '@/data/types';
+import { SCENARIO_STEPS, type Step } from '@/data/scenario';
 
 export type SimulatorStatus = 'Playing' | 'Paused' | 'Gate Triggered' | 'Completed';
 
@@ -231,6 +230,9 @@ export function useScenario() {
       }
 
       if (event.code === 'Space') {
+        if (activeEl?.tagName === 'BUTTON') {
+          return;
+        }
         event.preventDefault();
         if (state.isGateBlocked) {
           dispatch({ type: 'RESOLVE_GATE' });
@@ -249,6 +251,9 @@ export function useScenario() {
         event.preventDefault();
         dispatch({ type: 'RESET' });
       } else if (event.key === 'Enter' && state.isGateBlocked) {
+        if (activeEl?.tagName === 'BUTTON') {
+          return;
+        }
         event.preventDefault();
         dispatch({ type: 'RESOLVE_GATE' });
       }

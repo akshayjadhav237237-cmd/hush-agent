@@ -35,11 +35,11 @@ export const ATTENTION_GATES: Gate[] = [
   },
   {
     id: "gate-repeated-failure",
-    title: "Repeated Failure (Circuit Breaker)",
-    detects: "Looping compiler errors, persistent test failures (>3 attempts), or recursive prompt-refinement stalls.",
-    action: "Trips circuit breaker to prevent token burn, dumps stack trace diagnostics, and escalates to human engineer.",
+    title: "Repeated failure or no progress",
+    detects: "Total execution step cap (80 steps) reached, or Graphify GRAPH_REPORT.md checksum identical for two consecutive build rounds. Detects an unchanged code graph or step cap, not compiler or test build errors.",
+    action: "Pipeline halted; human notified via console or optional ntfy push to diagnose stall.",
     icon: "RefreshCw",
-    enforcement: "model"
+    enforcement: "code"
   },
   {
     id: "gate-scope-drift",

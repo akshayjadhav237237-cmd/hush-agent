@@ -3,34 +3,42 @@ import type { FaqItem } from "@/data/types";
 export const FAQ_ITEMS: FaqItem[] = [
   {
     q: "Why Gemma and not just Claude?",
-    a: "Claude excels at complex code generation and nuanced reasoning, but relying exclusively on proprietary frontier models for high-frequency orchestration, visual screenshot inspection, and security gate classification is cost-prohibitive and locks developers into a closed ecosystem. Gemma provides open-weights flexibility, responsive execution, native function calling, and multimodal vision in a transparent, inspectable footprint. Combining Gemma as the fast orchestrator and gatekeeper with Claude as the downstream code synthesizer achieves the optimal balance of speed, auditability, cost, and code quality."
+    a: "Claude excels at code generation and architectural synthesis. However, high-frequency desktop orchestration, screenshot inspection, and gate evaluation benefit from a focused open-weights model. Gemma 4 provides fast execution with native function calling and multimodal vision. Using Gemma as the desktop operator and Claude as the code architect separates visual manipulation from software engineering."
   },
   {
     q: "What runs locally vs in the cloud?",
-    a: "In the current build, Gemma 4 is called through the Gemini API. Running the same loop on a local runtime such as Ollama is a possible next step and has not been verified. Claude and Gemini Deep Research run in the browser, Antigravity runs on the desktop, and screenshots are sent to the Gemma API."
+    a: "Gemma 4 is called through the Google Gemini API. Claude and Gemini Deep Research run in the browser. Antigravity runs as a desktop application on Windows. Graphify runs locally via CLI tools to generate dependency graphs. Command execution via run_cmd runs locally in the workspace folder. Screenshots captured with pyautogui are sent to the Gemini API for visual inspection by Gemma."
   },
   {
     q: "What is simulated vs real in this project?",
-    a: "Real: The complete TypeScript architecture, interactive UI state machine, command allowlist enforcement engine, step playback mechanism, and attention gate resolution flow are fully implemented and running live in the application. Simulated in this demo walkthrough: The specific 7-step wedding photographer scenario utilizes a pre-recorded real-world execution trace so judges can inspect every terminal output, gate event, and decision branch without requiring external live API credentials, billing setup, or waiting for minutes of deep research processing."
+    a: "The TypeScript web application, interactive state machine, command allowlist sandbox, and attention gate flows are fully implemented. The wedding photographer build trace demonstrates real orchestrator execution patterns in a recorded walkthrough so evaluators can inspect every decision, terminal output, and gate event without live API keys or long research waits."
   },
   {
     q: "What are the known limitations (including UI click/coordinate accuracy)?",
-    a: "Hush uses keyboard shortcuts, clipboard, and CLI interfaces wherever possible. Gemma's direct UI click coordinate accuracy is unverified, and Hush does not claim any spatial grounding capability. Additional limitations include: long-horizon multi-file refactors risk context drift without modular subtask boundaries; interactive terminal prompts (such as ncurses menus or raw TTY password inputs) cannot be automated without dedicated PTY hooks; and ambiguous requirements depend on model prompts explicitly raising branching assumptions."
+    a: "Hush relies on keyboard shortcuts, clipboard, and CLI interfaces wherever possible. Gemma's direct UI click coordinate accuracy is unverified, and Hush does not claim spatial grounding capability. Long-horizon multi-file refactors risk context drift without modular subtask boundaries. Interactive terminal prompts requiring raw TTY input cannot be automated without dedicated PTY hooks."
   },
   {
     q: "How are API rate limits and token budgets managed?",
-    a: "Hush enforces a hard per-run step cap (default 25 iterations) and tracks token burn across all agent invocations. By offloading frequent routing and screenshot verification to Gemma rather than larger frontier models, token expenditure is drastically reduced. When rate limits (HTTP 429) are encountered, exponential backoff with jitter is applied; if limits persist, a circuit breaker trips an Attention Gate rather than burning budget in retry loops."
+    a: "Hush enforces a hard execution cap of 80 steps (MAX_STEPS = 80) in orchestrator.py. The orchestrator retains only the two most recent screenshots in context (KEEP_SCREENSHOTS = 2), replacing older screenshots with text placeholders to minimize token usage. Screenshots are downscaled to a width of 1280 pixels before transmission."
   },
   {
     q: "How does safety and system command containment work?",
-    a: "Shell execution is governed by a strict command allowlist and workspace containment sandbox. Commands are validated against permitted binaries (such as npm, git, node, vite). Unrecognized or dangerous patterns—including recursive deletion (rm -rf), pipe-to-shell interpreters (curl | sh), out-of-workspace file paths (../), and privilege escalation (sudo)—are blocked before execution. Additionally, a mouse-corner abort mechanism provides an immediate physical kill switch for any automated screen control."
+    a: "Shell execution is controlled by run_cmd with an allowlist restricted to ten commands: git, npm, node, python, pip, dir, type, echo, mkdir, and cd. Dangerous patterns such as recursive deletion (rm -rf, rmdir /s), pipe-to-shell interpreters (curl, wget), and command chaining are blocked before execution. Commands execute inside WORKDIR and PROJECT_DIR. For emergency stopping, pyautogui.FAILSAFE is enabled, immediately aborting execution when the mouse moves to the top-left corner."
   },
   {
     q: "How can judges reproduce this build?",
-    a: "Clone the repository from GitHub, ensure Node.js 18+ is installed, run `npm install` to install dependencies, and execute `npm run dev` to launch the local Vite development server. The interactive walkthrough, gate simulator, and architecture views will be immediately accessible in your browser at `http://localhost:5173`. To verify static type safety, execute `npm run build` or `tsc --noEmit`."
+    a: "For the web application: clone the repository, run npm install, and run npm run dev to open http://localhost:5173. For the Python orchestrator in agent/orchestrator.py: install dependencies with pip install google-genai pyautogui pyperclip pygetwindow requests pillow, install Graphify with uv tool install graphifyy, set GEMINI_API_KEY, and run python orchestrator.py with your prompt."
   },
   {
     q: "What are the open-source licensing and commercial use terms?",
-    a: "This project is released under the permissive Apache 2.0 license. Gemma weights and model artifacts are licensed under the Google Gemma Terms of Use (a permissive open-model license permitting commercial use under responsible AI guidelines). Developers and organizations are free to adapt, modify, and integrate this architecture into their own commercial or private pipelines."
+    a: "This project is released under the Apache 2.0 license. Gemma weights and model artifacts are governed by the Google Gemma Terms of Use, which permit commercial deployment under responsible AI guidelines."
+  },
+  {
+    q: "What does Graphify do here?",
+    a: "Graphify parses the code written by Antigravity locally using tree-sitter, extracts an AST dependency graph into graphify-out/, and exports an interactive graph.html. Gemma provides these structural insights (clusters, dependencies, connection paths) to Claude to help write informed subsequent build prompts. Additionally, graph_update monitors GRAPH_REPORT.md checksums to alert the human if two consecutive rounds produce identical code structure."
+  },
+  {
+    q: "Does Graphify send my code anywhere?",
+    a: "No. Graphify operates entirely locally on your machine using tree-sitter parsing without uploading source code to external servers. Note that other components in Hush do make network calls: Gemma 4 runs via Google's Gemini API, Claude and Gemini Deep Research run through the browser, and screenshots are transmitted to the Gemma API for visual verification."
   }
 ];
