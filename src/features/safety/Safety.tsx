@@ -3,7 +3,7 @@ import { SAFETY_ITEMS } from '@/data/safety';
 import { SafetySummary } from './SafetySummary';
 import { EmergencyCallout } from './EmergencyCallout';
 import { SafetyCard } from './SafetyCard';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, AlertTriangle } from 'lucide-react';
 
 type FilterState = 'all' | 'implemented' | 'planned';
 
@@ -124,6 +124,73 @@ export const Safety: React.FC = () => {
               </li>
             ))}
           </ul>
+        </div>
+
+        {/* Known Limitations Block */}
+        <div className="mt-16 bg-surface border border-border rounded-[14px] p-6 sm:p-8">
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
+            <div className="w-10 h-10 rounded-lg bg-surface-2 border border-border flex items-center justify-center text-text shrink-0">
+              <AlertTriangle className="w-5 h-5 text-warning" strokeWidth={1.5} aria-hidden="true" />
+            </div>
+            <div>
+              <span className="font-mono text-xs uppercase tracking-wider text-text-muted font-medium">
+                Transparent Boundaries
+              </span>
+              <h3 className="text-lg sm:text-xl font-semibold text-text tracking-tight">
+                Known Limitations
+              </h3>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <div className="p-4 rounded-xl bg-surface-2 border border-border flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-2 mb-2 font-mono text-xs font-semibold text-text">
+                  <span className="w-2 h-2 rounded-full bg-warning shrink-0" aria-hidden="true" />
+                  <span>1. Operational Guardrail vs. OS Sandbox</span>
+                </div>
+                <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
+                  Allowlisted commands like <code className="font-mono text-text">python</code> and <code className="font-mono text-text">npm</code> can still execute arbitrary code (operational guardrail, not OS sandbox).
+                </p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-surface-2 border border-border flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-2 mb-2 font-mono text-xs font-semibold text-text">
+                  <span className="w-2 h-2 rounded-full bg-warning shrink-0" aria-hidden="true" />
+                  <span>2. Unverified UI Click Accuracy</span>
+                </div>
+                <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
+                  Gemma UI click accuracy is unverified; spatial coordinate grounding is experimental.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-surface-2 border border-border flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-2 mb-2 font-mono text-xs font-semibold text-text">
+                  <span className="w-2 h-2 rounded-full bg-warning shrink-0" aria-hidden="true" />
+                  <span>3. Limit Detection vs. Code Handling</span>
+                </div>
+                <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
+                  Limit detection is judged by the model visually from screenshots, while countdown waiting and state resumption are executed in code.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-surface-2 border border-border flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-2 mb-2 font-mono text-xs font-semibold text-text">
+                  <span className="w-2 h-2 rounded-full bg-warning shrink-0" aria-hidden="true" />
+                  <span>4. Public ntfy Notification Topics</span>
+                </div>
+                <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
+                  ntfy push notification topics are public by design (security through obscurity; use high-entropy topic names).
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

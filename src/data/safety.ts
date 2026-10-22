@@ -1,59 +1,109 @@
 import type { SafetyItem } from "@/data/types";
-import { GRAPH_STALL_VERIFIED } from "@/data/brand";
+import { GRAPH_STALL_VERIFIED, DESKTOP_VERIFIED } from "@/data/brand";
 
 export const SAFETY_ITEMS: SafetyItem[] = [
   {
     id: "safety-command-allowlist",
     title: "Command allowlist",
-    description: "Strict allowlist restricting terminal execution to ten permitted binaries: git, npm, node, python, pip, dir, type, echo, mkdir, and cd. Blocks dangerous substrings and shell redirection.",
-    implemented: true
+    description: "Strict allowlist restricting terminal execution to ten permitted binaries: git, npm, node, python, pip, dir, type, echo, mkdir, and cd. Blocks dangerous substrings, drive escapes, and shell redirection.",
+    implemented: true,
+    statusLabel: "Implemented, unit-tested",
+    desktopVerified: true,
   },
   {
     id: "safety-workspace-only",
     title: "Workspace filesystem containment",
-    description: "Filesystem sandboxing enforcing all command execution and graph extraction to stay strictly within WORKDIR and PROJECT_DIR.",
-    implemented: true
+    description: "Filesystem sandboxing enforcing all command execution and graph extraction to stay strictly within WORKDIR and PROJECT_DIR, preventing path traversal outside the project root.",
+    implemented: true,
+    statusLabel: "Implemented, unit-tested",
+    desktopVerified: true,
   },
   {
     id: "safety-step-cap",
     title: "Step cap",
     description: "Hard execution limit per run (MAX_STEPS = 80) preventing runaway execution loops and unbounded compute spend.",
-    implemented: true
+    implemented: true,
+    statusLabel: "Implemented, unit-tested",
+    desktopVerified: true,
   },
   {
     id: "safety-mouse-corner-abort",
-    title: "Mouse-corner abort",
-    description: "Hardware failsafe via pyautogui.FAILSAFE = True. Moving the pointer to the top-left screen corner immediately aborts the orchestrator process.",
-    implemented: true
+    title: "Mouse-corner failsafe",
+    description: "Hardware failsafe via pyautogui.FAILSAFE = True. Moving the pointer to the top-left screen corner immediately aborts the orchestrator process (exits code 2, logs failsafe_abort).",
+    implemented: true,
+    statusLabel: "Implemented, unit-tested",
+    desktopVerified: DESKTOP_VERIFIED,
   },
   {
     id: "safety-human-notify-gate",
     title: "Human-notify gate",
-    description: "Interactive pause invoking console input and optional push notification via ntfy to request human guidance when gates trip.",
-    implemented: true
+    description: "Interactive pause invoking console input and optional push notification via ntfy to request human guidance when policy gates trip.",
+    implemented: true,
+    statusLabel: "Implemented, unit-tested",
+    desktopVerified: DESKTOP_VERIFIED,
   },
   {
     id: "safety-graph-stall",
     title: "Graph no-progress alert",
     description: "Calculates SHA-256 hash of graphify-out/GRAPH_REPORT.md after every build round. If the hash remains unchanged across two consecutive rounds, the agent invokes notify_human to prevent infinite stagnant looping.",
-    implemented: GRAPH_STALL_VERIFIED
+    implemented: GRAPH_STALL_VERIFIED,
+    statusLabel: "Planned",
+    desktopVerified: false,
   },
   {
     id: "safety-jsonl-audit-log",
-    title: "JSONL audit log",
-    description: "Append-only structured audit record tracking every tool call, arguments, and screenshot metadata. Planned.",
-    implemented: false
+    title: "Cryptographically chained audit log",
+    description: "Tamper-evident JSONL audit record tracking every tool call, argument, and screen state with SHA-256 hash chaining and automated credential redaction.",
+    implemented: true,
+    statusLabel: "Implemented, unit-tested",
+    desktopVerified: true,
+  },
+  {
+    id: "safety-checkpoint-resume",
+    title: "Atomic checkpoints and resume",
+    description: "Atomic state serialization after every step enabling clean resumption of interrupted runs via --resume [RUN_ID|latest] without repeating completed work.",
+    implemented: true,
+    statusLabel: "Implemented, unit-tested",
+    desktopVerified: true,
+  },
+  {
+    id: "safety-demo-mode",
+    title: "Simulated demo mode",
+    description: "Deterministic offline execution (--demo, --demo-limit, --demo-answer) generating synthetic screens and full build traces without live API keys or UI automation.",
+    implemented: true,
+    statusLabel: "Implemented, unit-tested",
+    desktopVerified: true,
   },
   {
     id: "safety-global-kill-hotkey",
     title: "Global kill hotkey",
-    description: "OS-level daemon hotkey to terminate the orchestrator and all background child processes. Planned.",
-    implemented: false
+    description: "Dedicated background daemon thread polling keyboard state at 20 Hz for Ctrl+Alt+K. Instantly terminates the orchestrator and all child processes with exit code 3.",
+    implemented: true,
+    statusLabel: "Implemented, unit-tested",
+    desktopVerified: DESKTOP_VERIFIED,
   },
   {
-    id: "safety-screenshot-hash-loop-breaker",
-    title: "Screenshot-hash loop breaker",
-    description: "Perceptual image hashing to detect identical screen state loops across tool calls. Planned.",
-    implemented: false
-  }
+    id: "safety-screenshot-loop-breaker",
+    title: "Loop breaker",
+    description: "Perceptual difference hashing (dhash) across consecutive screenshots to detect visual stagnation and break repetitive UI interaction loops.",
+    implemented: true,
+    statusLabel: "Implemented, unit-tested",
+    desktopVerified: DESKTOP_VERIFIED,
+  },
+  {
+    id: "safety-limit-wait",
+    title: "Service limit wait",
+    description: "Automated cooldown countdown when provider rate limits are encountered, safely pausing execution while continuously polling the kill switch.",
+    implemented: true,
+    statusLabel: "Implemented, unit-tested",
+    desktopVerified: true,
+  },
+  {
+    id: "safety-account-switch",
+    title: "Multi-profile account switching",
+    description: "Controlled browser profile switching via --account-switch, enforced by a hard cap of 2 switches per session and a 120-second cooldown period.",
+    implemented: true,
+    statusLabel: "Implemented, unit-tested",
+    desktopVerified: DESKTOP_VERIFIED,
+  },
 ];

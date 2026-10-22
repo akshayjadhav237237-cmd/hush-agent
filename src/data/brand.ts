@@ -6,3 +6,6 @@ export const VIDEO_SRC = "TODO";
 export const DEVPOST_URL = "TODO";
 export const HACKATHON_NAME = "TODO";
 export const GRAPH_STALL_VERIFIED = false;
+export const DESKTOP_VERIFIED = false;
+export const BASE_TOOL_COUNT = 22;
+export const SWITCHING_TOOL_COUNT = 23;

@@ -8,10 +8,11 @@ interface FooterLink {
 }
 
 const FOOTER_LINKS: readonly FooterLink[] = [
-  { label: 'Simulator', href: '#simulator' },
+  { label: 'Replay', href: '#simulator' },
+  { label: 'Run', href: '#run-it-yourself' },
   { label: 'Architecture', href: '#architecture' },
+  { label: 'Switching', href: '#account-switching' },
   { label: 'Gates', href: '#gates' },
-  { label: 'Gemma 4 Facts', href: '#gemma-facts' },
   { label: 'Safety', href: '#safety' },
   { label: 'FAQ', href: '#faq' },
 ];

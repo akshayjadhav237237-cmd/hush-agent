@@ -15,7 +15,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "What are the known limitations (including UI click/coordinate accuracy)?",
-    a: "Hush relies on keyboard shortcuts, clipboard, and CLI interfaces wherever possible. Gemma's direct UI click coordinate accuracy is unverified, and Hush does not claim spatial grounding capability. Long-horizon multi-file refactors risk context drift without modular subtask boundaries. Interactive terminal prompts requiring raw TTY input cannot be automated without dedicated PTY hooks."
+    a: "Hush operates under four core operational boundaries: (1) Allowlisted commands like python and npm can still execute arbitrary code (operational guardrail, not OS sandbox); (2) Gemma UI click accuracy is unverified; spatial coordinate grounding is experimental; (3) Limit detection is judged by the model visually from screenshots, while countdown waiting and state resumption are executed in code; and (4) ntfy push notification topics are public by design (security through obscurity; use high-entropy topic names)."
   },
   {
     q: "How are API rate limits and token budgets managed?",
@@ -23,7 +23,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "How does safety and system command containment work?",
-    a: "Shell execution is controlled by run_cmd with an allowlist restricted to ten commands: git, npm, node, python, pip, dir, type, echo, mkdir, and cd. Dangerous patterns such as recursive deletion (rm -rf, rmdir /s), pipe-to-shell interpreters (curl, wget), and command chaining are blocked before execution. Commands execute inside WORKDIR and PROJECT_DIR. For emergency stopping, pyautogui.FAILSAFE is enabled, immediately aborting execution when the mouse moves to the top-left corner."
+    a: "Shell execution is controlled by run_cmd with an allowlist restricted to ten commands: git, npm, node, python, pip, dir, type, echo, mkdir, and cd, running strictly within WORKDIR and PROJECT_DIR with path traversal blocked. Emergency stops include mouse-corner failsafe (pyautogui.FAILSAFE = True, exiting code 2) and a global kill hotkey (Ctrl+Alt+K, polled at 20 Hz, exiting code 3). Cryptographically chained JSONL audit logs and atomic checkpoints ensure safety, transparency, and resumption."
   },
   {
     q: "How can judges reproduce this build?",

@@ -6,7 +6,6 @@ import {
   Check,
   X,
   CheckCircle2,
-  Clock,
   CornerDownLeft,
   Command,
 } from 'lucide-react';
@@ -54,10 +53,12 @@ export const EmergencyCallout: React.FC = () => {
           </div>
         </div>
 
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-surface border border-border text-text-muted self-start sm:self-auto">
-          <ShieldAlert className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} aria-hidden="true" />
-          Active Failsafe: Mouse-Corner Abort
-        </span>
+        <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-surface border border-border text-text-muted">
+            <ShieldAlert className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} aria-hidden="true" />
+            Active Failsafes: Corner Abort &amp; Ctrl+Alt+K
+          </span>
+        </div>
       </div>
 
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -71,44 +72,54 @@ export const EmergencyCallout: React.FC = () => {
               </h4>
             </div>
             <p className="text-xs text-text-muted leading-relaxed mb-4">
-              Hardware interrupts provide immediate human intervention. Mouse-corner abort is the active emergency stop in the current release. Key shortcuts and daemon handlers are planned extensions.
+              Hardware interrupts provide immediate human intervention. Both mouse-corner abort (failsafe) and the global kill hotkey (Ctrl+Alt+K) are implemented in the Python orchestrator and covered by unit tests.
             </p>
 
             <div className="space-y-3">
               {/* Implemented: Mouse-Corner Abort */}
               <div className="p-3.5 rounded-lg bg-surface-2 border border-border">
-                <div className="flex items-center justify-between gap-2 mb-1.5">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
                   <div className="flex items-center gap-1.5">
                     <CornerDownLeft className="w-3.5 h-3.5 text-success shrink-0" strokeWidth={1.5} aria-hidden="true" />
                     <span className="text-xs font-mono text-text font-semibold">Mouse-Corner Abort</span>
                   </div>
-                  <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded-full bg-surface border border-border text-success font-medium">
-                    <CheckCircle2 className="w-3 h-3 text-success shrink-0" strokeWidth={1.5} aria-hidden="true" />
-                    <span>Implemented</span>
-                  </span>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded-full bg-surface border border-border text-success font-medium">
+                      <CheckCircle2 className="w-3 h-3 text-success shrink-0" strokeWidth={1.5} aria-hidden="true" />
+                      <span>Implemented, unit-tested</span>
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-surface border border-border text-text-muted">
+                      Not yet verified on a real desktop
+                    </span>
+                  </div>
                 </div>
                 <p className="text-xs text-text-muted leading-relaxed">
-                  Moving the pointer into the top-left screen corner triggers an immediate hardware interrupt via pyautogui.FAILSAFE = True. It stops automation loops and releases input control.
+                  Moving the pointer into the top-left screen corner triggers an immediate hardware interrupt via pyautogui.FAILSAFE = True. Exits code 2, logs failsafe_abort, and releases input control.
                 </p>
                 <div className="mt-2 pt-2 border-t border-border/60 text-[11px] font-mono text-success">
-                  Active failsafe in current release
+                  Active failsafe in Python runtime
                 </div>
               </div>
 
-              {/* Planned: Global Kill Hotkey */}
+              {/* Implemented, unit-tested: Global Kill Hotkey */}
               <div className="p-3.5 rounded-lg bg-surface-2 border border-border">
-                <div className="flex items-center justify-between gap-2 mb-1.5">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
                   <div className="flex items-center gap-1.5">
-                    <Command className="w-3.5 h-3.5 text-text-muted shrink-0" strokeWidth={1.5} aria-hidden="true" />
+                    <Command className="w-3.5 h-3.5 text-success shrink-0" strokeWidth={1.5} aria-hidden="true" />
                     <span className="text-xs font-mono text-text font-semibold">Global Kill Hotkey</span>
                   </div>
-                  <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded-full bg-surface border border-border text-text-muted font-medium">
-                    <Clock className="w-3 h-3 text-text-muted shrink-0" strokeWidth={1.5} aria-hidden="true" />
-                    <span>Planned</span>
-                  </span>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded-full bg-surface border border-border text-success font-medium">
+                      <CheckCircle2 className="w-3 h-3 text-success shrink-0" strokeWidth={1.5} aria-hidden="true" />
+                      <span>Implemented, unit-tested</span>
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-surface border border-border text-text-muted">
+                      Not yet verified on a real desktop
+                    </span>
+                  </div>
                 </div>
                 <p className="text-xs text-text-muted leading-relaxed mb-2">
-                  Planned OS daemon hotkey to broadcast SIGKILL across all child processes. This feature is planned and not yet active.
+                  Dedicated daemon thread polling global keyboard state at 20 Hz for Ctrl+Alt+K. Instantly aborts the orchestrator and all child processes with exit code 3.
                 </p>
                 <div className="flex items-center gap-1.5 font-mono text-xs">
                   <kbd className="px-2 py-0.5 rounded bg-surface border border-border text-text text-[11px]">Ctrl</kbd>
@@ -116,15 +127,14 @@ export const EmergencyCallout: React.FC = () => {
                   <kbd className="px-2 py-0.5 rounded bg-surface border border-border text-text text-[11px]">Alt</kbd>
                   <span className="text-text-muted">+</span>
                   <kbd className="px-2 py-0.5 rounded bg-surface border border-border text-text text-[11px]">K</kbd>
-                  <span className="text-text-muted text-[11px] font-sans ml-1">(or hold Esc 1.5s &bull; Planned)</span>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="mt-4 pt-3 border-t border-border/70 text-xs font-mono text-text-muted flex items-center justify-between">
-            <span>Active emergency stop:</span>
-            <span className="text-success font-semibold">Mouse-corner abort</span>
+            <span>Emergency stops:</span>
+            <span className="text-success font-semibold">Mouse corner &amp; Ctrl+Alt+K</span>
           </div>
         </div>
 
@@ -174,8 +184,9 @@ export const EmergencyCallout: React.FC = () => {
             </div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-border/70 text-xs font-mono text-text-muted">
-            Enforcement: <span className="text-accent font-semibold">run_cmd sandbox boundary</span>
+          <div className="mt-4 pt-3 border-t border-border/70 text-xs font-mono text-text-muted flex items-center justify-between">
+            <span>Enforcement:</span>
+            <span className="text-accent font-semibold">run_cmd sandbox boundary</span>
           </div>
         </div>
       </div>

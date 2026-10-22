@@ -27,6 +27,8 @@ export type SafetyItem = {
   title: string;
   description: string;
   implemented: boolean;
+  statusLabel?: "Implemented, unit-tested" | "Implemented" | "Planned";
+  desktopVerified?: boolean; // false indicates "Not yet verified on a real desktop"
 };
 
 export type Fact = {

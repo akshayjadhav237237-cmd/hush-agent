@@ -12,7 +12,7 @@ export const SafetySummary: React.FC<SafetySummaryProps> = ({
   plannedCount,
   totalCount,
 }) => {
-  const implementedPercentage = Math.round((implementedCount / totalCount) * 100);
+  const implementedPercentage = totalCount > 0 ? Math.round((implementedCount / totalCount) * 100) : 0;
 
   return (
     <div className="bg-surface border border-border rounded-[14px] p-5 sm:p-6 mb-8">
@@ -30,7 +30,7 @@ export const SafetySummary: React.FC<SafetySummaryProps> = ({
             <span className="text-text-muted" aria-hidden="true">&bull;</span>
             <span className="inline-flex items-center gap-1.5 text-text-muted">
               <Clock className="w-4 h-4 shrink-0 text-text-muted" strokeWidth={1.5} aria-hidden="true" />
-              <span>{plannedCount} Planned Extensions</span>
+              <span>{plannedCount} Planned Extension{plannedCount === 1 ? '' : 's'}</span>
             </span>
           </div>
         </div>
