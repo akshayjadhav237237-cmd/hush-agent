@@ -1,7 +1,6 @@
 import React from 'react';
 import { Header } from '@/features/shell/Header';
 import { Hero } from '@/features/shell/Hero';
-import { Mission } from '@/features/mission/Mission';
 import { Simulator } from '@/features/simulator/Simulator';
 import { RunItYourself } from '@/features/run-it-yourself/RunItYourself';
 import { Architecture } from '@/features/architecture/Architecture';
@@ -20,7 +19,6 @@ export const App: React.FC = () => {
       <Header />
       <main className="flex-1">
         <Hero />
-        <Mission />
         <Simulator />
         <RunItYourself />
         <Architecture />

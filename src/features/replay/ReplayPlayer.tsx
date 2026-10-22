@@ -62,26 +62,22 @@ export const ReplayPlayer: React.FC = () => {
     <section
       id="simulator"
       aria-labelledby="replay-heading"
-      className="w-full py-12 px-4 sm:px-6 relative scroll-mt-16 bg-[#000] text-[#F5F0E8]"
+      className="w-full py-12 px-4 sm:px-6 relative scroll-mt-16"
     >
       {/* Anchor for #replay navigation */}
       <span id="replay" className="absolute -top-16 opacity-0 pointer-events-none" />
 
-      <div className="max-w-[1120px] mx-auto bg-[#141414] border border-white/[0.06] rounded-[24px] p-6 sm:p-8 flex flex-col gap-6">
+      <div className="max-w-[1120px] mx-auto flex flex-col gap-6">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-white/[0.06]">
-          <div className="flex flex-col gap-2.5">
-            <div className="font-mono text-xs uppercase tracking-[0.2em] text-[#F5F0E8]/45">
-              [ REPLAY ]
-            </div>
-
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-border">
+          <div className="flex flex-col gap-2">
             {/* Badges bar */}
             <div className="flex flex-wrap items-center gap-2">
               {/* Demo Mode Badge */}
               {payload?.mode === 'demo' && (
                 <span
                   role="note"
-                  className="inline-flex items-center px-3 py-1 rounded-full border border-[#E3B15C]/40 bg-[#E3B15C]/10 text-xs font-mono text-[#E3B15C] font-semibold tracking-tight"
+                  className="inline-flex items-center px-2.5 py-1 rounded-[10px] border border-warning/60 bg-warning/10 text-xs font-mono text-warning font-semibold tracking-tight"
                 >
                   DEMO MODE: simulated desktop, real Gemma calls
                 </span>
@@ -91,7 +87,7 @@ export const ReplayPlayer: React.FC = () => {
               {payload?.mode === 'real' && (
                 <span
                   role="note"
-                  className="inline-flex items-center px-3 py-1 rounded-full border border-[#22FF6E]/40 bg-[#22FF6E]/10 text-xs font-mono text-[#22FF6E] font-semibold tracking-tight"
+                  className="inline-flex items-center px-2.5 py-1 rounded-[10px] border border-accent/60 bg-accent/10 text-xs font-mono text-accent font-semibold tracking-tight"
                 >
                   REAL EXECUTION MODE
                 </span>
@@ -99,16 +95,16 @@ export const ReplayPlayer: React.FC = () => {
 
               {/* Run ID Badge */}
               {payload?.run_id && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/[0.06] bg-white/[0.04] text-xs font-mono text-[#F5F0E8]/60">
-                  <Terminal className="w-3.5 h-3.5 text-[#22FF6E]" />
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[10px] border border-border bg-surface-2 text-xs font-mono text-text-muted">
+                  <Terminal className="w-3 h-3 text-text-muted" />
                   <span>Run: {payload.run_id}</span>
                 </span>
               )}
 
               {/* Total Event Count */}
               {status === 'available' && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/[0.06] bg-white/[0.04] text-xs font-mono text-[#F5F0E8]/60">
-                  <Hash className="w-3.5 h-3.5 text-[#22FF6E]" />
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[10px] border border-border bg-surface-2 text-xs font-mono text-text-muted">
+                  <Hash className="w-3 h-3 text-text-muted" />
                   <span>{totalSteps} events</span>
                 </span>
               )}
@@ -117,7 +113,7 @@ export const ReplayPlayer: React.FC = () => {
               {payload?.chain_verified === true && (
                 <span
                   role="status"
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#22FF6E]/40 bg-[#22FF6E]/15 text-xs font-mono text-[#22FF6E] font-semibold"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[10px] border border-accent/60 bg-accent/15 text-xs font-mono text-accent font-semibold"
                 >
                   <ShieldCheck className="w-3.5 h-3.5" />
                   <span>Chain Verified</span>
@@ -127,11 +123,11 @@ export const ReplayPlayer: React.FC = () => {
 
             <h2
               id="replay-heading"
-              className="text-2xl sm:text-3xl lg:text-4xl font-sans font-bold tracking-tight text-[#F0FFE8]"
+              className="text-lg sm:text-2xl font-serif font-semibold tracking-tight text-text"
             >
-              Tamper-Evident <span className="font-serif italic font-normal text-[#22FF6E]">Audit Replay.</span>
+              Execution Replay & Audit Trace
             </h2>
-            <p className="text-xs sm:text-sm text-[#F5F0E8]/60 leading-relaxed max-w-2xl font-sans">
+            <p className="text-xs sm:text-sm text-text-muted leading-relaxed max-w-2xl">
               Step-by-step telemetry reconstructed from cryptographic append-only audit records. Redacted for privacy.
             </p>
           </div>
@@ -139,9 +135,9 @@ export const ReplayPlayer: React.FC = () => {
 
         {/* State Display: Loading, Not Available, or Active Replay */}
         {status === 'loading' && (
-          <div className="w-full border border-white/[0.06] rounded-[20px] bg-[#0e0e0e] p-12 flex flex-col items-center justify-center text-center gap-3">
-            <div className="w-8 h-8 border-2 border-[#22FF6E] border-t-transparent rounded-full animate-spin" />
-            <p className="text-xs font-mono text-[#F5F0E8]/45">Loading audit replay...</p>
+          <div className="w-full border border-border rounded-[14px] bg-surface p-12 flex flex-col items-center justify-center text-center gap-3">
+            <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+            <p className="text-xs font-mono text-text-muted">Loading audit replay...</p>
           </div>
         )}
 
@@ -186,22 +182,22 @@ export const ReplayPlayer: React.FC = () => {
                 />
 
                 {/* Keyboard Shortcut Help */}
-                <div className="p-3.5 rounded-[16px] bg-[#0e0e0e] border border-white/[0.06] flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-[#F5F0E8]/45">
-                  <span className="text-[11px] font-semibold text-[#F0FFE8] uppercase tracking-wider">
+                <div className="p-3 rounded-[10px] bg-surface-2 border border-border flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-text-muted">
+                  <span className="text-[11px] font-semibold text-text uppercase tracking-wider">
                     Shortcuts:
                   </span>
                   <div className="flex flex-wrap items-center gap-3 text-[11px]">
                     <span>
-                      <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[#F5F0E8] font-semibold">Space</kbd> Play/Pause
+                      <kbd className="px-1.5 py-0.5 rounded bg-surface border border-border text-text font-semibold">Space</kbd> Play/Pause
                     </span>
                     <span>
-                      <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[#F5F0E8] font-semibold">←</kbd> Prev
+                      <kbd className="px-1.5 py-0.5 rounded bg-surface border border-border text-text font-semibold">←</kbd> Prev
                     </span>
                     <span>
-                      <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[#F5F0E8] font-semibold">→</kbd> Next
+                      <kbd className="px-1.5 py-0.5 rounded bg-surface border border-border text-text font-semibold">→</kbd> Next
                     </span>
                     <span>
-                      <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[#F5F0E8] font-semibold">R</kbd> Reset
+                      <kbd className="px-1.5 py-0.5 rounded bg-surface border border-border text-text font-semibold">R</kbd> Reset
                     </span>
                   </div>
                 </div>

@@ -1,13 +1,13 @@
 import React from 'react';
 import { PROJECT_NAME, GITHUB_URL, DEVPOST_URL, HACKATHON_NAME } from '@/data/brand';
-import { Award, ArrowUp, ExternalLink } from 'lucide-react';
+import { Award, ArrowUp } from 'lucide-react';
 
-interface QuickLink {
+interface FooterLink {
   readonly label: string;
   readonly href: string;
 }
 
-const QUICK_LINKS: readonly QuickLink[] = [
+const FOOTER_LINKS: readonly FooterLink[] = [
   { label: 'Replay', href: '#simulator' },
   { label: 'Run', href: '#run-it-yourself' },
   { label: 'Architecture', href: '#architecture' },
@@ -35,48 +35,37 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer
-      id="footer"
-      aria-label="Site footer"
-      className="w-full bg-black border-t border-white/[0.06] pt-16 pb-12 text-[#F5F0E8] font-['Space_Grotesk',sans-serif]"
-    >
-      <div className="max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* 4-column layout on md/lg screens */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 items-start">
-          {/* Column 1: Wordmark, Tagline & License */}
+    <footer id="footer" className="border-t border-border bg-surface transition-colors">
+      <div className="max-w-[1120px] mx-auto px-4 sm:px-6 py-12 lg:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 items-start">
+          {/* Column 1: Project Identity & Hackathon Badge */}
           <div className="space-y-4">
-            <a
-              href="#hero"
-              className="inline-flex items-center gap-0.5 group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#22FF6E] rounded"
-            >
-              <span className="font-['Archivo',sans-serif] text-2xl font-bold tracking-tight text-[#F5F0E8] group-hover:text-[#F0FFE8] transition-colors">
-                HUSH
+            <div className="flex items-center gap-2">
+              <span className="font-serif text-xl sm:text-2xl font-normal text-text tracking-tight">
+                {PROJECT_NAME}
+                <span className="text-accent">.</span>
               </span>
-              <span className="font-['JetBrains_Mono',monospace] text-2xl font-bold text-[#22FF6E] leading-none">
-                *
-              </span>
-            </a>
-
-            <p className="text-sm text-[rgba(245,240,232,0.75)] leading-relaxed">
-              Builds quietly. Speaks only when it must.
+            </div>
+            <p className="text-sm text-text-muted leading-relaxed">
+              Autonomous research, planning, and code delivery orchestrated by Gemma 4. Halts execution only when human judgment is strictly required.
             </p>
-
-            <p className="text-xs text-[rgba(245,240,232,0.45)] leading-relaxed pt-1">
-              MIT licensed. Gemma 4 is released by Google under the Apache 2.0 license.
-            </p>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border border-border bg-surface-2 text-text">
+              <Award className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} aria-hidden="true" />
+              <span>Targeting Best Use of Gemma 4</span>
+            </div>
           </div>
 
-          {/* Column 2: QUICK LINKS */}
-          <div>
-            <h3 className="font-['JetBrains_Mono',monospace] text-xs font-semibold uppercase tracking-[0.2em] text-[rgba(245,240,232,0.45)] mb-4 select-none">
-              [ QUICK LINKS ]
+          {/* Column 2: Navigation Links */}
+          <div className="space-y-3 md:text-center">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-text">
+              Navigation
             </h3>
-            <ul className="space-y-2.5 text-sm">
-              {QUICK_LINKS.map((link) => (
+            <ul className="space-y-2 text-sm text-text-muted">
+              {FOOTER_LINKS.map((link) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
-                    className="text-[rgba(245,240,232,0.75)] hover:text-[#22FF6E] transition-colors duration-150 inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#22FF6E] rounded"
+                    className="hover:text-text transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
                   >
                     {link.label}
                   </a>
@@ -85,85 +74,70 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Column 3: COMMUNITY */}
-          <div className="space-y-4">
-            <h3 className="font-['JetBrains_Mono',monospace] text-xs font-semibold uppercase tracking-[0.2em] text-[rgba(245,240,232,0.45)] mb-4 select-none">
-              [ COMMUNITY ]
+          {/* Column 3: License & Resources */}
+          <div className="space-y-3 md:text-right">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-text">
+              Open Source
             </h3>
-            <ul className="space-y-2.5 text-sm">
-              {isGithubAvailable ? (
-                <li>
-                  <a
-                    href={GITHUB_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-1.5 text-[rgba(245,240,232,0.75)] hover:text-[#22FF6E] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#22FF6E] rounded"
-                  >
-                    <span>GitHub Repository</span>
-                    <ExternalLink className="w-3.5 h-3.5 text-[rgba(245,240,232,0.45)] group-hover:text-[#22FF6E] transition-colors" strokeWidth={1.5} aria-hidden="true" />
-                  </a>
-                </li>
-              ) : (
-                <li className="text-xs text-[rgba(245,240,232,0.45)]">
-                  GitHub repository pending
-                </li>
-              )}
-
-              {isDevpostAvailable ? (
-                <li>
-                  <a
-                    href={DEVPOST_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-1.5 text-[rgba(245,240,232,0.75)] hover:text-[#22FF6E] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#22FF6E] rounded"
-                  >
-                    <span>Devpost Submission</span>
-                    <ExternalLink className="w-3.5 h-3.5 text-[rgba(245,240,232,0.45)] group-hover:text-[#22FF6E] transition-colors" strokeWidth={1.5} aria-hidden="true" />
-                  </a>
-                </li>
-              ) : (
-                <li className="text-xs text-[rgba(245,240,232,0.45)]">
-                  Devpost submission placeholder
-                </li>
-              )}
-            </ul>
-
-            <p className="text-xs text-[rgba(245,240,232,0.45)] leading-relaxed pt-2">
-              Graphify is an open-source project by{' '}
+            <p className="text-sm text-text-muted">
+              Hush is MIT licensed. Gemma 4 is released by Google under the Apache 2.0 license.
+            </p>
+            <p className="text-xs text-text-muted leading-relaxed">
+              Graphify is a separate open-source project by{' '}
+              <a
+                href="https://graphify.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:text-text transition-colors"
+              >
+                Graphify Labs
+              </a>
+              , used under its Apache 2.0 license (
               <a
                 href="https://github.com/Graphify-Labs/graphify"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline underline-offset-2 hover:text-[#22FF6E] transition-colors"
+                className="underline underline-offset-2 hover:text-text transition-colors"
               >
-                Graphify Labs
+                GitHub
               </a>
-              , used under Apache 2.0.
+              ).
             </p>
-          </div>
-
-          {/* Column 4: CONTACT & HACKATHON */}
-          <div className="space-y-4">
-            <h3 className="font-['JetBrains_Mono',monospace] text-xs font-semibold uppercase tracking-[0.2em] text-[rgba(245,240,232,0.45)] mb-4 select-none">
-              [ CONTACT &amp; HACKATHON ]
-            </h3>
-            <p className="text-sm text-[rgba(245,240,232,0.75)] leading-relaxed">
+            <p className="text-xs text-text-muted leading-relaxed">
               {isHackathonConfigured
                 ? `Built for ${HACKATHON_NAME}.`
-                : 'Built at a hackathon with Gemma 4.'}
-            </p>
-            <p className="text-xs text-[rgba(245,240,232,0.45)] leading-relaxed">
+                : 'Built at a hackathon with Gemma 4.'}{' '}
               Powered by Gemma 4, Claude, Gemini Deep Research, and Antigravity.
             </p>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[12px] bg-[#141414] border border-white/[0.06] text-xs font-['JetBrains_Mono',monospace] text-[rgba(245,240,232,0.75)]">
-              <Award className="w-3.5 h-3.5 text-[#22FF6E]" strokeWidth={1.5} aria-hidden="true" />
-              <span>Targeting Best Use of Gemma 4</span>
-            </div>
+            {(isGithubAvailable || isDevpostAvailable) && (
+              <div className="pt-2 flex flex-col md:items-end gap-1.5">
+                {isGithubAvailable && (
+                  <a
+                    href={GITHUB_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs text-text hover:text-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
+                  >
+                    Source repository &rarr;
+                  </a>
+                )}
+                {isDevpostAvailable && (
+                  <a
+                    href={DEVPOST_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs text-text hover:text-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
+                  >
+                    Devpost entry &rarr;
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Bottom Bar: Copyright & Back to Top */}
-        <div className="mt-16 pt-8 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-['JetBrains_Mono',monospace] text-[rgba(245,240,232,0.45)]">
+        {/* Bottom Bar */}
+        <div className="mt-12 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-muted">
           <p>
             &copy; {new Date().getFullYear()} {PROJECT_NAME}. All rights reserved.
           </p>
@@ -171,10 +145,10 @@ export const Footer: React.FC = () => {
             type="button"
             onClick={scrollToTop}
             aria-label="Back to top"
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[12px] border border-white/[0.06] bg-[#141414] text-[rgba(245,240,232,0.75)] hover:text-[#22FF6E] hover:border-white/[0.12] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#22FF6E]"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] border border-border bg-surface-2 text-text hover:bg-border transition-colors text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             <span>Back to top</span>
-            <ArrowUp className="w-3.5 h-3.5 text-[#22FF6E]" strokeWidth={1.5} aria-hidden="true" />
+            <ArrowUp className="w-3.5 h-3.5" strokeWidth={1.5} aria-hidden="true" />
           </button>
         </div>
       </div>

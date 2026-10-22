@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Terminal,
   Play,
   CheckCircle2,
   PackageCheck,
@@ -19,107 +20,108 @@ export const RunItYourself: React.FC = () => {
     <section
       id="run-it-yourself"
       aria-labelledby="run-it-yourself-heading"
-      className="py-20 lg:py-32 border-t border-white/[0.06] bg-[#000] text-[#F5F0E8]"
+      className="py-20 lg:py-32 border-t border-border bg-bg text-text"
     >
       <div className="max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* 1. Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="font-mono text-xs uppercase tracking-[0.2em] text-[#F5F0E8]/45 mb-4">
-            [ RUN IT YOURSELF ]
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-surface-2 border border-border text-text-muted mb-4">
+            <Terminal className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} aria-hidden="true" />
+            <span>Local Evaluation &amp; Reproduction</span>
           </div>
 
           <h2
             id="run-it-yourself-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl font-sans font-bold tracking-tight text-[#F0FFE8]"
+            className="text-3xl sm:text-4xl lg:text-5xl font-serif tracking-tight text-text"
           >
-            Evaluate <span className="font-serif italic font-normal text-[#22FF6E]">Locally on Windows.</span>
+            Run It Yourself
           </h2>
 
-          <p className="mt-4 text-base sm:text-lg text-[#F5F0E8]/60 leading-relaxed font-sans">
+          <p className="mt-4 text-base sm:text-lg text-text-muted leading-relaxed">
             Evaluate the orchestration loop locally on Windows. Run in simulated demo mode with synthetic desktop frames, or inspect audit logs and replay traces.
           </p>
         </div>
 
         {/* Quick Highlights Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-14">
-          <div className="p-6 rounded-[24px] bg-[#141414] border border-white/[0.06] flex items-start gap-4">
-            <div className="p-2.5 rounded-[12px] bg-white/[0.04] border border-white/[0.06] text-[#22FF6E] shrink-0">
-              <Sparkles className="w-5 h-5 text-[#22FF6E]" strokeWidth={1.5} />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-14">
+          <div className="p-4 rounded-[14px] bg-surface border border-border flex items-start gap-3">
+            <div className="p-2 rounded-[10px] bg-surface-2 border border-border text-accent shrink-0">
+              <Sparkles className="w-4 h-4 text-accent" strokeWidth={1.5} />
             </div>
             <div>
-              <h3 className="text-xs font-mono font-semibold uppercase tracking-wider text-[#F0FFE8]">
+              <h3 className="text-xs font-mono font-semibold uppercase tracking-wider text-text">
                 Zero-Risk Simulation
               </h3>
-              <p className="text-xs text-[#F5F0E8]/60 mt-1.5 leading-relaxed font-sans">
-                <code className="font-mono text-[#22FF6E] bg-white/5 px-1 py-0.5 rounded">--demo</code> mode executes against in-memory 1280x720 mock frames without physical mouse movement.
+              <p className="text-xs text-text-muted mt-1 leading-relaxed">
+                <code className="font-mono text-text">--demo</code> mode executes against in-memory 1280x720 mock frames without physical mouse movement.
               </p>
             </div>
           </div>
 
-          <div className="p-6 rounded-[24px] bg-[#141414] border border-white/[0.06] flex items-start gap-4">
-            <div className="p-2.5 rounded-[12px] bg-white/[0.04] border border-white/[0.06] text-[#22FF6E] shrink-0">
-              <CheckCircle2 className="w-5 h-5 text-[#22FF6E]" strokeWidth={1.5} />
+          <div className="p-4 rounded-[14px] bg-surface border border-border flex items-start gap-3">
+            <div className="p-2 rounded-[10px] bg-surface-2 border border-border text-accent shrink-0">
+              <CheckCircle2 className="w-4 h-4 text-success" strokeWidth={1.5} />
             </div>
             <div>
-              <h3 className="text-xs font-mono font-semibold uppercase tracking-wider text-[#F0FFE8]">
+              <h3 className="text-xs font-mono font-semibold uppercase tracking-wider text-text">
                 Tamper-Evident Audit
               </h3>
-              <p className="text-xs text-[#F5F0E8]/60 mt-1.5 leading-relaxed font-sans">
-                Cryptographic SHA-256 hash chaining links every event in <code className="font-mono text-[#22FF6E] bg-white/5 px-1 py-0.5 rounded">audit.jsonl</code> with automatic secret redaction.
+              <p className="text-xs text-text-muted mt-1 leading-relaxed">
+                Cryptographic SHA-256 hash chaining links every event in <code className="font-mono text-text">audit.jsonl</code> with automatic secret redaction.
               </p>
             </div>
           </div>
 
-          <div className="p-6 rounded-[24px] bg-[#141414] border border-white/[0.06] flex items-start gap-4">
-            <div className="p-2.5 rounded-[12px] bg-white/[0.04] border border-white/[0.06] text-[#22FF6E] shrink-0">
-              <ShieldAlert className="w-5 h-5 text-[#22FF6E]" strokeWidth={1.5} />
+          <div className="p-4 rounded-[14px] bg-surface border border-border flex items-start gap-3">
+            <div className="p-2 rounded-[10px] bg-surface-2 border border-border text-accent shrink-0">
+              <ShieldAlert className="w-4 h-4 text-accent" strokeWidth={1.5} />
             </div>
             <div>
-              <h3 className="text-xs font-mono font-semibold uppercase tracking-wider text-[#F0FFE8]">
+              <h3 className="text-xs font-mono font-semibold uppercase tracking-wider text-text">
                 Dual Emergency Kill
               </h3>
-              <p className="text-xs text-[#F5F0E8]/60 mt-1.5 leading-relaxed font-sans">
-                Global hotkey <kbd className="font-mono text-[11px] bg-white/5 border border-white/10 px-1.5 py-0.5 rounded text-[#F0FFE8]">Ctrl+Alt+K</kbd> (20&nbsp;Hz) and hardware corner abort at <code className="font-mono text-[#22FF6E] bg-white/5 px-1 py-0.5 rounded">(0, 0)</code>.
+              <p className="text-xs text-text-muted mt-1 leading-relaxed">
+                Global hotkey <kbd className="font-mono text-[11px] bg-surface-2 px-1 rounded">Ctrl+Alt+K</kbd> (20&nbsp;Hz) and hardware corner abort at <code className="font-mono text-text">(0, 0)</code>.
               </p>
             </div>
           </div>
         </div>
 
         {/* 2. Step-by-Step Instructions */}
-        <div className="space-y-6">
+        <div className="space-y-8">
           {/* Section Subtitle */}
-          <div className="flex items-center justify-between pb-4 border-b border-white/[0.06]">
+          <div className="flex items-center justify-between pb-3 border-b border-border">
             <div>
-              <h3 className="text-lg sm:text-xl font-sans font-bold text-[#F0FFE8] tracking-tight">
+              <h3 className="text-lg sm:text-xl font-semibold text-text tracking-tight">
                 Step-by-Step Evaluation Walkthrough
               </h3>
-              <p className="text-xs sm:text-sm text-[#F5F0E8]/45 mt-1 font-mono">
+              <p className="text-xs sm:text-sm text-text-muted mt-0.5 font-mono">
                 From dependency installation to sanitized replay export
               </p>
             </div>
-            <span className="text-xs font-mono text-[#22FF6E] bg-white/[0.04] border border-white/[0.06] px-3 py-1 rounded-full">
+            <span className="text-xs font-mono text-text-muted bg-surface-2 border border-border px-2.5 py-1 rounded-full">
               6 Steps
             </span>
           </div>
 
           {/* STEP 1 */}
-          <div className="p-6 sm:p-7 rounded-[24px] bg-[#141414] border border-white/[0.06] space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div className="p-5 sm:p-6 rounded-[14px] bg-surface border border-border space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <span className="flex items-center justify-center w-8 h-8 rounded-[10px] bg-white/[0.04] text-xs font-mono font-bold text-[#22FF6E] border border-white/[0.06] shrink-0">
+                <span className="flex items-center justify-center w-7 h-7 rounded-[8px] bg-surface-2 text-xs font-mono font-bold text-accent border border-border shrink-0">
                   01
                 </span>
-                <h4 className="text-base font-sans font-bold text-[#F0FFE8]">
+                <h4 className="text-base font-semibold text-text">
                   Install Dependencies
                 </h4>
               </div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/[0.04] border border-white/[0.06] text-[#F5F0E8]/60 self-start sm:self-auto">
-                <PackageCheck className="w-3.5 h-3.5 text-[#22FF6E]" strokeWidth={1.5} />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono bg-surface-2 border border-border text-text-muted self-start sm:self-auto">
+                <PackageCheck className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} />
                 <span>Python &amp; Graphify CLI</span>
               </span>
             </div>
 
-            <p className="text-xs sm:text-sm text-[#F5F0E8]/60 leading-relaxed font-sans">
+            <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
               Clone the repository and install core runtime packages, developer test tools, and the Graphify knowledge graph CLI for codebase indexing:
             </p>
 
@@ -135,24 +137,24 @@ uv tool install graphifyy`}
           </div>
 
           {/* STEP 2 */}
-          <div className="p-6 sm:p-7 rounded-[24px] bg-[#141414] border border-white/[0.06] space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div className="p-5 sm:p-6 rounded-[14px] bg-surface border border-border space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <span className="flex items-center justify-center w-8 h-8 rounded-[10px] bg-white/[0.04] text-xs font-mono font-bold text-[#22FF6E] border border-white/[0.06] shrink-0">
+                <span className="flex items-center justify-center w-7 h-7 rounded-[8px] bg-surface-2 text-xs font-mono font-bold text-accent border border-border shrink-0">
                   02
                 </span>
-                <h4 className="text-base font-sans font-bold text-[#F0FFE8]">
+                <h4 className="text-base font-semibold text-text">
                   Configure Environment
                 </h4>
               </div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/[0.04] border border-white/[0.06] text-[#F5F0E8]/60 self-start sm:self-auto">
-                <KeyRound className="w-3.5 h-3.5 text-[#22FF6E]" strokeWidth={1.5} />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono bg-surface-2 border border-border text-text-muted self-start sm:self-auto">
+                <KeyRound className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} />
                 <span>API Keys &amp; Alerts</span>
               </span>
             </div>
 
-            <p className="text-xs sm:text-sm text-[#F5F0E8]/60 leading-relaxed font-sans">
-              Set your Gemini API key in your Windows user environment. Optionally configure an <code className="font-mono text-[#22FF6E] bg-white/5 px-1 py-0.5 rounded">ntfy.sh</code> topic for mobile push notifications when attention gates trigger human escalation:
+            <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
+              Set your Gemini API key in your Windows user environment. Optionally configure an <code className="font-mono text-text">ntfy.sh</code> topic for mobile push notifications when attention gates trigger human escalation:
             </p>
 
             <CodeBlock
@@ -168,23 +170,23 @@ setx NTFY_TOPIC "your-private-topic"`}
           </div>
 
           {/* STEP 3 */}
-          <div className="p-6 sm:p-7 rounded-[24px] bg-[#141414] border border-white/[0.06] space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div className="p-5 sm:p-6 rounded-[14px] bg-surface border border-border space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <span className="flex items-center justify-center w-8 h-8 rounded-[10px] bg-white/[0.04] text-xs font-mono font-bold text-[#22FF6E] border border-white/[0.06] shrink-0">
+                <span className="flex items-center justify-center w-7 h-7 rounded-[8px] bg-surface-2 text-xs font-mono font-bold text-accent border border-border shrink-0">
                   03
                 </span>
-                <h4 className="text-base font-sans font-bold text-[#F0FFE8]">
+                <h4 className="text-base font-semibold text-text">
                   Run in Simulated Demo Mode
                 </h4>
               </div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/[0.04] border border-white/[0.06] text-[#F5F0E8]/60 self-start sm:self-auto">
-                <Play className="w-3.5 h-3.5 text-[#22FF6E]" strokeWidth={1.5} />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono bg-surface-2 border border-border text-text-muted self-start sm:self-auto">
+                <Play className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} />
                 <span>Synthetic 1280x720 Frames</span>
               </span>
             </div>
 
-            <p className="text-xs sm:text-sm text-[#F5F0E8]/60 leading-relaxed font-sans">
+            <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
               Run against in-memory 1280x720 screens with live Gemma function calling (no real mouse movement). Hush renders synthetic application windows, writes real code into the run project folder, and simulates human answers:
             </p>
 
@@ -195,7 +197,7 @@ setx NTFY_TOPIC "your-private-topic"`}
               caption="Executes live model function calls against synthetic in-memory screens with zero physical mouse interference."
             />
 
-            <p className="text-xs sm:text-sm text-[#F5F0E8]/60 leading-relaxed pt-2 font-sans">
+            <p className="text-xs sm:text-sm text-text-muted leading-relaxed pt-2">
               You can also test the autonomous backoff and human notification behavior under a simulated usage limit scenario:
             </p>
 
@@ -208,23 +210,23 @@ setx NTFY_TOPIC "your-private-topic"`}
           </div>
 
           {/* STEP 4 */}
-          <div className="p-6 sm:p-7 rounded-[24px] bg-[#141414] border border-white/[0.06] space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div className="p-5 sm:p-6 rounded-[14px] bg-surface border border-border space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <span className="flex items-center justify-center w-8 h-8 rounded-[10px] bg-white/[0.04] text-xs font-mono font-bold text-[#22FF6E] border border-white/[0.06] shrink-0">
+                <span className="flex items-center justify-center w-7 h-7 rounded-[8px] bg-surface-2 text-xs font-mono font-bold text-accent border border-border shrink-0">
                   04
                 </span>
-                <h4 className="text-base font-sans font-bold text-[#F0FFE8]">
+                <h4 className="text-base font-semibold text-text">
                   Resume an Interrupted Run
                 </h4>
               </div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/[0.04] border border-white/[0.06] text-[#F5F0E8]/60 self-start sm:self-auto">
-                <RotateCcw className="w-3.5 h-3.5 text-[#22FF6E]" strokeWidth={1.5} />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono bg-surface-2 border border-border text-text-muted self-start sm:self-auto">
+                <RotateCcw className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} />
                 <span>Atomic Checkpoints</span>
               </span>
             </div>
 
-            <p className="text-xs sm:text-sm text-[#F5F0E8]/60 leading-relaxed font-sans">
+            <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
               Atomic checkpoints allow resuming from the exact step. The orchestrator reloads the disk state, artifact ledger, and hash-verified audit log:
             </p>
 
@@ -237,23 +239,23 @@ setx NTFY_TOPIC "your-private-topic"`}
           </div>
 
           {/* STEP 5 */}
-          <div className="p-6 sm:p-7 rounded-[24px] bg-[#141414] border border-white/[0.06] space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div className="p-5 sm:p-6 rounded-[14px] bg-surface border border-border space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <span className="flex items-center justify-center w-8 h-8 rounded-[10px] bg-white/[0.04] text-xs font-mono font-bold text-[#22FF6E] border border-white/[0.06] shrink-0">
+                <span className="flex items-center justify-center w-7 h-7 rounded-[8px] bg-surface-2 text-xs font-mono font-bold text-accent border border-border shrink-0">
                   05
                 </span>
-                <h4 className="text-base font-sans font-bold text-[#F0FFE8]">
+                <h4 className="text-base font-semibold text-text">
                   Export Sanitized Audit Replay
                 </h4>
               </div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/[0.04] border border-white/[0.06] text-[#F5F0E8]/60 self-start sm:self-auto">
-                <FileSpreadsheet className="w-3.5 h-3.5 text-[#22FF6E]" strokeWidth={1.5} />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono bg-surface-2 border border-border text-text-muted self-start sm:self-auto">
+                <FileSpreadsheet className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} />
                 <span>SHA-256 Verified JSON</span>
               </span>
             </div>
 
-            <p className="text-xs sm:text-sm text-[#F5F0E8]/60 leading-relaxed font-sans">
+            <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
               Validate the SHA-256 tamper-evident log and export clean replay events. The export script verifies every cryptographic link in the audit chain and automatically redacts API keys, credentials, and full clipboard payloads:
             </p>
 
@@ -266,23 +268,23 @@ setx NTFY_TOPIC "your-private-topic"`}
           </div>
 
           {/* STEP 6 */}
-          <div className="p-6 sm:p-7 rounded-[24px] bg-[#141414] border border-white/[0.06] space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div className="p-5 sm:p-6 rounded-[14px] bg-surface border border-border space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <span className="flex items-center justify-center w-8 h-8 rounded-[10px] bg-white/[0.04] text-xs font-mono font-bold text-[#22FF6E] border border-white/[0.06] shrink-0">
+                <span className="flex items-center justify-center w-7 h-7 rounded-[8px] bg-surface-2 text-xs font-mono font-bold text-accent border border-border shrink-0">
                   06
                 </span>
-                <h4 className="text-base font-sans font-bold text-[#F0FFE8]">
+                <h4 className="text-base font-semibold text-text">
                   Emergency Stop Guardrails
                 </h4>
               </div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/[0.04] border border-white/[0.06] text-[#F5F0E8]/60 self-start sm:self-auto">
-                <ShieldAlert className="w-3.5 h-3.5 text-[#22FF6E]" strokeWidth={1.5} />
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono bg-surface-2 border border-border text-text-muted self-start sm:self-auto">
+                <ShieldAlert className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} />
                 <span>Operator Override</span>
               </span>
             </div>
 
-            <p className="text-xs sm:text-sm text-[#F5F0E8]/60 leading-relaxed font-sans">
+            <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
               Two independent kill mechanisms provide hardware-level and OS-level intervention:
             </p>
 
@@ -294,11 +296,11 @@ setx NTFY_TOPIC "your-private-topic"`}
         {/* 3. CLI Options Reference Table */}
         <div className="mt-16">
           <div className="mb-4">
-            <h3 className="text-xl sm:text-2xl font-sans font-bold text-[#F0FFE8] tracking-tight">
+            <h3 className="text-xl sm:text-2xl font-serif text-text tracking-tight">
               Command-Line Reference
             </h3>
-            <p className="text-xs sm:text-sm text-[#F5F0E8]/60 mt-1 leading-relaxed font-sans">
-              Complete reference of orchestrator arguments, flags, and default values matching <code className="font-mono text-[#22FF6E]">agent/core/cli.py</code>.
+            <p className="text-xs sm:text-sm text-text-muted mt-1 leading-relaxed">
+              Complete reference of orchestrator arguments, flags, and default values matching <code className="font-mono text-text">agent/core/cli.py</code>.
             </p>
           </div>
 
@@ -306,17 +308,17 @@ setx NTFY_TOPIC "your-private-topic"`}
         </div>
 
         {/* Local Reproduction Callout Footer */}
-        <div className="mt-12 p-6 sm:p-7 rounded-[24px] bg-[#141414] border border-white/[0.06] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
-          <div className="flex items-center gap-3.5">
-            <div className="p-2.5 rounded-[12px] bg-white/[0.04] border border-white/[0.06] text-[#22FF6E] shrink-0">
-              <CheckCircle2 className="w-5 h-5 text-[#22FF6E]" strokeWidth={1.5} aria-hidden="true" />
+        <div className="mt-12 p-5 sm:p-6 rounded-[14px] bg-surface-2 border border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-[10px] bg-surface border border-border text-accent shrink-0">
+              <CheckCircle2 className="w-5 h-5 text-success" strokeWidth={1.5} aria-hidden="true" />
             </div>
             <div>
-              <h4 className="text-sm font-sans font-bold text-[#F0FFE8]">
+              <h4 className="text-sm font-semibold text-text">
                 Fully Tested on Windows &amp; Mock Desktops
               </h4>
-              <p className="text-xs text-[#F5F0E8]/60 mt-0.5 font-sans">
-                Run pytest across the test suite in <code className="font-mono text-[#22FF6E]">agent/tests/</code> to verify safety sandboxing and audit trails.
+              <p className="text-xs text-text-muted">
+                Run pytest across the test suite in <code className="font-mono text-text">agent/tests/</code> to verify safety sandboxing and audit trails.
               </p>
             </div>
           </div>
@@ -324,10 +326,10 @@ setx NTFY_TOPIC "your-private-topic"`}
           <div className="flex items-center gap-2 self-stretch sm:self-auto justify-end">
             <a
               href="#safety"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-[12px] text-xs font-mono font-medium bg-white/[0.04] text-[#F5F0E8] hover:text-[#22FF6E] border border-white/[0.06] hover:border-[#22FF6E]/30 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] text-xs font-mono font-medium bg-surface text-text hover:text-accent border border-border hover:border-accent/40 transition-colors"
             >
               <span>View Safety Guardrails</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#22FF6E]" strokeWidth={1.5} />
+              <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
             </a>
           </div>
         </div>

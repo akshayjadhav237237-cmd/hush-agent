@@ -1,32 +1,43 @@
 @import "tailwindcss";
 
 :root {
-  /* Colors */
-  --bg: #000000;
-  --surface: #141414;
-  --surface-2: #1A1A1A;
-  --text: #F5F0E8;
-  --text-mint: #F0FFE8;
-  --text-muted: rgba(245, 240, 232, 0.45);
-  --border: rgba(255, 255, 255, 0.06);
-  --border-subtle: rgba(255, 255, 255, 0.1);
-  --accent: #22FF6E;
-  --accent-contrast: #000000;
-  --warning: #E3B15C;
-  --danger: #FF4D4D;
-  --success: #22FF6E;
+  --font-serif: "Instrument Serif", Georgia, serif;
+  --font-sans: "Geist Variable", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Border Radii */
-  --radius-card: 24px;
-  --radius-panel: 24px;
-  --radius-control: 12px;
-  --radius: 24px;
+  --radius-card: 14px;
+  --radius-control: 10px;
+  --radius: 14px;
 
-  /* Typography */
-  --font-sans: "Space Grotesk", system-ui, -apple-system, sans-serif;
-  --font-serif: "Cormorant Garamond", Georgia, serif;
-  --font-display: "Archivo", "Space Grotesk", sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  /* Light Theme */
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --surface-2: #F3F2EF;
+  --text: #14130F;
+  --text-muted: #6B6A63;
+  --border: #E6E4DE;
+  --accent: #2B4C3F;
+  --accent-contrast: #FAFAF8;
+  --warning: #B7791F;
+  --danger: #B3382C;
+  --success: #2B4C3F;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark Theme */
+    --bg: #0C0C0B;
+    --surface: #141413;
+    --surface-2: #1C1C1A;
+    --text: #F2F1EC;
+    --text-muted: #9A988F;
+    --border: #272624;
+    --accent: #7FB59D;
+    --accent-contrast: #0C0C0B;
+    --warning: #E3B15C;
+    --danger: #E5776B;
+    --success: #7FB59D;
+  }
 }
 
 @theme {
@@ -34,106 +45,30 @@
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-text: var(--text);
-  --color-text-mint: var(--text-mint);
-  --color-mint: var(--text-mint);
   --color-text-muted: var(--text-muted);
-  --color-muted: var(--text-muted);
   --color-border: var(--border);
-  --color-border-subtle: var(--border-subtle);
   --color-accent: var(--accent);
   --color-accent-contrast: var(--accent-contrast);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
 
-  --font-sans: var(--font-sans);
-  --font-serif: var(--font-serif);
-  --font-display: var(--font-display);
-  --font-mono: var(--font-mono);
-
-  --radius-card: var(--radius-card);
-  --radius-panel: var(--radius-panel);
-  --radius-control: var(--radius-control);
-  --radius: var(--radius);
+  --radius-card: 14px;
+  --radius-control: 10px;
   --radius-custom: var(--radius);
-}
 
-/* Base Styles */
-html {
-  scroll-behavior: smooth;
-  background-color: #000000;
-  color: #F5F0E8;
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
 body {
-  background-color: #000000;
-  color: #F5F0E8;
+  background-color: var(--bg);
+  color: var(--text);
   font-family: var(--font-sans);
   margin: 0;
   padding: 0;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* Utilities */
-.section-label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.panel {
-  background-color: var(--surface);
-  border-radius: var(--radius-panel);
-  border: 1px solid var(--border);
-}
-
-/* Scroll Reveal Utilities & Animations */
-@keyframes scroll-reveal-in {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.scroll-reveal {
-  opacity: 1;
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@supports (animation-timeline: view()) {
-  .scroll-reveal {
-    animation: scroll-reveal-in linear both;
-    animation-timeline: view();
-    animation-range: entry 5% cover 25%;
-  }
-}
-
-.scroll-reveal.revealed,
-.scroll-reveal.is-revealed,
-.scroll-reveal.in-view {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto !important;
-  }
-  .scroll-reveal,
-  .scroll-reveal.revealed,
-  .scroll-reveal.is-revealed,
-  .scroll-reveal.in-view {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
 }

@@ -110,31 +110,31 @@ export const CliReferenceTable: React.FC = () => {
   }, [searchTerm]);
 
   return (
-    <div className="rounded-[24px] border border-white/[0.06] bg-[#141414] overflow-hidden my-6">
+    <div className="rounded-[14px] border border-border bg-surface overflow-hidden my-6">
       {/* Table Header and Search Bar */}
-      <div className="p-5 sm:p-6 border-b border-white/[0.06] bg-white/[0.02] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="p-4 sm:p-5 border-b border-border bg-surface-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <SlidersHorizontal className="w-4 h-4 text-[#22FF6E]" strokeWidth={1.5} aria-hidden="true" />
-            <h4 className="text-base sm:text-lg font-sans font-bold text-[#F0FFE8] tracking-tight">
+            <SlidersHorizontal className="w-4 h-4 text-accent" strokeWidth={1.5} aria-hidden="true" />
+            <h4 className="text-sm sm:text-base font-semibold text-text tracking-tight">
               CLI Options Reference
             </h4>
           </div>
-          <p className="text-xs text-[#F5F0E8]/45 mt-1 font-mono">
-            Command-line arguments extracted directly from <code className="text-[#22FF6E]">agent/core/cli.py</code>
+          <p className="text-xs text-text-muted mt-0.5">
+            Command-line arguments extracted directly from <code className="font-mono text-text">agent/core/cli.py</code>
           </p>
         </div>
 
         {/* Search Input */}
-        <div className="relative min-w-[220px] sm:w-72">
-          <Search className="w-3.5 h-3.5 text-[#F5F0E8]/45 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" strokeWidth={1.5} />
+        <div className="relative min-w-[220px] sm:w-64">
+          <Search className="w-3.5 h-3.5 text-text-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" strokeWidth={1.5} />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Filter flags (e.g. demo, resume)..."
             aria-label="Filter CLI options"
-            className="w-full pl-9 pr-3.5 py-2 text-xs font-mono rounded-[12px] bg-[#0e0e0e] border border-white/[0.06] text-[#F5F0E8] placeholder:text-[#F5F0E8]/35 outline-none focus:ring-1 focus:ring-[#22FF6E] focus:border-[#22FF6E]"
+            className="w-full pl-8 pr-3 py-1.5 text-xs font-mono rounded-[8px] bg-surface border border-border text-text placeholder:text-text-muted/60 outline-none focus:ring-1 focus:ring-accent focus:border-accent"
           />
         </div>
       </div>
@@ -143,36 +143,36 @@ export const CliReferenceTable: React.FC = () => {
       <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-left border-collapse text-xs">
           <thead>
-            <tr className="border-b border-white/[0.06] bg-white/[0.01] text-[#F5F0E8]/45 font-mono uppercase tracking-wider text-[11px]">
-              <th className="py-3.5 px-5 font-medium w-[290px]">Option &amp; Syntax</th>
-              <th className="py-3.5 px-5 font-medium w-[120px]">Type</th>
-              <th className="py-3.5 px-5 font-medium w-[130px]">Default</th>
-              <th className="py-3.5 px-5 font-medium">Description &amp; Behavior</th>
+            <tr className="border-b border-border/80 bg-surface text-text-muted font-mono uppercase tracking-wider text-[11px]">
+              <th className="py-3 px-4 font-medium w-[280px]">Option &amp; Syntax</th>
+              <th className="py-3 px-4 font-medium w-[120px]">Type</th>
+              <th className="py-3 px-4 font-medium w-[130px]">Default</th>
+              <th className="py-3 px-4 font-medium">Description &amp; Behavior</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/[0.04]">
+          <tbody className="divide-y divide-border/60">
             {filteredOptions.map((opt) => {
               const isCopied = copiedFlag === opt.syntax;
               return (
                 <tr
                   key={opt.flag}
-                  className="hover:bg-white/[0.02] transition-colors group"
+                  className="hover:bg-surface-2/60 transition-colors group"
                 >
                   {/* Syntax & Copy Button */}
-                  <td className="py-3.5 px-5 font-mono">
+                  <td className="py-3 px-4 font-mono">
                     <div className="flex items-center gap-2">
-                      <code className="text-[#F0FFE8] font-semibold px-2.5 py-1 rounded-[8px] bg-[#0e0e0e] border border-white/[0.06]">
+                      <code className="text-text font-semibold px-2 py-0.5 rounded bg-surface-2 border border-border">
                         {opt.syntax}
                       </code>
                       <button
                         type="button"
                         onClick={() => handleCopyFlag(opt.syntax)}
                         aria-label={`Copy ${opt.syntax} to clipboard`}
-                        className="opacity-0 group-hover:opacity-100 focus:opacity-100 p-1.5 rounded-[8px] text-[#F5F0E8]/45 hover:text-[#F5F0E8] hover:bg-white/10 border border-transparent hover:border-white/[0.06] transition-all cursor-pointer"
+                        className="opacity-0 group-hover:opacity-100 focus:opacity-100 p-1 rounded text-text-muted hover:text-text hover:bg-surface border border-transparent hover:border-border transition-all"
                         title="Copy flag"
                       >
                         {isCopied ? (
-                          <Check className="w-3.5 h-3.5 text-[#22FF6E]" strokeWidth={2} />
+                          <Check className="w-3.5 h-3.5 text-success" strokeWidth={2} />
                         ) : (
                           <Copy className="w-3.5 h-3.5" strokeWidth={1.5} />
                         )}
@@ -181,21 +181,21 @@ export const CliReferenceTable: React.FC = () => {
                   </td>
 
                   {/* Type */}
-                  <td className="py-3.5 px-5 font-mono">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-white/[0.04] text-[#F5F0E8]/60 border border-white/[0.06]">
+                  <td className="py-3 px-4 font-mono">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-surface-2 text-text-muted border border-border/70">
                       {opt.argType}
                     </span>
                   </td>
 
                   {/* Default */}
-                  <td className="py-3.5 px-5 font-mono text-[#F5F0E8]/45">
-                    <code className="text-[#F5F0E8]/50 text-[11px]">
+                  <td className="py-3 px-4 font-mono text-text-muted">
+                    <code className="text-text-muted text-[11px]">
                       {opt.defaultValue}
                     </code>
                   </td>
 
                   {/* Description */}
-                  <td className="py-3.5 px-5 text-[#F5F0E8]/70 leading-relaxed font-sans text-xs">
+                  <td className="py-3 px-4 text-text-muted leading-relaxed font-sans text-xs">
                     {opt.description}
                   </td>
                 </tr>
@@ -203,8 +203,8 @@ export const CliReferenceTable: React.FC = () => {
             })}
             {filteredOptions.length === 0 && (
               <tr>
-                <td colSpan={4} className="py-8 text-center text-[#F5F0E8]/45 font-mono text-xs">
-                  No CLI options match &quot;{searchTerm}&quot;
+                <td colSpan={4} className="py-8 text-center text-text-muted font-mono text-xs">
+                  No CLI options match "{searchTerm}"
                 </td>
               </tr>
             )}
@@ -213,56 +213,56 @@ export const CliReferenceTable: React.FC = () => {
       </div>
 
       {/* Mobile Card View */}
-      <div className="md:hidden divide-y divide-white/[0.04]">
+      <div className="md:hidden divide-y divide-border/60">
         {filteredOptions.map((opt) => {
           const isCopied = copiedFlag === opt.syntax;
           return (
             <div key={opt.flag} className="p-4 space-y-2">
               <div className="flex items-center justify-between gap-2">
-                <code className="text-xs font-mono font-semibold text-[#F0FFE8] px-2 py-0.5 rounded-[6px] bg-[#0e0e0e] border border-white/[0.06]">
+                <code className="text-xs font-mono font-semibold text-text px-2 py-0.5 rounded bg-surface-2 border border-border">
                   {opt.syntax}
                 </code>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/[0.04] text-[#F5F0E8]/60 border border-white/[0.06]">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-surface-2 text-text-muted border border-border">
                     {opt.argType}
                   </span>
                   <button
                     type="button"
                     onClick={() => handleCopyFlag(opt.syntax)}
                     aria-label={`Copy ${opt.syntax}`}
-                    className="p-1 rounded text-[#F5F0E8]/60 hover:text-[#F5F0E8] bg-white/[0.04] border border-white/[0.06] cursor-pointer"
+                    className="p-1 rounded text-text-muted hover:text-text bg-surface-2 border border-border"
                   >
                     {isCopied ? (
-                      <Check className="w-3.5 h-3.5 text-[#22FF6E]" strokeWidth={2} />
+                      <Check className="w-3.5 h-3.5 text-success" strokeWidth={2} />
                     ) : (
                       <Copy className="w-3.5 h-3.5" strokeWidth={1.5} />
                     )}
                   </button>
                 </div>
               </div>
-              <p className="text-xs text-[#F5F0E8]/70 leading-relaxed font-sans">
+              <p className="text-xs text-text-muted leading-relaxed">
                 {opt.description}
               </p>
-              <div className="text-[11px] font-mono text-[#F5F0E8]/45">
-                Default: <code className="text-[#F0FFE8]">{opt.defaultValue}</code>
+              <div className="text-[11px] font-mono text-text-muted">
+                Default: <code className="text-text">{opt.defaultValue}</code>
               </div>
             </div>
           );
         })}
         {filteredOptions.length === 0 && (
-          <div className="py-6 text-center text-[#F5F0E8]/45 font-mono text-xs">
-            No CLI options match &quot;{searchTerm}&quot;
+          <div className="py-6 text-center text-text-muted font-mono text-xs">
+            No CLI options match "{searchTerm}"
           </div>
         )}
       </div>
 
       {/* Footer Banner */}
-      <div className="p-4 border-t border-white/[0.06] bg-white/[0.02] text-[11px] font-mono text-[#F5F0E8]/45 flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <Terminal className="w-3.5 h-3.5 text-[#22FF6E]" strokeWidth={1.5} />
+      <div className="p-3 border-t border-border bg-surface-2/60 text-[11px] font-mono text-text-muted flex items-center justify-between">
+        <div className="flex items-center gap-1.5">
+          <Terminal className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} />
           <span>Usage: python orchestrator.py [OPTIONS] [idea ...]</span>
         </div>
-        <span className="hidden sm:inline text-[#F5F0E8]/40">
+        <span className="hidden sm:inline text-text-muted/80">
           Run with -h / --help for complete CLI flag descriptions
         </span>
       </div>

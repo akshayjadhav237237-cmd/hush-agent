@@ -8,81 +8,73 @@ import { GemmaLimitsTab } from './GemmaLimitsTab';
 
 export const GemmaFacts: React.FC = () => {
   return (
-    <section
-      id="gemma-facts"
-      aria-labelledby="gemma-facts-heading"
-      className="py-20 lg:py-32 border-b border-[rgba(255,255,255,0.06)] bg-[#000000] text-[#F5F0E8]"
-    >
+    <section id="gemma-facts" className="py-20 lg:py-32 border-b border-border bg-bg">
       <div className="max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="font-mono text-xs uppercase tracking-[0.2em] text-[rgba(245,240,232,0.45)] mb-4">
-            [ GEMMA 4 ORCHESTRATION ]
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium border border-border bg-surface-2 text-text-muted mb-4">
+            <Cpu className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} aria-hidden="true" />
+            <span>Open Weights</span>
           </div>
-          <h2
-            id="gemma-facts-heading"
-            className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-[#F0FFE8] tracking-tight mb-4 leading-[1.15]"
-          >
-            Gemma 4 <span className="font-serif italic font-normal text-[#22FF6E]">Architecture</span> &amp; Orchestration
+          <h2 className="text-3xl sm:text-4xl font-bold text-text tracking-tight mb-3">
+            Gemma 4 Architecture and Integration
           </h2>
-          <p className="text-base sm:text-lg text-[rgba(245,240,232,0.55)] leading-relaxed max-w-2xl mx-auto">
-            How Hush deploys open-weights Gemma 4 models for native function calling orchestration, multimodal visual verification, and attention gating.
+          <p className="text-base text-text-muted leading-relaxed">
+            How Hush uses open-weights Gemma 4 models for function orchestration, visual verification, and attention gating.
           </p>
         </div>
 
         {/* Award Spotlight Callout */}
-        <div className="mb-10">
-          <GemmaAwardCallout />
-        </div>
+        <GemmaAwardCallout />
 
         {/* Radix Tabs Section */}
         <Tabs.Root defaultValue="specs" className="w-full">
           <Tabs.List
-            className="flex flex-wrap sm:flex-nowrap gap-2 p-2 rounded-[24px] bg-[#141414] border border-[rgba(255,255,255,0.06)] mb-8"
+            className="flex flex-wrap sm:flex-nowrap gap-1.5 p-1.5 rounded-[14px] bg-surface border border-border mb-8"
             aria-label="Gemma 4 Features and Technical Details"
           >
             <Tabs.Trigger
               value="specs"
-              className="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 px-4 py-3 rounded-[16px] text-xs sm:text-sm font-mono font-medium transition-all cursor-pointer text-[rgba(245,240,232,0.55)] hover:text-[#F5F0E8] hover:bg-white/[0.03] data-[state=active]:bg-[#1C1C1C] data-[state=active]:text-[#F0FFE8] data-[state=active]:border data-[state=active]:border-[rgba(255,255,255,0.12)] data-[state=active]:shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#22FF6E]"
+              className="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[10px] text-xs sm:text-sm font-medium transition-colors cursor-pointer text-text-muted hover:text-text data-[state=active]:bg-surface-2 data-[state=active]:text-text data-[state=active]:border data-[state=active]:border-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
             >
-              <Cpu className="w-4 h-4 shrink-0 text-[#22FF6E]" strokeWidth={1.75} aria-hidden="true" />
+              <Cpu className="w-4 h-4 shrink-0" strokeWidth={1.5} aria-hidden="true" />
               <span>Model Family</span>
             </Tabs.Trigger>
 
             <Tabs.Trigger
               value="usage"
-              className="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 px-4 py-3 rounded-[16px] text-xs sm:text-sm font-mono font-medium transition-all cursor-pointer text-[rgba(245,240,232,0.55)] hover:text-[#F5F0E8] hover:bg-white/[0.03] data-[state=active]:bg-[#1C1C1C] data-[state=active]:text-[#F0FFE8] data-[state=active]:border data-[state=active]:border-[rgba(255,255,255,0.12)] data-[state=active]:shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#22FF6E]"
+              className="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[10px] text-xs sm:text-sm font-medium transition-colors cursor-pointer text-text-muted hover:text-text data-[state=active]:bg-surface-2 data-[state=active]:text-text data-[state=active]:border data-[state=active]:border-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
             >
-              <Workflow className="w-4 h-4 shrink-0 text-[#22FF6E]" strokeWidth={1.75} aria-hidden="true" />
+              <Workflow className="w-4 h-4 shrink-0" strokeWidth={1.5} aria-hidden="true" />
               <span>Where We Use Gemma</span>
             </Tabs.Trigger>
 
             <Tabs.Trigger
               value="limits"
-              className="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 px-4 py-3 rounded-[16px] text-xs sm:text-sm font-mono font-medium transition-all cursor-pointer text-[rgba(245,240,232,0.55)] hover:text-[#F5F0E8] hover:bg-white/[0.03] data-[state=active]:bg-[#1C1C1C] data-[state=active]:text-[#F0FFE8] data-[state=active]:border data-[state=active]:border-[rgba(255,255,255,0.12)] data-[state=active]:shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#22FF6E]"
+              className="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[10px] text-xs sm:text-sm font-medium transition-colors cursor-pointer text-text-muted hover:text-text data-[state=active]:bg-surface-2 data-[state=active]:text-text data-[state=active]:border data-[state=active]:border-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
             >
-              <Scale className="w-4 h-4 shrink-0 text-[#22FF6E]" strokeWidth={1.75} aria-hidden="true" />
+              <Scale className="w-4 h-4 shrink-0" strokeWidth={1.5} aria-hidden="true" />
               <span>Capabilities and Limits</span>
             </Tabs.Trigger>
           </Tabs.List>
 
           <Tabs.Content
             value="specs"
-            className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#22FF6E] rounded-[24px]"
+            className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-[14px]"
           >
             <GemmaSpecsTab />
           </Tabs.Content>
 
           <Tabs.Content
             value="usage"
-            className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#22FF6E] rounded-[24px]"
+            className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-[14px]"
           >
             <GemmaUsageTab />
           </Tabs.Content>
 
           <Tabs.Content
             value="limits"
-            className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#22FF6E] rounded-[24px]"
+            className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-[14px]"
           >
             <GemmaLimitsTab />
           </Tabs.Content>
@@ -91,5 +83,3 @@ export const GemmaFacts: React.FC = () => {
     </section>
   );
 };
-
-export default GemmaFacts;

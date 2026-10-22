@@ -31,103 +31,103 @@ export const EventBadge: React.FC<EventBadgeProps> = ({ event, size = 'sm' }) =>
         return {
           label: 'run_start',
           icon: Play,
-          className: 'border-[#22FF6E]/40 bg-[#22FF6E]/10 text-[#22FF6E]',
+          className: 'border-accent/40 bg-accent/10 text-accent',
         };
       case 'model_text':
         return {
           label: 'model_text',
           icon: Bot,
-          className: 'border-white/[0.08] bg-white/[0.04] text-[#F0FFE8]',
+          className: 'border-accent/40 bg-surface-2 text-accent',
         };
       case 'tool_call':
         return {
           label: 'tool_call',
           icon: Terminal,
-          className: 'border-white/[0.08] bg-white/[0.04] text-[#F5F0E8]',
+          className: 'border-border bg-surface-2 text-text',
         };
       case 'tool_result':
         return {
           label: 'tool_result',
           icon: CheckCircle2,
-          className: 'border-white/[0.08] bg-white/[0.04] text-[#F5F0E8]/60',
+          className: 'border-border bg-surface-2 text-text-muted',
         };
       case 'screenshot':
         return {
           label: 'screenshot',
           icon: Camera,
-          className: 'border-white/[0.08] bg-white/[0.04] text-[#F5F0E8]/60',
+          className: 'border-border bg-surface-2 text-text-muted',
         };
       case 'gate':
         return {
           label: 'gate',
           icon: ShieldAlert,
-          className: 'border-[#E3B15C]/40 bg-[#E3B15C]/10 text-[#E3B15C] font-semibold',
+          className: 'border-warning/60 bg-warning/10 text-warning font-semibold',
         };
       case 'limit':
         return {
           label: 'limit',
           icon: Clock,
-          className: 'border-[#E3B15C]/40 bg-[#E3B15C]/10 text-[#E3B15C]',
+          className: 'border-warning/50 bg-warning/10 text-warning',
         };
       case 'switch':
         return {
           label: 'switch',
           icon: RefreshCw,
-          className: 'border-[#22FF6E]/40 bg-[#22FF6E]/10 text-[#22FF6E]',
+          className: 'border-accent/40 bg-accent/10 text-accent',
         };
       case 'checkpoint':
         return {
           label: 'checkpoint',
           icon: Bookmark,
-          className: 'border-white/[0.08] bg-white/[0.04] text-[#F5F0E8]/60',
+          className: 'border-border bg-surface-2 text-text-muted',
         };
       case 'retry':
         return {
           label: 'retry',
           icon: RotateCcw,
-          className: 'border-[#E3B15C]/40 bg-[#E3B15C]/10 text-[#E3B15C]',
+          className: 'border-warning/50 bg-warning/10 text-warning',
         };
       case 'kill':
         return {
           label: 'kill',
           icon: OctagonX,
-          className: 'border-[#E5776B]/40 bg-[#E5776B]/10 text-[#E5776B] font-semibold',
+          className: 'border-danger/60 bg-danger/10 text-danger font-semibold',
         };
       case 'failsafe_abort':
         return {
           label: 'failsafe_abort',
           icon: AlertOctagon,
-          className: 'border-[#E5776B]/40 bg-[#E5776B]/10 text-[#E5776B] font-semibold',
+          className: 'border-danger/60 bg-danger/10 text-danger font-semibold',
         };
       case 'resumed':
         return {
           label: 'resumed',
           icon: FastForward,
-          className: 'border-[#22FF6E]/40 bg-[#22FF6E]/10 text-[#22FF6E]',
+          className: 'border-accent/40 bg-surface-2 text-accent',
         };
       case 'finish':
         return {
           label: 'finish',
           icon: Award,
-          className: 'border-[#22FF6E]/50 bg-[#22FF6E]/15 text-[#22FF6E] font-semibold',
+          className: 'border-accent/60 bg-accent/15 text-accent font-semibold',
         };
       case 'max_steps':
         return {
           label: 'max_steps',
           icon: AlertTriangle,
-          className: 'border-[#E3B15C]/40 bg-[#E3B15C]/10 text-[#E3B15C]',
+          className: 'border-warning/50 bg-warning/10 text-warning',
         };
       case 'kill_switch_unavailable':
         return {
           label: 'kill_switch_unavailable',
           icon: AlertOctagon,
-          className: 'border-[#E5776B]/40 bg-[#E5776B]/10 text-[#E5776B] font-semibold',
+          className: 'border-danger/60 bg-danger/10 text-danger font-semibold',
         };
       default:
         return {
           label: evt,
           icon: Activity,
-          className: 'border-white/[0.08] bg-white/[0.04] text-[#F5F0E8]/60',
+          className: 'border-border bg-surface-2 text-text-muted',
         };
     }
   };
@@ -140,7 +140,7 @@ export const EventBadge: React.FC<EventBadgeProps> = ({ event, size = 'sm' }) =>
 
   return (
     <span
-      className={`inline-flex items-center rounded-full border font-mono tracking-tight transition-colors ${sizeClasses} ${className}`}
+      className={`inline-flex items-center rounded-[10px] border font-mono tracking-tight transition-colors ${sizeClasses} ${className}`}
     >
       <Icon className={size === 'sm' ? 'w-3 h-3 shrink-0' : 'w-3.5 h-3.5 shrink-0'} />
       <span>{label}</span>

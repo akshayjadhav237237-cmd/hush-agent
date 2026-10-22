@@ -56,7 +56,7 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
   return (
     <div className="relative w-full overflow-x-auto md:overflow-x-visible pb-2 pt-1">
       {/* Topology Canvas Container */}
-      <div className="relative w-full min-w-[720px] md:min-w-0 max-w-5xl mx-auto aspect-[1000/620] rounded-[24px] border border-white/[0.06] bg-[#141414] p-2 overflow-hidden shadow-2xl">
+      <div className="relative w-full min-w-[720px] md:min-w-0 max-w-5xl mx-auto aspect-[1000/620] rounded-[14px] border border-border bg-surface p-2 overflow-hidden shadow-sm">
         {/* SVG Vector Connections Layer */}
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none select-none"
@@ -78,7 +78,7 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
               height="32"
               patternUnits="userSpaceOnUse"
             >
-              <circle cx="1.5" cy="1.5" r="0.75" fill="rgba(255,255,255,0.08)" />
+              <circle cx="1.5" cy="1.5" r="0.75" fill="var(--border)" opacity="0.6" />
             </pattern>
 
             {/* Subtle glow filter for active channels */}
@@ -96,7 +96,7 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
             cx="500"
             cy="220"
             r="120"
-            fill="#22FF6E"
+            fill="var(--accent)"
             opacity="0.03"
             className="transition-opacity duration-300"
           />
@@ -104,8 +104,8 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
             cx="500"
             cy="220"
             r="75"
-            fill="#22FF6E"
-            opacity="0.06"
+            fill="var(--accent)"
+            opacity="0.05"
             className="transition-opacity duration-300"
           />
 
@@ -114,7 +114,7 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
             cx="500"
             cy="480"
             r="110"
-            fill="#22FF6E"
+            fill="var(--accent)"
             opacity="0.02"
             className="transition-opacity duration-300"
           />
@@ -122,8 +122,8 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
             cx="500"
             cy="480"
             r="70"
-            fill="#22FF6E"
-            opacity="0.05"
+            fill="var(--accent)"
+            opacity="0.04"
             className="transition-opacity duration-300"
           />
 
@@ -135,9 +135,9 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
 
             const strokeColor = active
               ? isWarning
-                ? '#FFBD2E'
-                : '#22FF6E'
-              : 'rgba(255,255,255,0.08)';
+                ? 'var(--warning)'
+                : 'var(--accent)'
+              : 'var(--border)';
 
             const staticPos = getStaticIndicatorPos(conn.id);
 
@@ -149,7 +149,7 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
                 <path
                   d={conn.pathD}
                   fill="none"
-                  stroke="rgba(255,255,255,0.08)"
+                  stroke="var(--border)"
                   strokeWidth="1"
                   strokeDasharray="3 3"
                   opacity={active ? 0.3 : 0.8}
@@ -345,7 +345,7 @@ export const TopologyGraph: React.FC<TopologyGraphProps> = ({
       </div>
 
       {/* Mobile scroll cue */}
-      <div className="flex md:hidden items-center justify-center gap-1.5 mt-2 text-xs font-mono text-[#F5F0E8]/45">
+      <div className="flex md:hidden items-center justify-center gap-1.5 mt-2 text-xs font-mono text-text-muted">
         <span>Scroll horizontally to view complete topology</span>
       </div>
     </div>
