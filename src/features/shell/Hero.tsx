@@ -1,93 +1,150 @@
-import React from 'react';
-import { GITHUB_URL } from '@/data/brand';
+import React, { useState, useEffect } from 'react';
+import { TAGLINE } from '@/data/brand';
 import { COPY } from '@/data/copy';
 import { ArrowRight } from 'lucide-react';
 
 export const Hero: React.FC = () => {
-  const isGithubAvailable =
-    (GITHUB_URL as string) !== 'TODO' &&
-    (GITHUB_URL as string).trim().length > 0;
+  const [videoAvailable, setVideoAvailable] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Check if /hero.mp4 exists without throwing uncaught errors
+    fetch('/hero.mp4', { method: 'HEAD' })
+      .then((res) => {
+        if (res.ok) {
+          const contentType = res.headers.get('content-type') || '';
+          if (contentType.includes('video') || contentType.includes('mp4')) {
+            setVideoAvailable(true);
+          }
+        }
+      })
+      .catch(() => {
+        setVideoAvailable(false);
+      });
+  }, []);
+
+  const taglineParts = TAGLINE.split('.');
+  const taglinePart1 = taglineParts[0] ? `${taglineParts[0].trim()}.` : COPY.hero.titleLine1;
+  const taglinePart2 = taglineParts[1]?.trim() || COPY.hero.titleLine2;
 
   return (
     <section
       id="hero"
-      aria-labelledby="hero-headline"
-      className="relative overflow-hidden py-20 lg:py-32"
+      aria-labelledby="hero-title"
+      className="relative m-4 sm:m-7 min-h-[calc(100vh-60px)] rounded-[40px] overflow-hidden flex flex-col justify-between p-8 sm:p-12 lg:p-16 border border-white/[0.06]"
+      style={{
+        background: 'radial-gradient(circle at 50% 30%, #0a1f44 0%, #030712 60%, #000000 100%)',
+        backgroundColor: '#000000',
+      }}
     >
-      {/* Subtle radial wash behind hero */}
+      {/* Optional video background fallback if /hero.mp4 is available */}
+      {videoAvailable && (
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-35 pointer-events-none mix-blend-screen"
+        >
+          <source src="/hero.mp4" type="video/mp4" />
+        </video>
+      )}
+
+      {/* Subtle radial shading overlay */}
       <div
-        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_40%_at_50%_0%,color-mix(in_srgb,var(--color-accent)_7%,transparent)_0%,transparent_100%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(34,255,110,0.04)_0%,_transparent_70%)]"
         aria-hidden="true"
       />
 
-      <div className="max-w-[1120px] mx-auto px-4 sm:px-6 text-center">
-        {/* Eyebrow badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border border-border bg-surface-2 text-text-muted mb-8">
-          <span className="w-1.5 h-1.5 rounded-full bg-accent" aria-hidden="true" />
+      {/* Top area */}
+      <div className="relative z-10 flex items-center justify-between w-full pt-12 sm:pt-10 md:pt-4">
+        {/* Section label mono: [ HUSH ] in green / muted font-mono text-xs tracking-[0.2em] */}
+        <div
+          className="font-mono text-xs tracking-[0.2em] text-[#22FF6E] uppercase select-none"
+          style={{ fontFamily: "'JetBrains Mono', var(--font-mono), monospace" }}
+        >
+          [ HUSH ]
+        </div>
+
+        {/* Eyebrow: Built with Gemma 4 tag */}
+        <div
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-mono border border-white/[0.08] bg-[#141414]/90 text-[#F5F0E8]/80 backdrop-blur-sm select-none"
+          style={{ fontFamily: "'JetBrains Mono', var(--font-mono), monospace" }}
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-[#22FF6E] animate-pulse" aria-hidden="true" />
           <span>{COPY.eyebrow}</span>
         </div>
+      </div>
 
-        {/* Hero H1 */}
-        <h1
-          id="hero-headline"
-          className="text-[44px] sm:text-[64px] lg:text-[72px] leading-[1.08] tracking-tight font-sans font-semibold text-text"
-        >
-          <span className="block">{COPY.hero.titleLine1}</span>
-          <span className="block font-serif italic font-normal text-accent mt-1 sm:mt-2">
-            {COPY.hero.titleLine2}
-          </span>
-        </h1>
-
-        {/* Hero subhead */}
-        <p className="mt-6 sm:mt-8 text-[17px] leading-[1.65] text-text-muted max-w-2xl mx-auto">
-          {COPY.hero.subhead}
-        </p>
-
-        <p className="mt-4 text-xs font-mono text-text-muted">
-          Works with Graphify for codebase memory.
-        </p>
-
-        {/* CTAs */}
-        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5">
-          <a
-            href="#simulator"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-accent text-accent-contrast rounded-[10px] px-5 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+      {/* Bottom area */}
+      <div className="relative z-10 flex flex-col md:flex-row items-start md:items-end justify-between gap-8 lg:gap-12 pt-16">
+        {/* Bottom-left: Giant wordmark */}
+        <div className="shrink-0 select-none">
+          <h1
+            id="hero-title"
+            className="text-[#F5F0E8] font-extrabold tracking-tighter text-[20vw] sm:text-[24vw] lg:text-[28vw] leading-[0.85] select-none inline-flex items-start"
+            style={{
+              fontFamily: "'Archivo', 'Space Grotesk', var(--font-sans), sans-serif",
+            }}
           >
-            <span>{COPY.hero.ctaPrimary}</span>
-            <ArrowRight className="w-4 h-4" strokeWidth={1.5} aria-hidden="true" />
-          </a>
-
-          {isGithubAvailable ? (
-            <a
-              href={GITHUB_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-border bg-transparent text-text hover:bg-surface-2 rounded-[10px] px-5 py-2.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-            >
-              <span>{COPY.hero.ctaSecondary}</span>
-            </a>
-          ) : (
+            <span>HUSH</span>
             <span
-              aria-disabled="true"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-border bg-transparent text-text-muted rounded-[10px] px-5 py-2.5 text-sm font-medium cursor-not-allowed select-none"
+              className="text-[#22FF6E] align-super text-[0.4em] leading-none ml-1 select-none font-sans"
+              aria-hidden="true"
             >
-              <span>{COPY.hero.ctaSecondary}</span>
+              *
             </span>
-          )}
+          </h1>
         </div>
 
-        {/* Source on GitHub link */}
-        <div className="mt-8 sm:mt-10 flex items-center justify-center">
+        {/* Bottom-right container */}
+        <div className="flex flex-col items-start md:items-end text-left md:text-right max-w-md pb-2">
+          {/* Tagline text: TAGLINE ("Builds quietly. Speaks only when it must.") or existing hero subhead */}
+          <div className="space-y-2.5 mb-6">
+            <p
+              className="text-base sm:text-lg lg:text-xl font-normal text-[#F0FFE8] tracking-tight leading-snug"
+              style={{ fontFamily: "'Space Grotesk', var(--font-sans), sans-serif" }}
+            >
+              <span>{taglinePart1} </span>
+              <span
+                className="italic text-[#22FF6E]"
+                style={{ fontFamily: "'Cormorant Garamond', var(--font-serif), Georgia, serif" }}
+              >
+                {taglinePart2}
+              </span>
+            </p>
+            <p
+              className="text-xs sm:text-sm text-[rgba(245,240,232,0.45)] leading-relaxed"
+              style={{ fontFamily: "'Space Grotesk', var(--font-sans), sans-serif" }}
+            >
+              {COPY.hero.subhead}
+            </p>
+          </div>
+
+          {/* White pill CTA button */}
           <a
-            href={GITHUB_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-mono text-xs text-text-muted hover:text-accent transition-colors underline underline-offset-4"
+            href="#simulator"
+            className="group inline-flex items-center gap-3 bg-[#F5F0E8] text-black rounded-full px-6 py-3 font-medium text-sm hover:opacity-95 transition-all shadow-lg hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22FF6E]"
+            style={{ fontFamily: "'Space Grotesk', var(--font-sans), sans-serif" }}
           >
-            Source on GitHub
+            <span>{COPY.hero.ctaPrimary}</span>
+            <span className="w-6 h-6 rounded-full bg-black text-[#F5F0E8] flex items-center justify-center transition-transform duration-200 group-hover:translate-x-0.5">
+              <ArrowRight className="w-3.5 h-3.5" strokeWidth={2} aria-hidden="true" />
+            </span>
+          </a>
+
+          {/* Small mono scroll indicator */}
+          <a
+            href="#simulator"
+            className="inline-flex items-center gap-1.5 text-[11px] font-mono tracking-widest text-[rgba(245,240,232,0.45)] hover:text-[#22FF6E] transition-colors mt-4 select-none uppercase"
+            style={{ fontFamily: "'JetBrains Mono', var(--font-mono), monospace" }}
+          >
+            <span>SCROLL</span>
+            <span className="animate-bounce" aria-hidden="true">↓</span>
           </a>
         </div>
       </div>
     </section>
   );
 };
+
+export default Hero;

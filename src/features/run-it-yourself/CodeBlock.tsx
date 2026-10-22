@@ -42,12 +42,12 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   }, [code]);
 
   return (
-    <div className="group relative rounded-[10px] border border-border bg-surface-2 overflow-hidden my-3">
+    <div className="group relative rounded-[18px] border border-white/[0.06] bg-[#0e0e0e] overflow-hidden my-3.5">
       {/* Code Header Bar */}
-      <div className="flex items-center justify-between px-3.5 py-2 border-b border-border/70 bg-surface/60 text-xs font-mono text-text-muted">
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.06] bg-white/[0.02] text-xs font-mono text-[#F5F0E8]/45">
         <div className="flex items-center gap-2 min-w-0">
-          <Terminal className="w-3.5 h-3.5 text-accent shrink-0" strokeWidth={1.5} aria-hidden="true" />
-          <span className="truncate font-medium text-text">
+          <Terminal className="w-3.5 h-3.5 text-[#22FF6E] shrink-0" strokeWidth={1.5} aria-hidden="true" />
+          <span className="truncate font-medium text-[#F0FFE8]">
             {title || language.toUpperCase()}
           </span>
         </div>
@@ -56,15 +56,15 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
           type="button"
           onClick={handleCopy}
           aria-label={copied ? 'Copied code to clipboard' : 'Copy code to clipboard'}
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs font-mono transition-all border outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] text-xs font-mono transition-all border outline-none cursor-pointer focus-visible:ring-2 focus-visible:ring-[#22FF6E] ${
             copied
-              ? 'bg-success/15 border-success/40 text-success font-medium'
-              : 'bg-surface border-border text-text-muted hover:text-text hover:bg-surface-2'
+              ? 'bg-[#22FF6E]/15 border-[#22FF6E]/40 text-[#22FF6E] font-medium'
+              : 'bg-white/[0.04] border-white/[0.06] text-[#F5F0E8]/60 hover:text-[#F5F0E8] hover:bg-white/10'
           }`}
         >
           {copied ? (
             <>
-              <Check className="w-3.5 h-3.5 text-success animate-in zoom-in-50 duration-200" strokeWidth={2} />
+              <Check className="w-3.5 h-3.5 text-[#22FF6E] animate-in zoom-in-50 duration-200" strokeWidth={2} />
               <span>Copied!</span>
             </>
           ) : (
@@ -77,14 +77,14 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
       </div>
 
       {/* Code Content */}
-      <div className="relative p-3.5 sm:p-4 overflow-x-auto text-xs sm:text-[13px] font-mono leading-relaxed text-text selection:bg-accent/20">
+      <div className="relative p-4 overflow-x-auto text-xs sm:text-[13px] font-mono leading-relaxed text-[#F5F0E8] selection:bg-[#22FF6E]/20">
         <pre className="m-0 p-0 font-mono whitespace-pre">
           <code>{code}</code>
         </pre>
       </div>
 
       {caption && (
-        <div className="px-3.5 py-1.5 border-t border-border/50 bg-surface/30 text-[11px] font-mono text-text-muted">
+        <div className="px-4 py-2 border-t border-white/[0.06] bg-white/[0.01] text-[11px] font-mono text-[#F5F0E8]/45">
           {caption}
         </div>
       )}

@@ -35,7 +35,7 @@ const getScenarioIcon = (id: ScenarioId) => {
     case 'coding':
       return <Code2 className="w-3.5 h-3.5" strokeWidth={1.5} />;
     case 'gate':
-      return <ShieldAlert className="w-3.5 h-3.5 text-warning" strokeWidth={1.5} />;
+      return <ShieldAlert className="w-3.5 h-3.5 text-[#FFBD2E]" strokeWidth={1.5} />;
     default:
       return <Sparkles className="w-3.5 h-3.5" strokeWidth={1.5} />;
   }
@@ -54,13 +54,13 @@ export const FlowController: React.FC<FlowControllerProps> = ({
     SCENARIOS.find((s) => s.id === activeScenarioId) || SCENARIOS[0];
 
   return (
-    <div className="w-full space-y-3">
+    <div className="w-full space-y-4">
       {/* Top Toolbar: Scenario Buttons & Playback Controls */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 p-3 rounded-[14px] bg-surface border border-border">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 p-4 rounded-[24px] bg-[#141414] border border-white/[0.06]">
         {/* Scenario Selectors */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
-          <span className="text-xs font-mono text-text-muted mr-1 hidden sm:inline">
-            Flow:
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
+          <span className="text-xs font-mono uppercase tracking-wider text-[#F5F0E8]/45 mr-1 hidden sm:inline">
+            Scenario:
           </span>
           {SCENARIOS.map((scenario) => {
             const isSelected = scenario.id === activeScenarioId;
@@ -71,14 +71,14 @@ export const FlowController: React.FC<FlowControllerProps> = ({
                 key={scenario.id}
                 type="button"
                 onClick={() => onSelectScenario(scenario.id)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-[8px] border transition-all whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-[12px] border transition-all whitespace-nowrap outline-none focus-visible:ring-2 focus-visible:ring-[#22FF6E] ${
                   isSelected
                     ? isGate
-                      ? 'bg-warning text-accent-contrast border-warning shadow-sm font-semibold'
-                      : 'bg-accent text-accent-contrast border-accent shadow-sm font-semibold'
+                      ? 'bg-[#FFBD2E] text-black border-[#FFBD2E] shadow-sm font-semibold'
+                      : 'bg-[#22FF6E] text-black border-[#22FF6E] shadow-[0_0_15px_rgba(34,255,110,0.25)] font-semibold'
                     : isGate
-                    ? 'bg-surface-2 text-warning border-border hover:border-warning/50'
-                    : 'bg-surface-2 text-text-muted border-border hover:text-text hover:bg-surface'
+                    ? 'bg-white/[0.04] text-[#FFBD2E] border-white/[0.08] hover:border-[#FFBD2E]/50'
+                    : 'bg-white/[0.04] text-[#F5F0E8]/70 border-white/[0.08] hover:text-[#F5F0E8] hover:bg-white/[0.08]'
                 }`}
                 aria-pressed={isSelected}
                 aria-label={`Select scenario: ${scenario.title}`}
@@ -94,7 +94,7 @@ export const FlowController: React.FC<FlowControllerProps> = ({
         <div className="flex items-center gap-2 self-end md:self-auto shrink-0">
           {prefersReducedMotion && (
             <span
-              className="text-[10px] font-mono px-2 py-0.5 rounded-[4px] bg-surface-2 border border-border text-text-muted flex items-center gap-1"
+              className="text-[10px] font-mono px-2 py-0.5 rounded-[6px] bg-white/[0.04] border border-white/[0.08] text-[#F5F0E8]/45 flex items-center gap-1"
               title="System Reduced Motion preference active."
             >
               <Info className="w-3 h-3" strokeWidth={1.5} />
@@ -105,7 +105,7 @@ export const FlowController: React.FC<FlowControllerProps> = ({
           <button
             type="button"
             onClick={onTogglePlay}
-            className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium rounded-[8px] border border-border bg-surface-2 text-text hover:bg-surface hover:text-accent transition-colors outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-medium rounded-[12px] border border-white/[0.08] bg-white/[0.04] text-[#F5F0E8] hover:bg-white/[0.08] hover:text-[#22FF6E] transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#22FF6E]"
             aria-label={isPlaying ? 'Pause animation' : 'Play animation'}
           >
             {isPlaying ? (
@@ -125,31 +125,31 @@ export const FlowController: React.FC<FlowControllerProps> = ({
             type="button"
             onClick={onToggleSpeed}
             disabled={!isPlaying}
-            className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs font-mono font-medium rounded-[8px] border border-border transition-colors outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-medium rounded-[12px] border transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#22FF6E] ${
               playbackSpeed === 2
-                ? 'bg-accent/15 border-accent text-accent'
-                : 'bg-surface-2 text-text hover:bg-surface'
-            } ${!isPlaying ? 'opacity-50 cursor-not-allowed' : ''}`}
+                ? 'bg-[#22FF6E]/15 border-[#22FF6E] text-[#22FF6E]'
+                : 'bg-white/[0.04] border-white/[0.08] text-[#F5F0E8] hover:bg-white/[0.08]'
+            } ${!isPlaying ? 'opacity-40 cursor-not-allowed' : ''}`}
             aria-label={`Playback pace: ${playbackSpeed === 2 ? 'Fast' : 'Standard'}. Click to toggle.`}
           >
             <FastForward className="w-3.5 h-3.5" strokeWidth={1.5} />
-            <span>{playbackSpeed === 2 ? 'Fast' : 'Normal'}</span>
+            <span>{playbackSpeed === 2 ? '2x Fast' : '1x Speed'}</span>
           </button>
         </div>
       </div>
 
       {/* Scenario Briefing & Safety Alerts */}
-      <div className="rounded-[14px] bg-surface border border-border p-4">
+      <div className="rounded-[24px] bg-[#141414] border border-white/[0.06] p-5 sm:p-6 space-y-4">
         <div className="flex items-start justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono uppercase tracking-wider text-accent font-medium">
+              <span className="text-xs font-mono uppercase tracking-wider text-[#22FF6E] font-medium">
                 Active Scenario
               </span>
-              <span className="text-xs text-text-muted font-normal">•</span>
-              <span className="text-sm font-semibold text-text">{currentScenario.title}</span>
+              <span className="text-xs text-[#F5F0E8]/45 font-normal">•</span>
+              <span className="text-sm sm:text-base font-semibold text-[#F0FFE8]">{currentScenario.title}</span>
             </div>
-            <p className="text-xs text-text-muted mt-1 leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#F5F0E8]/45 mt-1.5 leading-relaxed">
               {currentScenario.summary}
             </p>
           </div>
@@ -157,11 +157,11 @@ export const FlowController: React.FC<FlowControllerProps> = ({
 
         {/* Safety Note banner if gate triggered */}
         {currentScenario.safetyNote && (
-          <div className="mt-3 p-3 rounded-[10px] bg-warning/10 border border-warning/40 text-text text-xs flex items-start gap-2.5">
-            <AlertTriangle className="w-4 h-4 text-warning shrink-0 mt-0.5" strokeWidth={1.5} />
+          <div className="p-3.5 rounded-[16px] bg-[#FFBD2E]/10 border border-[#FFBD2E]/30 text-[#F5F0E8] text-xs flex items-start gap-3">
+            <AlertTriangle className="w-4 h-4 text-[#FFBD2E] shrink-0 mt-0.5" strokeWidth={1.5} />
             <div>
-              <span className="font-semibold text-warning">Policy Safety Intercept: </span>
-              <span className="text-text leading-relaxed">
+              <span className="font-semibold text-[#FFBD2E]">Policy Safety Intercept: </span>
+              <span className="text-[#F5F0E8]/80 leading-relaxed">
                 {currentScenario.safetyNote}
               </span>
             </div>
@@ -169,22 +169,22 @@ export const FlowController: React.FC<FlowControllerProps> = ({
         )}
 
         {/* Narrative Steps Progress */}
-        <div className="mt-4 pt-3 border-t border-border">
-          <div className="text-[11px] font-mono uppercase tracking-wider text-text-muted mb-2">
+        <div className="pt-4 border-t border-white/[0.06]">
+          <div className="text-[11px] font-mono uppercase tracking-[0.15em] text-[#F5F0E8]/45 mb-3">
             Execution Sequence
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5">
             {currentScenario.narrativeSteps.map((step) => (
               <div
                 key={step.step}
-                className="p-2.5 rounded-[10px] bg-surface-2/60 border border-border text-xs flex items-start gap-2"
+                className="p-3 rounded-[16px] bg-white/[0.02] border border-white/[0.06] text-xs flex items-start gap-2.5 hover:border-white/[0.12] transition-colors"
               >
-                <span className="w-4 h-4 rounded-full bg-accent/15 text-accent border border-accent/30 text-[10px] font-mono font-medium flex items-center justify-center shrink-0">
+                <span className="w-4 h-4 rounded-full bg-[#22FF6E]/15 text-[#22FF6E] border border-[#22FF6E]/30 text-[10px] font-mono font-medium flex items-center justify-center shrink-0">
                   {step.step}
                 </span>
                 <div className="min-w-0">
-                  <span className="font-semibold text-text block truncate">{step.agent}</span>
-                  <span className="text-text-muted text-[11px] leading-snug line-clamp-2">
+                  <span className="font-semibold text-[#F0FFE8] block truncate">{step.agent}</span>
+                  <span className="text-[#F5F0E8]/45 text-[11px] leading-snug line-clamp-2 mt-0.5">
                     {step.action}
                   </span>
                 </div>

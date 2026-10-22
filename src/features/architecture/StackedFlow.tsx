@@ -27,10 +27,10 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
     activeScenario.activeNodeIds.includes(id);
 
   return (
-    <div className="w-full max-w-xl mx-auto flex flex-col items-center gap-3 py-3 px-2">
+    <div className="w-full max-w-xl mx-auto flex flex-col items-center gap-3 py-4 px-2">
       {/* 1. Origin: Operator */}
       <div className="w-full">
-        <div className="text-[11px] font-mono tracking-wide text-text-muted mb-1 px-1">
+        <div className="text-[11px] font-mono tracking-wider uppercase text-[#F5F0E8]/45 mb-1 px-1">
           Stage 1: Intent Origin
         </div>
         <NodeCard
@@ -50,7 +50,7 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
             y1="0"
             x2="12"
             y2="28"
-            stroke="var(--border)"
+            stroke="rgba(255,255,255,0.08)"
             strokeWidth="1"
             strokeDasharray="3 3"
           />
@@ -60,7 +60,7 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
               y1="0"
               x2="12"
               y2="28"
-              stroke="var(--accent)"
+              stroke="#22FF6E"
               strokeWidth="1.5"
               strokeDasharray="5 5"
               animate={
@@ -76,7 +76,7 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
             />
           )}
           {isNodeActive('user') && isNodeActive('gemma') && !effectiveReducedMotion && isPlaying && (
-            <circle r="3" fill="var(--accent)" stroke="var(--accent)" strokeWidth="1">
+            <circle r="3" fill="#22FF6E" stroke="#22FF6E" strokeWidth="1">
               <animateMotion
                 path="M 12 0 L 12 28"
                 dur={`${1.8 / playbackSpeed}s`}
@@ -89,9 +89,9 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
 
       {/* 2. Central Orchestrator: Google Gemma 4 */}
       <div className="w-full">
-        <div className="text-[11px] font-mono tracking-wide text-accent font-medium mb-1 px-1 flex items-center justify-between">
+        <div className="text-[11px] font-mono tracking-wider uppercase text-[#22FF6E] font-medium mb-1 px-1 flex items-center justify-between">
           <span>Stage 2: Central Orchestrator</span>
-          <span className="text-[10px] text-text-muted font-normal">Task Coordination</span>
+          <span className="text-[10px] text-[#F5F0E8]/45 font-normal">Task Coordination</span>
         </div>
         <NodeCard
           node={ARCHITECTURE_NODES.gemma}
@@ -110,7 +110,7 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
             y1="0"
             x2="12"
             y2="28"
-            stroke="var(--border)"
+            stroke="rgba(255,255,255,0.08)"
             strokeWidth="1"
             strokeDasharray="3 3"
           />
@@ -120,7 +120,7 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
               y1="0"
               x2="12"
               y2="28"
-              stroke="var(--accent)"
+              stroke="#22FF6E"
               strokeWidth="1.5"
               strokeDasharray="5 5"
               animate={
@@ -136,7 +136,7 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
             />
           )}
           {isNodeActive('gemma') && !effectiveReducedMotion && isPlaying && (
-            <circle r="3" fill="var(--accent)" stroke="var(--accent)" strokeWidth="1">
+            <circle r="3" fill="#22FF6E" stroke="#22FF6E" strokeWidth="1">
               <animateMotion
                 path="M 12 0 L 12 28"
                 dur={`${1.8 / playbackSpeed}s`}
@@ -148,12 +148,12 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
       </div>
 
       {/* 3. Subagents Group */}
-      <div className="w-full p-3 rounded-[14px] border border-border bg-surface-2/30">
-        <div className="text-[11px] font-mono tracking-wide text-text-muted mb-2 px-1 flex items-center gap-1.5">
-          <Cpu className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} />
-          <span>Stage 3: Subagent Execution</span>
+      <div className="w-full p-4 rounded-[24px] border border-white/[0.06] bg-[#141414]">
+        <div className="text-[11px] font-mono tracking-wider uppercase text-[#F5F0E8]/45 mb-3 px-1 flex items-center gap-1.5">
+          <Cpu className="w-3.5 h-3.5 text-[#22FF6E]" strokeWidth={1.5} />
+          <span>Stage 3: Subagent Execution Mesh</span>
         </div>
-        <div className="grid grid-cols-1 gap-2">
+        <div className="grid grid-cols-1 gap-2.5">
           <NodeCard
             node={ARCHITECTURE_NODES.claude}
             isSelected={selectedNodeId === 'claude'}
@@ -186,7 +186,7 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
             y1="0"
             x2="12"
             y2="28"
-            stroke="var(--border)"
+            stroke="rgba(255,255,255,0.08)"
             strokeWidth="1"
             strokeDasharray="3 3"
           />
@@ -196,7 +196,7 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
               y1="0"
               x2="12"
               y2="28"
-              stroke="var(--accent)"
+              stroke="#22FF6E"
               strokeWidth="1.5"
               strokeDasharray="5 5"
               animate={
@@ -212,7 +212,7 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
             />
           )}
           {isNodeActive('graphify') && !effectiveReducedMotion && isPlaying && (
-            <circle r="3" fill="var(--accent)" stroke="var(--accent)" strokeWidth="1">
+            <circle r="3" fill="#22FF6E" stroke="#22FF6E" strokeWidth="1">
               <animateMotion
                 path="M 12 0 L 12 28"
                 dur={`${1.8 / playbackSpeed}s`}
@@ -225,12 +225,12 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
 
       {/* 4. Code Graph Memory: Graphify */}
       <div className="w-full">
-        <div className="text-[11px] font-mono tracking-wide text-accent font-medium mb-1 px-1 flex items-center justify-between">
+        <div className="text-[11px] font-mono tracking-wider uppercase text-[#22FF6E] font-medium mb-1 px-1 flex items-center justify-between">
           <span className="flex items-center gap-1.5">
-            <Network className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} />
+            <Network className="w-3.5 h-3.5 text-[#22FF6E]" strokeWidth={1.5} />
             <span>Stage 4: Code Graph Memory</span>
           </span>
-          <span className="text-[10px] text-text-muted font-normal">Local Analysis</span>
+          <span className="text-[10px] text-[#F5F0E8]/45 font-normal">Local Analysis</span>
         </div>
         <NodeCard
           node={ARCHITECTURE_NODES.graphify}
@@ -249,7 +249,7 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
             y1="0"
             x2="12"
             y2="28"
-            stroke="var(--border)"
+            stroke="rgba(255,255,255,0.08)"
             strokeWidth="1"
             strokeDasharray="3 3"
           />
@@ -259,7 +259,7 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
               y1="0"
               x2="12"
               y2="28"
-              stroke="var(--warning)"
+              stroke="#FFBD2E"
               strokeWidth="1.5"
               strokeDasharray="5 5"
               animate={
@@ -275,7 +275,7 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
             />
           )}
           {isNodeActive('gate') && !effectiveReducedMotion && isPlaying && (
-            <circle r="3" fill="var(--warning)" stroke="var(--warning)" strokeWidth="1">
+            <circle r="3" fill="#FFBD2E" stroke="#FFBD2E" strokeWidth="1">
               <animateMotion
                 path="M 12 0 L 12 28"
                 dur={`${1.8 / playbackSpeed}s`}
@@ -288,12 +288,12 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
 
       {/* 5. Safety Intercept: Attention Gate */}
       <div className="w-full">
-        <div className="text-[11px] font-mono tracking-wide text-warning font-medium mb-1 px-1 flex items-center justify-between">
+        <div className="text-[11px] font-mono tracking-wider uppercase text-[#FFBD2E] font-medium mb-1 px-1 flex items-center justify-between">
           <span className="flex items-center gap-1">
             <ShieldAlert className="w-3.5 h-3.5" strokeWidth={1.5} />
             <span>Stage 5: Attention Gate Checkpoint</span>
           </span>
-          <span className="text-[10px] text-text-muted font-normal">Policy Guard</span>
+          <span className="text-[10px] text-[#F5F0E8]/45 font-normal">Policy Guard</span>
         </div>
         <NodeCard
           node={ARCHITECTURE_NODES.gate}

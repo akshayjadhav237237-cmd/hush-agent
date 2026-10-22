@@ -32,55 +32,39 @@ export const SafetyCard: React.FC<SafetyCardProps> = ({ item, index }) => {
     <article
       tabIndex={0}
       aria-labelledby={`safety-title-${item.id}`}
-      className="w-full group bg-surface border border-border rounded-[14px] p-5 sm:p-6 flex flex-col justify-between transition-colors duration-150 hover:border-accent/40 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+      className="w-full group bg-[#141414] border border-white/[0.06] rounded-[24px] p-6 sm:p-7 flex flex-col justify-between transition-colors duration-150 hover:border-[#22FF6E]/30 focus-visible:outline-2 focus-visible:outline-[#22FF6E] focus-visible:outline-offset-2"
     >
       <div>
         {/* Top line: Index and Status Badges */}
-        <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-          <span className="font-mono text-xs font-semibold text-text-muted bg-surface-2 px-2.5 py-1 rounded-md border border-border">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <span className="font-mono text-xs font-semibold text-[#22FF6E] bg-white/[0.04] px-2.5 py-1 rounded-[8px] border border-white/[0.06]">
             SEC-{itemNumber}
           </span>
 
           <div className="flex flex-wrap items-center gap-1.5">
             {/* Status Badge */}
-            {item.statusLabel ? (
+            {item.implemented ? (
               <span
-                className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium border border-border ${
-                  item.implemented
-                    ? 'bg-surface-2 text-success'
-                    : 'bg-surface-2 text-text-muted'
-                }`}
-                aria-label={`Status: ${item.statusLabel}`}
+                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium border border-[#22FF6E]/30 bg-[#22FF6E]/10 text-[#22FF6E]"
+                aria-label={`Status: ${item.statusLabel || 'Implemented'}`}
               >
-                {item.implemented ? (
-                  <CheckCircle2 className="w-3.5 h-3.5 text-success shrink-0" strokeWidth={1.5} aria-hidden="true" />
-                ) : (
-                  <Clock className="w-3.5 h-3.5 text-text-muted shrink-0" strokeWidth={1.5} aria-hidden="true" />
-                )}
-                <span>{item.statusLabel}</span>
-              </span>
-            ) : item.implemented ? (
-              <span
-                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-surface-2 text-success border border-border"
-                aria-label="Status: Implemented"
-              >
-                <CheckCircle2 className="w-3.5 h-3.5 text-success shrink-0" strokeWidth={1.5} aria-hidden="true" />
-                <span>Implemented</span>
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#22FF6E] shrink-0" strokeWidth={1.5} aria-hidden="true" />
+                <span>{item.statusLabel || 'Implemented'}</span>
               </span>
             ) : (
               <span
-                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-surface-2 text-text-muted border border-border"
-                aria-label="Status: Planned"
+                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium border border-[#E3B15C]/30 bg-[#E3B15C]/10 text-[#E3B15C]"
+                aria-label={`Status: ${item.statusLabel || 'Planned'}`}
               >
-                <Clock className="w-3.5 h-3.5 text-text-muted shrink-0" strokeWidth={1.5} aria-hidden="true" />
-                <span>Planned</span>
+                <Clock className="w-3.5 h-3.5 text-[#E3B15C] shrink-0" strokeWidth={1.5} aria-hidden="true" />
+                <span>{item.statusLabel || 'Planned'}</span>
               </span>
             )}
 
             {/* Subtle secondary tag when not yet verified on a real desktop */}
             {item.desktopVerified === false && (
               <span
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-mono font-normal bg-surface-2 text-text-muted/80 border border-border"
+                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-mono font-normal border border-white/10 bg-white/5 text-[#F5F0E8]/45"
                 title="Not yet verified on a real desktop"
               >
                 <span>Not yet verified on a real desktop</span>
@@ -92,28 +76,28 @@ export const SafetyCard: React.FC<SafetyCardProps> = ({ item, index }) => {
         {/* Title */}
         <h3
           id={`safety-title-${item.id}`}
-          className="text-base sm:text-lg font-semibold text-text tracking-tight group-hover:text-accent transition-colors"
+          className="text-base sm:text-lg font-sans font-bold text-[#F0FFE8] tracking-tight group-hover:text-[#22FF6E] transition-colors"
         >
           {item.title}
         </h3>
 
         {/* Description */}
-        <p className="mt-2 text-sm text-text-muted leading-relaxed">
+        <p className="mt-2.5 text-sm text-[#F5F0E8]/60 leading-relaxed font-sans">
           {item.description}
         </p>
       </div>
 
       {/* Footer metadata: Layer & Scope */}
-      <div className="mt-5 pt-3 border-t border-border/70 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-text-muted">
-        <span className="inline-flex items-center gap-1 text-text-muted">
+      <div className="mt-6 pt-3.5 border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-[#F5F0E8]/45">
+        <span className="inline-flex items-center gap-1.5 text-[#F5F0E8]/60">
           {item.implemented ? (
-            <ShieldCheck className="w-3.5 h-3.5 text-accent shrink-0" strokeWidth={1.5} aria-hidden="true" />
+            <ShieldCheck className="w-3.5 h-3.5 text-[#22FF6E] shrink-0" strokeWidth={1.5} aria-hidden="true" />
           ) : (
-            <Wrench className="w-3.5 h-3.5 text-text-muted shrink-0" strokeWidth={1.5} aria-hidden="true" />
+            <Wrench className="w-3.5 h-3.5 text-[#E3B15C] shrink-0" strokeWidth={1.5} aria-hidden="true" />
           )}
           <span>{metadata.layer}</span>
         </span>
-        <span className="text-text-muted/80">
+        <span className="text-[#F5F0E8]/40">
           {metadata.scope}
         </span>
       </div>
