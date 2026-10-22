@@ -19,7 +19,7 @@ export interface ArchitectureNodeData {
   categoryLabel: string;
   privacyTier: PrivacyTier;
   privacyLabel: string;
-  executionDomain: 'Local On-Device' | 'Human Checkpoint' | 'External API' | 'Sandboxed Container';
+  executionDomain: 'Cloud API' | 'Human Checkpoint' | 'External API' | 'Sandboxed Container';
   description: string;
   detailedFunction: string;
   capabilities: string[];

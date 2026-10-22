@@ -19,6 +19,7 @@ export type Gate = {
   detects: string;
   action: string;
   icon: string;
+  enforcement: "code" | "model";
 };
 
 export type SafetyItem = {

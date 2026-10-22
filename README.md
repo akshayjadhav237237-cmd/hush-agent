@@ -2,7 +2,7 @@
 
 > Builds quietly. Speaks only when it must.
 
-Hush is a Windows desktop automation orchestrator. Google Gemma 4 operates as the central control plane, driving Claude (architecture), Gemini Deep Research (web research), and Antigravity (coding engine) in an autonomous loop.
+Hush is a Windows desktop automation orchestrator. Google Gemma 4 operates as the central control plane, driving Claude (architecture), Gemini Deep Research (web research), and Antigravity (coding engine) in an autonomous loop. The desktop agent runner code is located in [`agent/`](agent/README.md).
 
 ## Core Thesis
 
@@ -10,16 +10,16 @@ Traditional autonomous agents generate continuous notification fatigue. Constant
 
 Hush inverts this model. All safe tasks execute silently. The system interrupts the human operator only when progress is impossible without them:
 
-- **Auth, CAPTCHA, or MFA**: Login prompts, CAPTCHA challenges, two-factor authentication requests, or biometric verification barriers.
-- **Missing Credentials or Billing**: Missing API keys, expired service tokens, missing cloud environment secrets, or paid plan quota limits.
-- **Ambiguous Requirements**: Underspecified architectural choices, conflicting UX paths, branching business rules, or explicit `NEEDS_HUMAN` flags.
-- **Destructive or Non-Allowlisted Commands**: Unrecognized terminal commands, recursive deletions (`rm -rf`), privilege escalation (`sudo`), or out-of-sandbox modifications.
-- **Repeated Failures**: Looping compiler errors, persistent test failures (>3 attempts), or recursive prompt-refinement stalls that trip the circuit breaker.
-- **Domain or Scope Drift**: Hallucinated dependencies, feature creep outside the initial specification, or unrequested architectural redesigns.
+- **Auth, CAPTCHA, or MFA**: Login prompts, CAPTCHA challenges, two-factor authentication requests, or biometric verification barriers (model-judged).
+- **Missing Credentials or Billing**: Missing API keys, expired service tokens, missing cloud environment secrets, or paid plan quota limits (model-judged).
+- **Ambiguous Requirements**: Underspecified architectural choices, conflicting UX paths, branching business rules, or explicit `NEEDS_HUMAN` flags (model-judged).
+- **Destructive or Non-Allowlisted Commands**: Unrecognized terminal commands, recursive deletions (`rm -rf`), privilege escalation (`sudo`), or out-of-sandbox modifications (enforced in code).
+- **Repeated Failures**: Looping compiler errors, persistent test failures (>3 attempts), or recursive prompt-refinement stalls that trip the circuit breaker (model-judged).
+- **Domain or Scope Drift**: Hallucinated dependencies, feature creep outside the initial specification, or unrequested architectural redesigns (model-judged).
 
 ## How It Works
 
-Hush organizes specialized agents into an execution loop governed by Google Gemma 4 as the on-device orchestrator using function calling and screenshot vision.
+Hush organizes specialized agents into an execution loop governed by Google Gemma 4 as the orchestrator using function calling and screenshot vision via the Gemini API.
 
 ```
        +---------------------------------------------+
@@ -57,13 +57,13 @@ Hush organizes specialized agents into an execution loop governed by Google Gemm
 To enable clear and reproducible evaluation, the codebase separates real engine components from recorded walkthrough data:
 
 - **Real**:
-  - Complete TypeScript architecture.
-  - Interactive UI state machine.
-  - Command allowlist AST enforcement.
+  - Complete TypeScript showcase architecture and UI state machine.
+  - Command allowlist parsing and policy boundary model.
   - Timeline playback engine.
-  - Deterministic attention gate resolution flow.
+  - Policy attention gate resolution flow and enforcement tags (code vs model).
+  - Desktop automation runner setup in [`agent/`](agent/README.md).
 - **Simulated in Demo**:
-  - The 7-step wedding photographer scenario uses a recorded execution trace. This provides reproducible judge evaluation without requiring external API keys or minutes of deep research latency.
+  - The 7-step wedding photographer scenario uses a recorded execution trace. This provides reproducible judge evaluation without requiring external live API credentials or waiting for minutes of deep research latency.
 
 ## Security and Guardrails
 
@@ -71,7 +71,7 @@ Safety controls match the definitions in `src/data/safety.ts`.
 
 ### Implemented
 
-- **Command Allowlist**: Strict whitelist restricting terminal execution to benign toolchains (`git`, `npm`, `vite`, `npx`, `node`) while blocking destructive binaries and recursive deletions.
+- **Command Allowlist**: Strict whitelist restricting terminal execution to benign toolchains (`git`, `npm`, `vite`, `python`, `node`) while blocking destructive binaries and recursive deletions.
 - **Workspace-Only Filesystem Containment**: Filesystem sandboxing enforcing all read/write and process execution to stay strictly within the designated project root directory.
 - **Step Cap**: Hard iteration limit per autonomous task run (max 25 agent steps) preventing infinite loops and runaway compute consumption.
 - **Mouse-Corner Abort**: Failsafe hardware interrupt that halts browser and OS automation immediately if the pointer is moved into any screen corner.
@@ -90,7 +90,7 @@ Google Gemma 4 serves as the primary control plane across three core roles:
 - **Native Function Calling**: Orchestrates workflow dispatch, tool routing, and agent delegation.
 - **Multimodal Screenshot Vision**: Inspects rendered web components to verify layout alignment, responsive fidelity, and visual contrast directly from screenshots.
 - **Attention-Gate Classification**: Classifies pipeline state to evaluate risk, ambiguity, and policy compliance before human escalation.
-- **Model Deployment**: Targets `gemma-4-26b-a4b-it` via the Gemini API. The system is also compatible with local on-device execution via Ollama or LiteRT.
+- **Model Deployment**: In the current build, Gemma 4 is called through the Gemini API (`gemma-4-26b-a4b-it`). Running the same loop on a local runtime such as Ollama is a possible next step and has not been verified.
 
 ## Known Limitations
 
@@ -101,17 +101,23 @@ Google Gemma 4 serves as the primary control plane across three core roles:
 
 ## Run Instructions
 
+### Showcase Website
+
 ```bash
 npm install
 npm run dev
 npm run build
 ```
 
-Verify static type checking:
+Typecheck:
 
 ```bash
-npx tsc --noEmit
+tsc --noEmit
 ```
+
+### Desktop Agent
+
+See [`agent/README.md`](agent/README.md) for environment configuration and usage instructions.
 
 ## License
 

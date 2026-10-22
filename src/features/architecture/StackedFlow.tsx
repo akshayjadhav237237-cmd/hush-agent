@@ -230,7 +230,7 @@ export const StackedFlow: React.FC<StackedFlowProps> = ({
             <ShieldAlert className="w-3.5 h-3.5" strokeWidth={1.5} />
             Stage 4: Attention Gate Checkpoint
           </span>
-          <span className="text-[10px] text-text-muted font-normal">Deterministic Guard</span>
+          <span className="text-[10px] text-text-muted font-normal">Policy Guard</span>
         </div>
         <NodeCard
           node={ARCHITECTURE_NODES.gate}

@@ -32,25 +32,25 @@ export const ARCHITECTURE_NODES: Record<string, ArchitectureNodeData> = {
   gemma: {
     id: 'gemma',
     name: 'Google Gemma 4',
-    shortRole: 'Local Orchestrator & Vision Guard',
+    shortRole: 'Cloud Orchestrator & Vision Inspection',
     modelId: 'Google Gemma 4',
     category: 'orchestrator',
     categoryLabel: 'Orchestrator',
-    privacyTier: 'local-only',
-    privacyLabel: 'Local On-Device',
-    executionDomain: 'Local On-Device',
+    privacyTier: 'cloud-vetted',
+    privacyLabel: 'Gemini API',
+    executionDomain: 'Cloud API',
     description:
-      'Central on-device orchestrator using multimodal screen vision to coordinate subagents and guard privacy.',
+      'Central orchestrator using multimodal screen vision and function calling via the Gemini API.',
     detailedFunction:
-      'Runs locally on the workstation. Inspects active window pixels via multimodal vision to verify IDE state, plans hierarchical execution graphs, sanitizes outbound tokens, dispatches subtasks to Claude, Gemini Deep Research, and Antigravity, and intercepts hazardous commands at the Attention Gate.',
+      'In the current build, Gemma 4 is called through the Gemini API. Running the same loop on a local runtime such as Ollama is a possible next step and has not been verified. Inspects rendered visual state via multimodal vision, plans task workflows, and intercepts hazardous commands at the Attention Gate.',
     capabilities: [
       'Screen vision and workspace state inspection',
-      'Local function calling and task routing',
-      'On-device secret and token redaction',
+      'Function calling and task routing via Gemini API',
+      'Structured task parameter validation',
       'Hazard classification for privileged actions'
     ],
     securityProtocol:
-      'Runs on-device. Does not stream desktop frames or credentials to external services.',
+      'In the current build, Gemma 4 is called through the Gemini API. Running the same loop on a local runtime such as Ollama is a possible next step and has not been verified.',
     coordinates: { x: 500, y: 310 },
     samplePayload: {
       input: 'Workspace state (editor, terminal output) + operator goal',
@@ -61,15 +61,15 @@ export const ARCHITECTURE_NODES: Record<string, ArchitectureNodeData> = {
   gate: {
     id: 'gate',
     name: 'Attention Gate',
-    shortRole: 'Deterministic Checkpoint & Kill Switch',
+    shortRole: 'Policy Checkpoint & Kill Switch',
     modelId: 'Attention Gate',
     category: 'safety',
     categoryLabel: 'Safety Gate',
     privacyTier: 'human-gated',
-    privacyLabel: 'Deterministic Intercept',
+    privacyLabel: 'Policy Intercept',
     executionDomain: 'Human Checkpoint',
     description:
-      'Deterministic security checkpoint that halts autonomous execution before sensitive system operations.',
+      'Security policy checkpoint that halts autonomous execution before sensitive system operations.',
     detailedFunction:
       'Interposes between agent proposals and workstation execution. Triggers when actions touch credentials, elevated permissions, filesystem modifications, or remote pushes. Requires explicit operator confirmation or triggers the instant kill switch.',
     capabilities: [
@@ -79,7 +79,7 @@ export const ARCHITECTURE_NODES: Record<string, ArchitectureNodeData> = {
       'Immediate agent execution kill switch'
     ],
     securityProtocol:
-      'Fail-closed deterministic guard. Execution halts indefinitely until reviewed by the operator.',
+      'Fail-closed policy guard. Execution halts indefinitely until reviewed by the operator.',
     coordinates: { x: 170, y: 470 },
     samplePayload: {
       input: 'Privileged action proposed: workspace directory modification',
@@ -189,7 +189,7 @@ export const CONNECTIONS: ConnectionFlow[] = [
     from: 'gemma',
     to: 'gate',
     label: 'Privileged Action Routing',
-    description: 'Deterministic routing of hazardous actions to the Attention Gate.',
+    description: 'Policy routing of hazardous actions to the Attention Gate.',
     pathD: 'M 400 330 C 340 330, 340 470, 270 470',
     packetCount: 2,
     bidirectional: true

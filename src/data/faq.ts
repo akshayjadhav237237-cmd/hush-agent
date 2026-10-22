@@ -3,15 +3,15 @@ import type { FaqItem } from "@/data/types";
 export const FAQ_ITEMS: FaqItem[] = [
   {
     q: "Why Gemma and not just Claude?",
-    a: "Claude excels at complex code generation and nuanced reasoning, but relying exclusively on proprietary frontier models for high-frequency orchestration, visual screenshot inspection, and security gate classification is cost-prohibitive and locks developers into a closed ecosystem. Gemma provides open-weights flexibility, responsive execution, native function calling, and multimodal vision in a transparent, inspectable footprint. Combining Gemma as the fast local/open orchestrator and gatekeeper with Claude as the downstream code synthesizer achieves the optimal balance of speed, auditability, cost, and code quality."
+    a: "Claude excels at complex code generation and nuanced reasoning, but relying exclusively on proprietary frontier models for high-frequency orchestration, visual screenshot inspection, and security gate classification is cost-prohibitive and locks developers into a closed ecosystem. Gemma provides open-weights flexibility, responsive execution, native function calling, and multimodal vision in a transparent, inspectable footprint. Combining Gemma as the fast orchestrator and gatekeeper with Claude as the downstream code synthesizer achieves the optimal balance of speed, auditability, cost, and code quality."
   },
   {
     q: "What runs locally vs in the cloud?",
-    a: "Local execution encompasses the orchestration runtime, command allowlist sandbox, step-cap counters, workspace filesystem operations, and headless browser screenshot capture. Cloud APIs power Gemini Deep Research queries and Claude code synthesis endpoints. Gemma inference can be served either locally (via Ollama, vLLM, or llama.cpp) or through the Gemini API endpoints depending on developer hardware and deployment preferences."
+    a: "In the current build, Gemma 4 is called through the Gemini API. Running the same loop on a local runtime such as Ollama is a possible next step and has not been verified. Claude and Gemini Deep Research run in the browser, Antigravity runs on the desktop, and screenshots are sent to the Gemma API."
   },
   {
     q: "What is simulated vs real in this project?",
-    a: "Real: The complete TypeScript architecture, interactive UI state machine, command allowlist enforcement engine, step playback mechanism, and attention gate resolution flow are fully implemented and running live in the application. Simulated in this demo walkthrough: The specific 7-step wedding photographer scenario utilizes a pre-recorded real-world execution trace so judges can deterministically inspect every terminal output, gate event, and decision branch without requiring external live API credentials, billing setup, or waiting for minutes of deep research processing."
+    a: "Real: The complete TypeScript architecture, interactive UI state machine, command allowlist enforcement engine, step playback mechanism, and attention gate resolution flow are fully implemented and running live in the application. Simulated in this demo walkthrough: The specific 7-step wedding photographer scenario utilizes a pre-recorded real-world execution trace so judges can inspect every terminal output, gate event, and decision branch without requiring external live API credentials, billing setup, or waiting for minutes of deep research processing."
   },
   {
     q: "What are the known limitations (including UI click/coordinate accuracy)?",
@@ -23,11 +23,11 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "How does safety and system command containment work?",
-    a: "Shell execution is governed by a strict command allowlist and workspace containment sandbox. Commands are validated against permitted binaries (such as npm, npx, git, node, vite). Unrecognized or dangerous patterns—including recursive deletion (rm -rf), pipe-to-shell interpreters (curl | sh), out-of-workspace file paths (../), and privilege escalation (sudo)—are blocked before execution. Additionally, a mouse-corner abort mechanism provides an immediate physical kill switch for any automated screen control."
+    a: "Shell execution is governed by a strict command allowlist and workspace containment sandbox. Commands are validated against permitted binaries (such as npm, git, node, vite). Unrecognized or dangerous patterns—including recursive deletion (rm -rf), pipe-to-shell interpreters (curl | sh), out-of-workspace file paths (../), and privilege escalation (sudo)—are blocked before execution. Additionally, a mouse-corner abort mechanism provides an immediate physical kill switch for any automated screen control."
   },
   {
     q: "How can judges reproduce this build?",
-    a: "Clone the repository from GitHub, ensure Node.js 18+ is installed, run `npm install` to install dependencies, and execute `npm run dev` to launch the local Vite development server. The interactive walkthrough, gate simulator, and architecture views will be immediately accessible in your browser at `http://localhost:5173`. To verify static type safety, execute `npx tsc --noEmit`."
+    a: "Clone the repository from GitHub, ensure Node.js 18+ is installed, run `npm install` to install dependencies, and execute `npm run dev` to launch the local Vite development server. The interactive walkthrough, gate simulator, and architecture views will be immediately accessible in your browser at `http://localhost:5173`. To verify static type safety, execute `npm run build` or `tsc --noEmit`."
   },
   {
     q: "What are the open-source licensing and commercial use terms?",

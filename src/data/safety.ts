@@ -4,7 +4,7 @@ export const SAFETY_ITEMS: SafetyItem[] = [
   {
     id: "safety-command-allowlist",
     title: "Command Allowlist",
-    description: "Strict whitelist restricting terminal execution to benign toolchains (git, npm, vite, npx, node) while blocking destructive binaries and recursive deletions.",
+    description: "Strict whitelist restricting terminal execution to benign toolchains (git, npm, vite, python, node) while blocking destructive binaries and recursive deletions.",
     implemented: true
   },
   {

@@ -4,3 +4,4 @@ export const REPO_NAME = "hush-agent";
 export const GITHUB_URL = "https://github.com/akshayjadhav237237-cmd/hush-agent";
 export const VIDEO_SRC = "TODO";
 export const DEVPOST_URL = "TODO";
+export const HACKATHON_NAME = "TODO";

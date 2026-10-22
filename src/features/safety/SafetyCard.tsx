@@ -12,7 +12,7 @@ const ENFORCEMENT_METADATA: Record<string, { layer: string; scope: string }> = {
   'safety-workspace-only': { layer: 'Path Boundary Validator', scope: 'File Operations' },
   'safety-step-cap': { layer: 'Iteration Counter', scope: 'Runtime Loop Engine' },
   'safety-mouse-corner-abort': { layer: 'OS Pointer Hook', scope: 'Hardware Interruption' },
-  'safety-human-notify-gate': { layer: 'Deterministic Barrier', scope: 'Handoff Protocol' },
+  'safety-human-notify-gate': { layer: 'Policy Gate Barrier', scope: 'Handoff Protocol' },
   'safety-jsonl-audit-log': { layer: 'Append-Only Ledger', scope: 'Forensic Audit' },
   'safety-global-kill-hotkey': { layer: 'System Daemon', scope: 'OS Subprocess Tree' },
   'safety-screenshot-hash-loop-breaker': { layer: 'Perceptual Hash', scope: 'UI Vision Guard' },

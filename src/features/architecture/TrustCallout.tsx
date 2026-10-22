@@ -33,26 +33,25 @@ export const TrustCallout: React.FC = () => {
             </div>
             <div>
               <h4 className="text-sm font-semibold text-text">
-                Google Gemma 4: Local Orchestrator
+                Google Gemma 4: Cloud Orchestrator
               </h4>
               <p className="text-xs text-text-muted font-mono">
-                On-Device Screen Vision &amp; Privacy Sentry
+                Gemini API Function Calling &amp; Vision
               </p>
             </div>
           </div>
 
           <p className="text-xs text-text-muted leading-relaxed">
-            Running locally on the workstation, Google Gemma 4 acts as the central coordinator. It inspects local
-            screen state using multimodal vision to verify editor output without streaming desktop frames or credentials to external services.
+            In the current build, Gemma 4 is called through the Gemini API. Running the same loop on a local runtime such as Ollama is a possible next step and has not been verified. Screenshots are transmitted to the Gemma API for layout inspection.
           </p>
 
           <div className="space-y-2.5 pt-3 border-t border-border">
             <div className="flex items-start gap-2.5 text-xs">
               <Eye className="w-4 h-4 text-accent shrink-0 mt-0.5" strokeWidth={1.5} />
               <div>
-                <span className="font-medium text-text">Zero-leakage screen vision: </span>
+                <span className="font-medium text-text">Screen vision inspection: </span>
                 <span className="text-text-muted">
-                  Visual frame analysis executes locally. Proprietary source code and credentials never leave workstation memory.
+                  Screenshots are transmitted to the Gemma API for layout and responsive element verification.
                 </span>
               </div>
             </div>
@@ -70,7 +69,7 @@ export const TrustCallout: React.FC = () => {
             <div className="flex items-start gap-2.5 text-xs">
               <ShieldCheck className="w-4 h-4 text-success shrink-0 mt-0.5" strokeWidth={1.5} />
               <div>
-                <span className="font-medium text-text">On-device secret redaction: </span>
+                <span className="font-medium text-text">Secret redaction: </span>
                 <span className="text-text-muted">
                   Scrubs API keys, environment tokens, and internal paths prior to subagent dispatch.
                 </span>
@@ -87,7 +86,7 @@ export const TrustCallout: React.FC = () => {
             </div>
             <div>
               <h4 className="text-sm font-semibold text-text">
-                Attention Gate: Deterministic Checkpoint
+                Attention Gate: Policy Gate Checkpoint
               </h4>
               <p className="text-xs text-text-muted font-mono">
                 Zero-Trust Break-Glass Intercept &amp; Kill Switch
@@ -97,7 +96,7 @@ export const TrustCallout: React.FC = () => {
 
           <p className="text-xs text-text-muted leading-relaxed">
             Autonomous agent operations are restrained from irreversible mutations. The Attention Gate serves
-            as a deterministic checkpoint between agent proposals and workstation execution.
+            as a policy checkpoint between agent proposals and workstation execution.
           </p>
 
           <div className="space-y-2.5 pt-3 border-t border-border">

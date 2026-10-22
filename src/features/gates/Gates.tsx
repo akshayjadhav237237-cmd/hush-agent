@@ -16,7 +16,7 @@ export const Gates: React.FC = () => {
         <div className="text-center max-w-2xl mx-auto mb-16">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-surface-2 border border-border text-text-muted mb-4">
             <Shield className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} aria-hidden="true" />
-            <span>Deterministic Interruption Engine</span>
+            <span>Policy Gate Interruption Engine</span>
           </div>
           <h2
             id="gates-heading"
@@ -25,7 +25,7 @@ export const Gates: React.FC = () => {
             The 6 Attention Gates
           </h2>
           <p className="mt-4 text-base sm:text-lg text-text-muted leading-relaxed">
-            Autonomous progress does not require constant confirmation. Hush runs silently across verified safe states. It escalates to human review only when an invariant trips.
+            Autonomous progress does not require constant confirmation. Hush runs silently across verified safe states. It escalates to human review only when a policy gate trips.
           </p>
         </div>
 
@@ -35,7 +35,7 @@ export const Gates: React.FC = () => {
         {/* Bento Grid Header */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-text-muted">
           <span className="uppercase tracking-wider font-semibold">
-            Active Gate Invariants ({ATTENTION_GATES.length} Total)
+            Active Policy Gates ({ATTENTION_GATES.length} Total)
           </span>
           <span className="inline-flex items-center gap-1.5 text-text-muted font-medium">
             <ShieldCheck className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} aria-hidden="true" />
@@ -55,6 +55,8 @@ export const Gates: React.FC = () => {
             </li>
           ))}
         </ul>
+
+        <p className="mt-8 text-center text-xs text-text-muted font-sans">Code-enforced gates cannot be talked around by the model. Model-judged gates can be wrong, which is why the audit log is on the roadmap.</p>
       </div>
     </section>
   );

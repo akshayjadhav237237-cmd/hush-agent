@@ -71,10 +71,10 @@ export const GemmaAwardCallout: React.FC = () => {
           </div>
           <div>
             <h4 className="text-sm font-semibold text-text mb-1">
-              Local and Cloud Parity
+              Cloud Execution via Gemini API
             </h4>
             <p className="text-xs text-text-muted leading-relaxed">
-              Runs in the cloud with the Gemini API (<code className="font-mono text-accent">gemma-4-26b-a4b-it</code>) or offline on developer hardware with Ollama and LiteRT.
+              In the current build, Gemma 4 is called through the Gemini API (<code className="font-mono text-accent">gemma-4-26b-a4b-it</code>). Running the same loop on a local runtime such as Ollama is a possible next step and has not been verified.
             </p>
           </div>
         </div>

@@ -44,12 +44,12 @@ export const Architecture: React.FC = () => {
         </div>
 
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-text tracking-tight">
-          Orchestration &amp; Deterministic Safety
+          Orchestration &amp; Policy Safety
         </h2>
 
         <p className="text-sm sm:text-base text-text-muted leading-relaxed">
-          Hush coordinates specialized agents through an on-device orchestrator. Google Gemma 4 manages
-          screen context and task contracts while the Attention Gate deterministically intercepts privileged operations.
+          Hush coordinates specialized agents through the Gemma 4 orchestrator. Google Gemma 4 manages
+          screen context and task contracts while the Attention Gate intercepts privileged operations.
         </p>
 
         {/* View Layout Toggle */}

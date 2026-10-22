@@ -15,13 +15,13 @@ const MODEL_TIERS: ModelTier[] = [
     name: 'Gemma 4 E2B / E4B',
     type: 'Edge & Mobile Dense',
     context: '128K tokens',
-    bestFor: 'On-device edge automation, LiteRT runtime, local classification',
+    bestFor: 'Edge automation, LiteRT runtime, classification',
   },
   {
     name: 'Gemma 4 12B',
     type: 'Workstation Dense',
     context: '256K tokens',
-    bestFor: 'Local execution on consumer GPUs and Apple Silicon unified memory',
+    bestFor: 'Open-weights execution on consumer GPUs and Apple Silicon unified memory',
   },
   {
     name: 'Gemma 4 26B A4B',

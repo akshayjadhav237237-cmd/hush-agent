@@ -1,5 +1,5 @@
 import React from 'react';
-import { PROJECT_NAME, GITHUB_URL, DEVPOST_URL } from '@/data/brand';
+import { PROJECT_NAME, GITHUB_URL, DEVPOST_URL, HACKATHON_NAME } from '@/data/brand';
 import { Award, ArrowUp } from 'lucide-react';
 
 interface FooterLink {
@@ -24,6 +24,10 @@ export const Footer: React.FC = () => {
   const isDevpostAvailable =
     (DEVPOST_URL as string) !== 'TODO' &&
     (DEVPOST_URL as string).trim().length > 0;
+
+  const isHackathonConfigured =
+    (HACKATHON_NAME as string) !== 'TODO' &&
+    (HACKATHON_NAME as string).trim().length > 0;
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -75,11 +79,13 @@ export const Footer: React.FC = () => {
               Open Source
             </h3>
             <p className="text-sm text-text-muted">
-              Dual-licensed under <span className="text-text font-medium">MIT</span> and{' '}
-              <span className="text-text font-medium">Apache 2.0</span>.
+              Hush is MIT licensed. Gemma 4 is released by Google under the Apache 2.0 license.
             </p>
             <p className="text-xs text-text-muted leading-relaxed">
-              Built for the Google Gemma 4 Developer Challenge. Powered by Gemma 4 local inference, Claude, Gemini Deep Research, and Antigravity.
+              {isHackathonConfigured
+                ? `Built for ${HACKATHON_NAME}.`
+                : 'Built at a hackathon with Gemma 4.'}{' '}
+              Powered by Gemma 4, Claude, Gemini Deep Research, and Antigravity.
             </p>
             {(isGithubAvailable || isDevpostAvailable) && (
               <div className="pt-2 flex flex-col md:items-end gap-1.5">

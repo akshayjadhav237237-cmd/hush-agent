@@ -10,6 +10,8 @@ import {
   AlertTriangle,
   ShieldCheck,
   Search,
+  CheckCircle2,
+  Eye,
 } from 'lucide-react';
 
 interface GateCardProps {
@@ -37,7 +39,7 @@ const GATE_CATEGORIES: Record<string, { tag: string; layer: string }> = {
 
 export const GateCard: React.FC<GateCardProps> = ({ gate, index }) => {
   const IconComponent = ICON_MAP[gate.icon] ?? AlertTriangle;
-  const category = GATE_CATEGORIES[gate.id] ?? { tag: 'Invariant', layer: 'Execution Engine' };
+  const category = GATE_CATEGORIES[gate.id] ?? { tag: 'Policy Gate', layer: 'Execution Engine' };
   const gateNumber = String(index + 1).padStart(2, '0');
 
   return (
@@ -75,6 +77,21 @@ export const GateCard: React.FC<GateCardProps> = ({ gate, index }) => {
           {gate.title}
         </h3>
 
+        {/* Enforcement Tag: text + icon (not color only) */}
+        <div className="mt-2.5 flex items-center">
+          {gate.enforcement === 'code' ? (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-surface-2 border border-border text-success">
+              <CheckCircle2 className="w-3.5 h-3.5 text-success shrink-0" strokeWidth={1.5} aria-hidden="true" />
+              <span>Enforced in code</span>
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-surface-2 border border-border text-text-muted">
+              <Eye className="w-3.5 h-3.5 text-text-muted shrink-0" strokeWidth={1.5} aria-hidden="true" />
+              <span>Judged by the model, guided by prompt</span>
+            </span>
+          )}
+        </div>
+
         {/* Trigger Condition */}
         <div className="mt-4 pt-3 border-t border-border">
           <div className="text-[11px] uppercase tracking-wider font-mono font-medium text-text-muted mb-1 flex items-center gap-1.5">
@@ -98,11 +115,11 @@ export const GateCard: React.FC<GateCardProps> = ({ gate, index }) => {
         </div>
       </div>
 
-      {/* Card Footer: Strict Invariant Enforcement Layer */}
+      {/* Card Footer: Policy Gate Enforcement Layer */}
       <div className="mt-5 pt-3 border-t border-border/70 flex items-center justify-between text-[11px] text-text-muted font-mono">
         <span className="inline-flex items-center gap-1.5 text-text-muted">
           <ShieldCheck className="w-3.5 h-3.5 text-accent shrink-0" strokeWidth={1.5} aria-hidden="true" />
-          <span>Strict Invariant</span>
+          <span>Policy Gate</span>
         </span>
         <span className="truncate max-w-[150px] text-right" title={category.layer}>
           {category.layer}

@@ -1,31 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { GITHUB_URL } from '@/data/brand';
 import { COPY } from '@/data/copy';
-import { ArrowRight, Check, Copy, Terminal } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export const Hero: React.FC = () => {
-  const [copied, setCopied] = useState(false);
-  const quickstartCommand = 'npx hush-agent';
   const isGithubAvailable =
     (GITHUB_URL as string) !== 'TODO' &&
     (GITHUB_URL as string).trim().length > 0;
-
-  const handleCopyCommand = async () => {
-    try {
-      await navigator.clipboard.writeText(quickstartCommand);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      const textArea = document.createElement('textarea');
-      textArea.value = quickstartCommand;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
 
   return (
     <section
@@ -91,48 +72,16 @@ export const Hero: React.FC = () => {
           )}
         </div>
 
-        {/* Quickstart command pill */}
+        {/* Source on GitHub link */}
         <div className="mt-8 sm:mt-10 flex items-center justify-center">
-          <div
-            className="inline-flex items-center gap-2.5 sm:gap-3 px-3.5 py-2 rounded-[10px] border border-border bg-surface-2 transition-colors"
-            role="region"
-            aria-label="Quickstart terminal command"
+          <a
+            href={GITHUB_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-mono text-xs text-text-muted hover:text-accent transition-colors underline underline-offset-4"
           >
-            <Terminal
-              className="w-4 h-4 text-text-muted shrink-0"
-              strokeWidth={1.5}
-              aria-hidden="true"
-            />
-            <code className="font-mono text-xs sm:text-sm text-text select-all">
-              {quickstartCommand}
-            </code>
-            <button
-              type="button"
-              onClick={handleCopyCommand}
-              aria-label={copied ? 'Command copied' : 'Copy quickstart command'}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[10px] text-xs font-medium border border-border bg-surface text-text hover:bg-surface-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            >
-              {copied ? (
-                <>
-                  <Check
-                    className="w-3.5 h-3.5 text-success shrink-0"
-                    strokeWidth={1.5}
-                    aria-hidden="true"
-                  />
-                  <span className="text-success font-medium">Copied</span>
-                </>
-              ) : (
-                <>
-                  <Copy
-                    className="w-3.5 h-3.5 text-text-muted shrink-0"
-                    strokeWidth={1.5}
-                    aria-hidden="true"
-                  />
-                  <span>Copy</span>
-                </>
-              )}
-            </button>
-          </div>
+            Source on GitHub
+          </a>
         </div>
       </div>
     </section>

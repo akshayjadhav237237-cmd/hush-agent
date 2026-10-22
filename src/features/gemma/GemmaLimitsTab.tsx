@@ -46,14 +46,14 @@ const ITEMS: CapabilityLimitItem[] = [
   },
   {
     id: 'offline-execution',
-    title: 'Offline and Local Execution',
+    title: 'Cloud API Execution and Local Runtime',
     icon: <HardDrive className="w-5 h-5 text-accent" strokeWidth={1.5} aria-hidden="true" />,
     capability:
-      'Open weights permit offline execution through Ollama, vLLM, or LiteRT on local hardware.',
+      'In the current build, Gemma 4 is called through the Gemini API. Running the same loop on a local runtime such as Ollama is a possible next step and has not been verified.',
     limitation:
-      'Larger model weights require sufficient unified memory and compute bandwidth.',
+      'Running large open-weight models locally requires dedicated hardware memory and runtime verification that has not yet been conducted for this workflow.',
     mitigation:
-      'Hush supports running smaller model sizes locally for rapid gating, or routing to the Gemini API for cloud orchestration.',
+      'Hush routes orchestration calls through the Gemini API to ensure consistent function calling and vision capabilities without local hardware dependencies.',
   },
 ];
 

@@ -160,7 +160,7 @@ export const FlowController: React.FC<FlowControllerProps> = ({
           <div className="mt-3 p-3 rounded-[10px] bg-warning/10 border border-warning/40 text-text text-xs flex items-start gap-2.5">
             <AlertTriangle className="w-4 h-4 text-warning shrink-0 mt-0.5" strokeWidth={1.5} />
             <div>
-              <span className="font-semibold text-warning">Deterministic Safety Intercept: </span>
+              <span className="font-semibold text-warning">Policy Safety Intercept: </span>
               <span className="text-text leading-relaxed">
                 {currentScenario.safetyNote}
               </span>

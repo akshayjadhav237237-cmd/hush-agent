@@ -14,7 +14,7 @@ import {
 export const EmergencyCallout: React.FC = () => {
   const allowedCommands = [
     'npm run *',
-    'npx *',
+    'python *',
     'vite build',
     'node *',
     'git status/diff',
@@ -134,7 +134,7 @@ export const EmergencyCallout: React.FC = () => {
               </h4>
             </div>
             <p className="text-xs text-text-muted leading-relaxed mb-4">
-              All shell commands pass through deterministic AST parsing before execution. Allowed toolchains run silently. Unrecognized or destructive commands are blocked at the sandbox boundary.
+              All shell commands pass through AST policy parsing before execution. Allowed toolchains run silently. Unrecognized or destructive commands are blocked at the sandbox boundary.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

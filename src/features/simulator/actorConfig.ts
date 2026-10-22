@@ -19,7 +19,7 @@ export const ACTOR_CONFIG: Record<Actor, ActorMeta> = {
   gemma: {
     id: 'gemma',
     label: 'Gemma 4',
-    role: 'Local triage and verification sentinel',
+    role: 'Triage and verification orchestrator',
     icon: Cpu,
   },
   gemini: {
