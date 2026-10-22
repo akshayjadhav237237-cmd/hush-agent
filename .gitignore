@@ -5,3 +5,6 @@ dist
 workspace/
 __pycache__/
 .DS_Store
+agent/runs/
+agent/workspace/
+.pytest_cache/

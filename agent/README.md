@@ -1,167 +1,164 @@
 # Hush Desktop Agent
 
-Desktop orchestration loop for Windows.
+Modular autonomous desktop orchestration agent built with Google Gemma 4.
 
 ## Overview
 
-Hush orchestrates multi-agent desktop workflows using Google Gemma 4 through the Gemini API. The orchestrator coordinates Claude for architecture, Gemini Deep Research for investigation, and Antigravity for code generation. Safe operations run without user interruption. The system halts and requests human judgment only when blockers or policy gates require intervention.
+Hush orchestrates multi-agent desktop workflows by using Google Gemma 4 (via native function calling and visual screenshot inspection) to drive Claude (architect & prompt-writer), Gemini Deep Research (researcher), and Antigravity (IDE coding agent). Hush progresses autonomously and silently whenever possible, escalating to the operator only when progress cannot continue without human intervention (login, captcha, payment, ambiguous requirement, destructive action approval, or repeated failure).
 
-The script is a hackathon starter skeleton designed for Windows desktop environments.
+Hush features a modular core architecture with cryptographically chained audit logging, atomic checkpointing and resume, simulated demo mode, an asynchronous global kill switch, an image-hashing loop breaker, automatic backoff and limit waiting, and optional multi-profile account switching.
 
-## Platform
+## Module Map (`agent/core/`)
 
-- Windows only. The script uses Windows desktop APIs through `pyautogui` and `pygetwindow`.
+- `core/accounts.py`: Chrome profile account switching with cooldowns, confirmation gates, and usage limits.
+- `core/artifacts.py`: Local run artifact storage and resume prompt generation for long-text transfer.
+- `core/audit.py`: Cryptographically chained JSONL audit log with SHA-256 integrity and secret redaction.
+- `core/checkpoint.py`: Atomic run state serialization, checkpointing, and run discovery.
+- `core/cli.py`: Command-line argument parsing and end-to-end execution bootstrap.
+- `core/command_safety.py`: Binary allowlist, operator blocks, and filesystem confinement guardrails for shell execution.
+- `core/constants.py`: Standard paths, model defaults, screen resolutions, and process exit codes.
+- `core/demo/project_files.py`: Deterministic file and code generator for mock demo workflows.
+- `core/demo/screens.py`: Synthetic 1280x720 PNG screen renderer for mock applications.
+- `core/demo/world.py`: In-memory state machine implementing the `Desktop` protocol for demo evaluation.
+- `core/desktop_tools.py`: Real Windows desktop automation driver using PyAutoGUI, PyGetWindow, and Pyperclip.
+- `core/graph_tools.py`: Knowledge graph extraction, update, inspection, and stall detection via Graphify.
+- `core/killswitch.py`: Global hotkey kill switch (`Ctrl+Alt+K`) polled at 20 Hz and PyAutoGUI failsafe detector.
+- `core/limits.py`: Usage limit pause and countdown manager with periodic kill switch checks.
+- `core/loop.py`: Main model-tool execution loop, failure escalations, and safety gate dispatching.
+- `core/loopbreaker.py`: Perceptual difference hashing (`dhash`) to break repetitive action or wait loops.
+- `core/model_client.py`: Google GenAI Client wrapper with exponential backoff and error classification.
+- `core/notify.py`: Human escalation handler supporting console prompts and optional ntfy.sh push alerts.
+- `core/prompts.py`: System prompt, playbook, bootstrap templates, and resume message builders.
+- `core/retry.py`: Exponential backoff with jitter and GenAI response candidate extraction.
+- `core/shell_tool.py`: Subprocess command runner bounded by timeout, output truncation, and safety checks.
+- `core/tool_registry.py`: Factory aggregating desktop, shell, graph, artifact, and limit tools into a unified registry.
+- `core/tool_schema.py`: GenAI tool definitions and function declaration schemas (22 or 23 tools).
+- `core/types.py`: Protocol definitions (`Desktop`), callback signatures, and execution `RunContext`.
+- `core/vision.py`: Screenshot image part encoding and historical image pruning to manage model context.
 
-## Prerequisites
+## CLI Flags
 
-- Python 3.10 or higher.
-- Dependencies listed in `requirements.txt`:
-  - `google-genai`
-  - `pyautogui`
-  - `pyperclip`
-  - `pygetwindow`
-  - `requests`
-  - `pillow`
-- Graphify CLI for codebase graph memory:
-  ```bash
-  uv tool install graphifyy
-  ```
+Usage: `python orchestrator.py [OPTIONS] [idea ...]`
 
-## Setup
+- `idea`: Positional arguments describing the project or application to build autonomously.
+- `--resume [RUN_ID]`: Resume an interrupted run. If no `RUN_ID` is provided, automatically selects the most recent run (`latest`).
+- `--demo`: Run in simulated demo mode against mock applications without moving the real mouse or opening browser windows.
+- `--demo-limit`: Trigger a simulated service usage limit scenario during demo execution.
+- `--demo-answer TEXT`: Pre-configured answer to supply automatically when `notify_human` or `NEEDS_HUMAN` triggers during demo mode.
+- `--account-switch`: Enable automated switching between Chrome profiles upon hitting service limits.
+- `--i-accept-account-switch-terms`: Acknowledge caution terms and risks for automated Chrome account switching non-interactively.
+- `--log-text`: Record raw clipboard and artifact payloads in audit logs instead of hashing and recording lengths.
+- `--max-steps N`: Hard cap on the maximum number of orchestrator loop turns (default: `80`).
+- `-h`, `--help`: Show CLI options and descriptions. Works cleanly without `GEMINI_API_KEY` set.
 
-1. Create and activate a Python virtual environment:
+## Registered Tools
+
+The tool schema defines **22 tools** by default, or **23 tools** when `--account-switch` is active:
+
+1. `open_app(name: string)`: Open a desktop application via the Windows Start menu.
+2. `open_url(url: string)`: Open a URL in the default browser.
+3. `focus_window(title_contains: string)`: Bring a window matching title substring to the foreground.
+4. `paste_text(text: string, press_enter: boolean)`: Paste text into the focused element via clipboard.
+5. `press_keys(keys: string)`: Send hotkey chords or key sequences (e.g., `ctrl+l`, `f2`).
+6. `click(x: integer, y: integer)`: Click at screenshot coordinate space (automatically scaled to desktop resolution).
+7. `scroll(amount: integer)`: Scroll mouse wheel vertically.
+8. `screenshot()`: Capture a full-screen screenshot and attach it to model context.
+9. `read_clipboard()`: Read current system clipboard text (truncated to 4,000 characters).
+10. `wait(seconds: integer)`: Pause execution (maximum 120 seconds).
+11. `run_cmd(command: string)`: Execute an allowlisted shell command confined to the project directory.
+12. `graph_build()`: Extract and generate initial Graphify knowledge graph and report.
+13. `graph_update()`: Refresh Graphify graph after code changes and inspect for stalled build progress.
+14. `graph_report()`: Read the latest `GRAPH_REPORT.md` summary (up to 6,000 characters).
+15. `graph_query(question: string)`: Query the Graphify knowledge graph.
+16. `graph_explain(symbol: string)`: Explain a symbol using the Graphify graph.
+17. `graph_path(source: string, target: string)`: Trace connection paths between symbols in the code graph.
+18. `save_artifact(name: string)`: Save full clipboard content as a persistent artifact file.
+19. `paste_artifact(name: string, press_enter: boolean)`: Load artifact file and paste directly into focused window without size limits.
+20. `report_limit(app: string, minutes_until_reset: integer)`: Report service limit; pauses execution or routes to account switching.
+21. `notify_human(message: string)`: Escalate question to the operator and wait for response.
+22. `finish(summary: string)`: Conclude orchestrator execution with a completion summary.
+23. `switch_account(app: string)`: Switch Chrome profile for Claude or Gemini (active only when account switching is configured).
+
+## Constants Quoted from Code
+
+- **Default Model**: `os.getenv("GEMMA_MODEL", "gemma-4-26b-a4b-it")`
+- **Default Max Steps**: `MAX_STEPS_DEFAULT = 80`
+- **Screenshot Width**: `SHOT_WIDTH = 1280`
+- **Context Screenshot Retention**: `KEEP_SCREENSHOTS = 2`
+- **Exit Codes**:
+  - `EXIT_OK = 0`: Run finished successfully via `finish` tool.
+  - `EXIT_ERROR = 1`: Invalid arguments, missing files, or runtime initialization failure.
+  - `EXIT_FAILSAFE = 2`: Hardware mouse-corner abort triggered (`pyautogui.FailSafeException`).
+  - `EXIT_KILL = 3`: Emergency abort via kill switch (`Ctrl+Alt+K` or signal).
+  - `EXIT_MAX_STEPS = 4`: Step limit reached without task completion.
+  - `EXIT_MODEL_FAILURE = 5`: Repeated unrecoverable model generation failures.
+- **Emergency Abort Hotkey**: `HOTKEY_DESCRIPTION = "Ctrl+Alt+K (polled at 20 Hz globally)"`
+- **Command Allowlist**: `ALLOWED_COMMANDS = {"git", "npm", "node", "python", "pip", "dir", "type", "echo", "mkdir", "cd"}`
+- **Blocked Substrings**: `("rm -rf", "rmdir /s", "del /s", "format ", "shutdown", "reg delete", "diskpart", "powershell -enc", "curl ", "wget ", "invoke-webrequest", "&&", "||", "|", ">", "<", ";", "&", "%", "^", "`", "$(", "\n", "\r", "git push", "git remote", "git config", "git credential", "git -c", "pip install")`
+- **Blocked Sensitive File Names**: `BLOCKED_PATH_NAMES = {".env", ".ssh", "id_rsa", "credentials", "secrets"}`
+- **Account Switcher Constraints**: `MAX_SWITCHES = 2`, `COOLDOWN_SECONDS = 120.0`
+
+## Safety Features and Verification Status
+
+- **Hardware Corner Failsafe**: Moving mouse to top-left corner raises `pyautogui.FailSafeException`. Intercepted cleanly by orchestrator, logged as `failsafe_abort`, and exits with code 2 without showing exception text to model. *(Implemented and unit-tested; not yet verified on a real desktop)*
+- **Emergency Kill Switch**: Asynchronous thread polling `Ctrl+Alt+K` at 20 Hz via Windows `GetAsyncKeyState`. Intercepts loop before and during tool calls and exits with code 3. *(Implemented and unit-tested; not yet verified on a real desktop)*
+- **Filesystem Path Confinement**: `run_cmd` resolves all path arguments against `project_dir` using `os.path.realpath` and `os.path.commonpath`. Blocks `..` traversal, drive escapes, and UNC network paths (`\\`). *(Implemented and unit-tested; not yet verified on a real desktop)*
+- **Command Operator Deny-List**: Rejects command separators (`&&`, `||`, `;`, `&`), redirection (`>`, `<`), string interpolation (`$()`, backticks, `%`), and dangerous administrative tools (`powershell -enc`, `curl`, `wget`). *(Implemented and unit-tested; not yet verified on a real desktop)*
+- **Loop Breaker**: Difference hash (`dhash`) compares consecutive screen captures. Trips alert if screen remains identical across 3 consecutive interactive actions (`act`) or 15 wait intervals (`wait`). *(Implemented and unit-tested; not yet verified on a real desktop)*
+- **Cryptographic Audit Trail**: Each event in `audit.jsonl` is linked to the previous line via SHA-256 hash chaining (`prev` field). Validated with `verify_chain()`. *(Implemented and unit-tested)*
+- **Secret Redaction**: Redacts patterns for Google API keys (`AIza...`), Anthropic/OpenAI keys (`sk-...`), GitHub tokens (`ghp_...`, `github_pat_...`), and HTTP Authorization headers (`Bearer ...`) from all audit logs and error messages. *(Implemented and unit-tested)*
+- **Artifact Pipeline**: Tools `save_artifact` and `paste_artifact` transfer long text (reports, prompts) directly between disk and clipboard, preventing large text injection errors into model call arguments. *(Implemented and unit-tested)*
+
+## Account Switching
+
+Automated Chrome account switching allows alternating profiles when Claude or Gemini hit rate limits.
+
+### Caution Notice
+
+> "Switching between accounts to work around usage limits may violate the terms of the services involved and could get those accounts restricted. Use only your own accounts. Hush never stores or types passwords."
+
+### Setup
+
+1. Configure profiles in environment:
+   ```cmd
+   set HUSH_CHROME_PROFILES="Profile 1, Profile 2"
+   ```
+2. Enable with explicit consent:
+   ```bash
+   python orchestrator.py --account-switch --i-accept-account-switch-terms "my project idea"
+   ```
+   Or run with interactive terminal prompt (must enter `I UNDERSTAND` to proceed).
+
+## Demo Mode
+
+Run a complete simulated build workflow using mock applications and pre-scripted state transitions:
 
 ```bash
-python -m venv venv
-venv\Scripts\activate
+set GEMINI_API_KEY=your-api-key
+python orchestrator.py --demo --demo-answer "SQLite" "a todo app"
 ```
 
-2. Install Python dependencies:
+Demo mode renders synthetic 1280x720 PNG screens in-memory, writes real Python code into the run folder (`project/`), exercises human escalation, and requires zero mouse movements or real window focus.
+
+## Exporting Replays
+
+Convert any completed or interrupted run into a redacted, shareable JSON replay:
 
 ```bash
-pip install -r requirements.txt
+python export_replay.py latest
+# Or specify run ID:
+python export_replay.py 20261022-120000
 ```
 
-3. Install Graphify via `uv`:
-
-```bash
-uv tool install graphifyy
-```
-
-## Configuration
-
-Set environment variables before running the orchestrator:
-
-- `GEMINI_API_KEY` (required): Gemini API key for Gemma 4 model inference.
-- `GEMMA_MODEL` (optional): Gemma model identifier. Defaults to `gemma-4-26b-a4b-it`.
-- `NTFY_TOPIC` (optional): Topic name for mobile push notifications via `https://ntfy.sh/{NTFY_TOPIC}`.
-- `PROJECT_DIR` (optional): Target project directory for code generation and Graphify extraction. Defaults to `./workspace/project`.
-
-Example configuration in Command Prompt:
-
-```cmd
-set GEMINI_API_KEY=your-api-key-here
-set GEMMA_MODEL=gemma-4-26b-a4b-it
-set NTFY_TOPIC=your-ntfy-topic
-set PROJECT_DIR=C:\path\to\workspace\project
-```
-
-Example configuration in PowerShell:
-
-```powershell
-$env:GEMINI_API_KEY="your-api-key-here"
-$env:GEMMA_MODEL="gemma-4-26b-a4b-it"
-$env:NTFY_TOPIC="your-ntfy-topic"
-$env:PROJECT_DIR="C:\path\to\workspace\project"
-```
-
-Do not store credentials in source files.
-
-## Usage
-
-Run the orchestrator with an initial idea or task prompt:
-
-```bash
-python orchestrator.py "a portfolio website for a wedding photographer"
-```
-
-## Tools
-
-The orchestrator registers 19 native tools with the Gemma model:
-
-| Tool | Parameters | Description |
-| --- | --- | --- |
-| `open_app` | `name` (string) | Opens a desktop application via the Windows Start menu. |
-| `open_url` | `url` (string) | Opens a target URL in the default browser. |
-| `focus_window` | `title_contains` (string) | Brings a window matching the title substring to the foreground. |
-| `paste_text` | `text` (string), `press_enter` (boolean) | Pastes text into the active field using the clipboard. |
-| `press_keys` | `keys` (string) | Simulates hotkeys or key sequences (for example, `ctrl+v` or `enter`). |
-| `click` | `x` (integer), `y` (integer) | Clicks at specified coordinates in screenshot pixel space. |
-| `scroll` | `amount` (integer) | Scrolls the mouse wheel vertically. |
-| `screenshot` | none | Captures a full-screen screenshot and attaches it to the model context. |
-| `read_clipboard` | none | Returns the current text content from the system clipboard. |
-| `wait` | `seconds` (integer) | Pauses execution for a specified duration (maximum 120 seconds). |
-| `run_cmd` | `command` (string) | Executes an allowlisted shell command in `WORKDIR`. |
-| `graph_build` | none | Extracts and builds the initial Graphify code graph for the project. |
-| `graph_update` | none | Updates the Graphify graph and checks for stalled progress. |
-| `graph_report` | none | Reads the generated `GRAPH_REPORT.md` summary. |
-| `graph_query` | `question` (string) | Queries the Graphify code graph with a question. |
-| `graph_explain` | `symbol` (string) | Explains a specific code symbol using the knowledge graph. |
-| `graph_path` | `source` (string), `target` (string) | Traces the dependency path between two code symbols. |
-| `notify_human` | `message` (string) | Escalates to the operator for input and pauses the loop. |
-| `finish` | `summary` (string) | Terminates the loop with a completion summary. |
-
-## Graphify Integration
-
-Hush integrates Graphify for structured codebase memory. Graphify converts the generated project into an AST knowledge graph using local tree-sitter parsers. Parsing runs entirely on the local machine; no code is uploaded to external servers during graph extraction.
-
-### Invocation Commands
-
-The orchestrator invokes Graphify as a subprocess inside `PROJECT_DIR` without a shell:
-
-- Initial graph build (`graph_build`):
-  1. `graphify extract . --code-only`
-  2. `graphify cluster-only . --no-label`
-  3. `graphify export html`
-- Iterative refresh (`graph_update`):
-  1. `graphify update .`
-  2. `graphify export html`
-- Graph querying (`graph_query`, `graph_explain`, `graph_path`):
-  - `graphify query "<question>"`
-  - `graphify explain "<symbol>"`
-  - `graphify path "<source>" "<target>"`
-
-### Generated Artifacts
-
-Graphify stores outputs in the `graphify-out/` directory within `PROJECT_DIR`:
-
-- `graphify-out/graph.html`: Interactive visual graph representation.
-- `graphify-out/GRAPH_REPORT.md`: Markdown summary of clusters, symbols, and dependencies.
-
-### Stalled Build Detection
-
-`graph_update` implements an automated progress gate using SHA-256 hashing. After updating the graph, it computes the hash of `graphify-out/GRAPH_REPORT.md`. If the hash remains identical across two consecutive rounds, the orchestrator triggers `notify_human` to alert the operator that code generation may have stalled.
-
-## Safety and Guardrails
-
-The orchestrator incorporates layered controls to limit unintended behavior:
-
-- **Command Allowlist**: `run_cmd` permits only approved binaries: `git`, `npm`, `node`, `python`, `pip`, `dir`, `type`, `echo`, `mkdir`, and `cd`.
-- **Blocked Substrings**: Commands containing any of the following substrings are rejected: `rm -rf`, `rmdir /s`, `del /s`, `format `, `shutdown`, `reg delete`, `diskpart`, `powershell -enc`, `curl `, `wget `, `invoke-webrequest`, `&&`, `||`, `|`, `>`, `<`, `;`.
-- **Guardrail Scope Notice**: The command allowlist functions as an operational guardrail, not a secure operating system sandbox. Permitted runtimes such as `python` and `npm` can execute arbitrary code within their execution context.
-- **Step Cap**: `MAX_STEPS = 80` enforces a hard limit on total model turns per run.
-- **Hardware Fail-Safe**: `pyautogui.FAILSAFE = True`. Moving the mouse cursor to the top-left screen corner `(0, 0)` immediately raises a `pyautogui.FailSafeException` and aborts execution.
-- **Human Escalation Gate**: `notify_human` prints the alert to the terminal, sends an HTTP push notification to `https://ntfy.sh/{NTFY_TOPIC}` if configured, and blocks execution until input is entered in the console.
+Validates the audit chain integrity and outputs `replay.json` containing step summaries, timings, and tool calls with all clipboard text redacted.
 
 ## Known Limitations
 
-- **Untested Starter**: The script is an experimental skeleton. Coordinates, sleep intervals, and window titles require machine-specific tuning.
-- **Windows Only**: Relies on Windows desktop APIs and process management.
-- **Cloud Screenshot Transmission**: Full-screen captures are sent to Google's Gemma API endpoint for multimodal processing.
-- **Coordinate Grounding**: Direct UI click coordinates are experimental. The script prioritizes keyboard hotkeys, clipboard buffers, and CLI commands.
-- **Third-Party Terms**: Automating browser chat interfaces may conflict with third-party service terms.
-- **Graphify Dependency**: Graphify must be installed on the system PATH via `uv tool install graphifyy`.
-- **Stall Detection Verification**: The SHA-256 no-progress check is unverified until `GRAPH_STALL_VERIFIED` is confirmed through runtime testing.
+- **Guardrail Scope**: The command allowlist is an operational guardrail, not an OS sandbox. Binaries like `python` and `npm` execute arbitrary code within the project directory.
+- **Gemma Click Grounding**: Visual coordinate accuracy for desktop clicks is experimental and unverified on physical hardware.
+- **Antigravity Account Switching**: Unsupported. Account switching applies only to browser-based Claude and Gemini; Antigravity limits require manual human resolution.
+- **Limit Detection**: Usage limit banners and cooldown times are recognized visually by the model from screenshots; the orchestrator handles countdown pauses and resume execution in code.
+- **Push Notification Privacy**: `ntfy.sh` topics are public by design; choose obscure, high-entropy topic names if using mobile push alerts.
 
 ## Attribution
 
