@@ -102,20 +102,27 @@ Graphify is a separate open-source project by [Graphify Labs](https://graphify.c
 
 ## Security and Guardrails
 
-Hush implements defense-in-depth boundaries in `agent/orchestrator.py`:
+Hush implements thirteen defense-in-depth boundaries across `agent/core/`:
 
-- **Command Allowlist**: `run_cmd` permits only 10 binaries: `git`, `npm`, `node`, `python`, `pip`, `dir`, `type`, `echo`, `mkdir`, and `cd`.
-- **Blocked Substrings**: Shell command execution rejects commands containing any of the following strings: `rm -rf`, `rmdir /s`, `del /s`, `format `, `shutdown`, `reg delete`, `diskpart`, `powershell -enc`, `curl `, `wget `, `invoke-webrequest`, `&&`, `||`, `|`, `>`, `<`, `;`.
-- **Operational Guardrail Caveat**: The command allowlist is an operational guardrail, not an operating system sandbox. Permitted binaries like `python` and `npm` can run arbitrary code within their runtime context.
-- **Step Cap**: Execution stops after a maximum of 80 steps (`MAX_STEPS = 80`).
-- **Hardware Fail-Safe**: `pyautogui.FAILSAFE = True`. Moving the mouse cursor into the top-left screen corner `(0, 0)` immediately aborts automation.
-- **Human Escalation Gate**: `notify_human` prints to the terminal, sends an HTTP notification to `https://ntfy.sh/{NTFY_TOPIC}` if configured, and blocks execution until input is provided in the console.
+- **Command Allowlist**: Shell execution via `run_cmd` permits only 10 binaries: `git`, `npm`, `node`, `python`, `pip`, `dir`, `type`, `echo`, `mkdir`, and `cd`. Commands containing chained operators, redirection, or dangerous administrative patterns are rejected. The command allowlist is an operational guardrail, not an operating system sandbox; permitted binaries like `python` and `npm` can run arbitrary code within their runtime context.
+- **Workspace Filesystem Confinement**: Command execution and path arguments are resolved against the workspace root using `os.path.realpath` and `os.path.commonpath`. Path traversal (`..`), drive escapes, and UNC network paths are blocked.
+- **Step Cap**: A hard execution ceiling per run (`MAX_STEPS = 80`) prevents runaway execution loops and unbounded compute spend.
+- **Mouse-Corner Failsafe**: Hardware failsafe via `pyautogui.FAILSAFE = True`. Moving the pointer to the top-left screen corner `(0, 0)` immediately aborts the orchestrator process with exit code 2 and records a `failsafe_abort` event.
+- **Human-Notify Gate**: Interactive policy gate that halts execution, prints to the console, and optionally dispatches push notifications via `ntfy.sh` when operator guidance, credentials, or judgment are required.
+- **Graph Stall Detection**: Computes a SHA-256 digest of `graphify-out/GRAPH_REPORT.md` on every build update. If the hash remains unchanged across two consecutive iterations, Hush alerts the operator to prevent stagnant looping.
+- **SHA-256 Chained Audit Log**: Tamper-evident JSONL audit record tracking every tool call, argument, and screen state with SHA-256 hash chaining (`prev` field) and automated secret redaction for API keys and tokens.
+- **Atomic Checkpoint & Resume**: Atomic state serialization after every step enables resumption of interrupted runs via `--resume [RUN_ID|latest]` without repeating completed work.
+- **Simulated Demo Mode**: Deterministic offline execution (`--demo`, `--demo-limit`, `--demo-answer`) generating synthetic 1280x720 PNG screens and mock runs without live credentials or UI manipulation.
+- **Ctrl+Alt+K Kill Hotkey Polled at 20 Hz**: Dedicated background daemon thread polling keyboard state at 20 Hz for `Ctrl+Alt+K` via `GetAsyncKeyState`, immediately terminating the orchestrator and all child processes with exit code 3.
+- **Perceptual Loop Breaker dhash**: Perceptual difference hashing (`dhash`) across consecutive screenshots detects visual stagnation and terminates repetitive UI interaction loops after 3 consecutive identical actions or 15 wait intervals.
+- **Service Limit Wait**: Automated cooldown countdown when provider rate limits are encountered, safely pausing execution while continuously polling the emergency kill switch.
+- **Multi-Profile Account Switching**: Controlled browser profile rotation via `--account-switch`, bounded by a hard cap of 2 switches per session, a 120-second cooldown period, and explicit operator consent.
 
 ## Gemma 4 Integration
 
 - **Model Identifier**: `gemma-4-26b-a4b-it` by default, configurable via `GEMMA_MODEL`.
 - **API Client**: Google GenAI SDK (`google-genai`).
-- **Tool Registrations**: 19 native tools defined via function declarations.
+- **Tool Registrations**: 22 native tools (23 with account switching enabled via --account-switch).
 - **Multimodal Vision**: Full-screen desktop screenshots downscaled to 1280px width and sent to the Gemma API. Older screenshots in the conversation history are stripped to maintain context space.
 
 ## Real vs Simulated
@@ -131,7 +138,7 @@ To facilitate clear evaluation, the repository separates real engine components 
 
 ## Known Limitations
 
-- **Starter Skeleton**: The desktop script is an untested starter implementation. Coordinates, sleep intervals, and window titles require machine-specific calibration.
+- **Physical Desktop Calibration**: The desktop automation runner is covered by unit and integration test suites, but physical screen coordinates, sleep intervals, and window titles require machine-specific calibration on physical Windows hardware.
 - **Platform**: Windows only.
 - **Cloud Screenshot Transmission**: Desktop screenshots are transmitted to Google's cloud API endpoint.
 - **Click Grounding**: Direct coordinate clicking is unverified. The orchestrator relies primarily on keyboard shortcuts, clipboard transfer, and terminal commands.

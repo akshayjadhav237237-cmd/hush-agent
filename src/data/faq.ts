@@ -31,7 +31,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "What are the open-source licensing and commercial use terms?",
-    a: "This project is released under the Apache 2.0 license. Gemma weights and model artifacts are governed by the Google Gemma Terms of Use, which permit commercial deployment under responsible AI guidelines."
+    a: "Hush is released under the MIT License. Gemma 4 is released by Google under the Apache 2.0 license. Model weights and artifacts are governed by the Google Gemma Terms of Use, which permit commercial deployment under responsible AI guidelines."
   },
   {
     q: "What does Graphify do here?",

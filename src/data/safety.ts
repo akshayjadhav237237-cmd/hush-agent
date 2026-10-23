@@ -64,7 +64,7 @@ export const SAFETY_ITEMS: SafetyItem[] = [
     description: "Atomic state serialization after every step enabling clean resumption of interrupted runs via --resume [RUN_ID|latest] without repeating completed work.",
     implemented: true,
     statusLabel: "Implemented, unit-tested",
-    desktopVerified: true,
+    desktopVerified: DESKTOP_VERIFIED,
   },
   {
     id: "safety-demo-mode",

@@ -90,7 +90,7 @@ export const ReplaySummaryCard: React.FC<ReplaySummaryCardProps> = ({
           </span>
           <span className="inline-flex items-center gap-1 text-[11px] font-mono text-accent">
             <ShieldCheck className="w-3 h-3" />
-            <span>Redacted & Verified</span>
+            <span>Sanitized Output</span>
           </span>
         </div>
 
