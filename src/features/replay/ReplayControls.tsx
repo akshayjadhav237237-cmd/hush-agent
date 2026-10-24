@@ -6,7 +6,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
+  ShieldAlert,
+  Gauge,
 } from 'lucide-react';
+import type { PlaybackSpeed } from './types';
 
 interface ReplayControlsProps {
   currentIndex: number;
@@ -14,11 +17,16 @@ interface ReplayControlsProps {
   currentTime: number;
   totalTime: number;
   isPlaying: boolean;
-  onPlay: () => void;
-  onPause: () => void;
+  speed: PlaybackSpeed;
+  hasNextGate: boolean;
+  onPlay?: () => void;
+  onPause?: () => void;
   onTogglePlay: () => void;
   onStepNext: () => void;
   onStepPrev: () => void;
+  onNextGate: () => void;
+  onSetSpeed: (speed: PlaybackSpeed) => void;
+  onToggleSpeed: () => void;
   onReset: () => void;
   onScrub: (index: number) => void;
 }
@@ -29,9 +37,14 @@ export const ReplayControls: React.FC<ReplayControlsProps> = ({
   currentTime,
   totalTime,
   isPlaying,
+  speed,
+  hasNextGate,
   onTogglePlay,
   onStepNext,
   onStepPrev,
+  onNextGate,
+  onSetSpeed,
+  onToggleSpeed,
   onReset,
   onScrub,
 }) => {
@@ -48,8 +61,10 @@ export const ReplayControls: React.FC<ReplayControlsProps> = ({
   const progressPercent =
     totalSteps > 1 ? (currentIndex / (totalSteps - 1)) * 100 : 0;
 
+  const secondsPerEvent = (1.5 / speed).toFixed(2);
+
   return (
-    <div className="w-full flex flex-col gap-3 p-4 rounded-[14px] bg-surface border border-border">
+    <div className="w-full flex flex-col gap-3 p-4 rounded-[14px] bg-surface border border-border shadow-xs">
       {/* Top Scrubber Track */}
       <div className="flex flex-col gap-1.5">
         <div className="flex items-center justify-between text-xs font-mono text-text-muted">
@@ -79,10 +94,10 @@ export const ReplayControls: React.FC<ReplayControlsProps> = ({
         </div>
       </div>
 
-      {/* Buttons row */}
+      {/* Controls row */}
       <div className="flex flex-wrap items-center justify-between gap-3 pt-1 border-t border-border">
-        {/* Playback Controls */}
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        {/* Playback Controls & Fast Navigation */}
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
           {/* Reset button */}
           <button
             type="button"
@@ -140,14 +155,67 @@ export const ReplayControls: React.FC<ReplayControlsProps> = ({
           >
             <ChevronRight className="w-4 h-4" />
           </button>
+
+          {/* Next Gate fast navigation button */}
+          <button
+            type="button"
+            onClick={onNextGate}
+            disabled={!hasNextGate}
+            title={hasNextGate ? 'Jump to next gate, limit, or switch event' : 'No upcoming gate events'}
+            aria-label="Next gate"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] border border-warning/50 bg-warning/10 text-warning hover:bg-warning/20 text-xs font-mono font-medium transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <ShieldAlert className="w-3.5 h-3.5" />
+            <span>Next gate</span>
+          </button>
         </div>
 
-        {/* Speed / Pace indicator */}
-        <div className="flex items-center gap-2 text-xs font-mono text-text-muted">
-          <span className="px-2 py-1 rounded-[8px] bg-surface-2 border border-border">
-            1.5s / event
+        {/* Speed Controls & Progress */}
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap text-xs font-mono text-text-muted">
+          {/* Playback Speeds Toggle & Pill Selector */}
+          <div className="flex items-center gap-1.5">
+            {/* Speed Toggle Button (1x, 2x, 4x) */}
+            <button
+              type="button"
+              onClick={onToggleSpeed}
+              title={`Playback speed: ${speed}x (click to toggle: 1x -> 2x -> 4x)`}
+              aria-label={`Toggle playback speed: current ${speed}x`}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[8px] border border-border bg-surface hover:bg-surface-2 text-text text-xs font-mono font-medium transition-colors cursor-pointer"
+            >
+              <Gauge className="w-3 h-3 text-accent" />
+              <span>{speed}x</span>
+            </button>
+
+            {/* Segmented Speed Selector */}
+            <div
+              className="flex items-center rounded-[8px] bg-surface-2 border border-border p-0.5"
+              role="group"
+              aria-label="Select playback speed"
+            >
+              {([1, 2, 4] as const).map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => onSetSpeed(s)}
+                  title={`Set speed to ${s}x`}
+                  aria-pressed={speed === s}
+                  className={`px-2 py-0.5 rounded-[6px] text-xs font-mono font-medium transition-all cursor-pointer ${
+                    speed === s
+                      ? 'bg-accent text-accent-contrast shadow-xs'
+                      : 'text-text-muted hover:text-text'
+                  }`}
+                >
+                  {s}x
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <span className="hidden sm:inline px-2 py-1 rounded-[8px] bg-surface-2 border border-border text-[11px]">
+            {secondsPerEvent}s / event
           </span>
-          <span className="hidden sm:inline text-[11px] text-text-muted">
+
+          <span className="hidden md:inline text-[11px] text-text-muted">
             {progressPercent.toFixed(0)}%
           </span>
         </div>

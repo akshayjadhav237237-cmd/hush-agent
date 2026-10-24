@@ -5,20 +5,29 @@ import { EmergencyCallout } from './EmergencyCallout';
 import { SafetyCard } from './SafetyCard';
 import { ShieldCheck, AlertTriangle } from 'lucide-react';
 
-type FilterState = 'all' | 'implemented' | 'planned';
+type FilterState = 'All' | 'Implemented' | 'Unverified' | 'Planned';
 
 export const Safety: React.FC = () => {
-  const [filter, setFilter] = useState<FilterState>('all');
+  const [filter, setFilter] = useState<FilterState>('All');
 
-  const implementedCount = SAFETY_ITEMS.filter((item) => item.implemented).length;
-  const plannedCount = SAFETY_ITEMS.filter((item) => !item.implemented).length;
   const totalCount = SAFETY_ITEMS.length;
+  const implementedCount = SAFETY_ITEMS.filter((item) => item.implemented).length;
+  const unverifiedCount = SAFETY_ITEMS.filter((item) => item.desktopVerified === false).length;
+  const plannedCount = SAFETY_ITEMS.filter((item) => !item.implemented).length;
 
   const filteredItems = SAFETY_ITEMS.filter((item) => {
-    if (filter === 'implemented') return item.implemented;
-    if (filter === 'planned') return !item.implemented;
+    if (filter === 'Implemented') return item.implemented;
+    if (filter === 'Unverified') return item.desktopVerified === false;
+    if (filter === 'Planned') return !item.implemented;
     return true;
   });
+
+  const filterTabs: { id: FilterState; label: string; count: number }[] = [
+    { id: 'All', label: 'All', count: totalCount },
+    { id: 'Implemented', label: 'Implemented', count: implementedCount },
+    { id: 'Unverified', label: 'Unverified', count: unverifiedCount },
+    { id: 'Planned', label: 'Planned', count: plannedCount },
+  ];
 
   return (
     <section
@@ -44,7 +53,7 @@ export const Safety: React.FC = () => {
           </p>
         </div>
 
-        {/* Summary Counter at Top */}
+        {/* Stats Row & Summary Counter at Top */}
         <SafetySummary
           implementedCount={implementedCount}
           plannedCount={plannedCount}
@@ -56,7 +65,7 @@ export const Safety: React.FC = () => {
 
         {/* Security Checklist Section */}
         <div className="mt-12">
-          {/* Checklist controls: Title and Filter Buttons */}
+          {/* Checklist controls: Title and Mono Pill Filter Buttons */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-border">
             <div>
               <h3 className="text-xl font-semibold text-text tracking-tight">
@@ -67,54 +76,37 @@ export const Safety: React.FC = () => {
               </p>
             </div>
 
-            {/* Filter Tabs */}
+            {/* Filter Buttons Styled as Mono Pills */}
             <div
-              className="inline-flex items-center p-1 rounded-xl bg-surface-2 border border-border self-start sm:self-auto"
+              className="flex flex-wrap items-center gap-2 self-start sm:self-auto"
               role="group"
               aria-label="Filter guardrails"
             >
-              <button
-                type="button"
-                onClick={() => setFilter('all')}
-                aria-pressed={filter === 'all'}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-                  filter === 'all'
-                    ? 'bg-surface text-text shadow-xs font-semibold'
-                    : 'text-text-muted hover:text-text'
-                }`}
-              >
-                All ({totalCount})
-              </button>
-              <button
-                type="button"
-                onClick={() => setFilter('implemented')}
-                aria-pressed={filter === 'implemented'}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-                  filter === 'implemented'
-                    ? 'bg-surface text-success shadow-xs font-semibold'
-                    : 'text-text-muted hover:text-text'
-                }`}
-              >
-                Implemented ({implementedCount})
-              </button>
-              <button
-                type="button"
-                onClick={() => setFilter('planned')}
-                aria-pressed={filter === 'planned'}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-                  filter === 'planned'
-                    ? 'bg-surface text-text shadow-xs font-semibold'
-                    : 'text-text-muted hover:text-text'
-                }`}
-              >
-                Planned ({plannedCount})
-              </button>
+              {filterTabs.map((tab) => {
+                const isActive = filter === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setFilter(tab.id)}
+                    aria-pressed={isActive}
+                    className={`px-3.5 py-1.5 rounded-full font-mono text-xs font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                      isActive
+                        ? 'bg-accent/15 text-accent border border-accent/40 font-semibold shadow-xs'
+                        : 'bg-surface border border-border text-text-muted hover:text-text hover:border-border/80'
+                    }`}
+                  >
+                    <span>{tab.label}</span>
+                    <span className="ml-1.5 opacity-75 font-normal">({tab.count})</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           {/* Checklist Grid */}
           <ul
-            className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 list-none p-0 m-0"
+            className="grid grid-cols-1 md:grid-cols-2 gap-5 list-none p-0 m-0"
             role="list"
             aria-label="Security Checklist"
           >
@@ -124,12 +116,18 @@ export const Safety: React.FC = () => {
               </li>
             ))}
           </ul>
+
+          {filteredItems.length === 0 && (
+            <div className="py-12 text-center font-mono text-sm text-text-muted">
+              No guardrails match the current filter selection.
+            </div>
+          )}
         </div>
 
         {/* Known Limitations Block */}
-        <div className="mt-16 bg-surface border border-border rounded-[14px] p-6 sm:p-8">
+        <div className="mt-16 bg-[#141414] dark:bg-[#141414] bg-surface border border-border rounded-[24px] p-6 sm:p-8 shadow-xs">
           <div className="flex items-center gap-3 mb-6 pb-4 border-b border-border">
-            <div className="w-10 h-10 rounded-lg bg-surface-2 border border-border flex items-center justify-center text-text shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-surface-2 border border-border flex items-center justify-center text-text shrink-0">
               <AlertTriangle className="w-5 h-5 text-warning" strokeWidth={1.5} aria-hidden="true" />
             </div>
             <div>
@@ -143,7 +141,7 @@ export const Safety: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-            <div className="p-4 rounded-xl bg-surface-2 border border-border flex flex-col justify-between">
+            <div className="p-5 rounded-2xl bg-surface-2/60 border border-border flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-2 mb-2 font-mono text-xs font-semibold text-text">
                   <span className="w-2 h-2 rounded-full bg-warning shrink-0" aria-hidden="true" />
@@ -155,7 +153,7 @@ export const Safety: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-surface-2 border border-border flex flex-col justify-between">
+            <div className="p-5 rounded-2xl bg-surface-2/60 border border-border flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-2 mb-2 font-mono text-xs font-semibold text-text">
                   <span className="w-2 h-2 rounded-full bg-warning shrink-0" aria-hidden="true" />
@@ -167,7 +165,7 @@ export const Safety: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-surface-2 border border-border flex flex-col justify-between">
+            <div className="p-5 rounded-2xl bg-surface-2/60 border border-border flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-2 mb-2 font-mono text-xs font-semibold text-text">
                   <span className="w-2 h-2 rounded-full bg-warning shrink-0" aria-hidden="true" />
@@ -179,7 +177,7 @@ export const Safety: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-surface-2 border border-border flex flex-col justify-between">
+            <div className="p-5 rounded-2xl bg-surface-2/60 border border-border flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-2 mb-2 font-mono text-xs font-semibold text-text">
                   <span className="w-2 h-2 rounded-full bg-warning shrink-0" aria-hidden="true" />

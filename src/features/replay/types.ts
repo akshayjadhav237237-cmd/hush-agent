@@ -16,12 +16,38 @@ export type KnownAuditEvent =
   | 'max_steps'
   | 'kill_switch_unavailable';
 
+export type PlaybackSpeed = 1 | 2 | 4;
+
+export type ReplayFilterType =
+  | 'tool_call'
+  | 'tool_result'
+  | 'gate'
+  | 'kill'
+  | 'limit'
+  | 'switch'
+  | 'retry'
+  | 'checkpoint'
+  | 'finish';
+
+export const REPLAY_FILTER_TYPES: readonly ReplayFilterType[] = [
+  'tool_call',
+  'tool_result',
+  'gate',
+  'kill',
+  'limit',
+  'switch',
+  'retry',
+  'checkpoint',
+  'finish',
+] as const;
+
 export interface ReplayEvent {
   t: number;
   step: number;
   event: KnownAuditEvent | string;
   tool?: string;
   gate?: string;
+  provider?: string;
   summary: string;
 }
 
@@ -30,6 +56,7 @@ export interface ReplayPayload {
   run_id?: string;
   chain_verified?: boolean;
   verified?: boolean;
+  provider?: string;
   events: ReplayEvent[];
 }
 

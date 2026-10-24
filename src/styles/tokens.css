@@ -1,43 +1,48 @@
 @import "tailwindcss";
 
-:root {
-  --font-serif: "Instrument Serif", Georgia, serif;
-  --font-sans: "Geist Variable", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+:root,
+[data-theme="dark"] {
+  --bg: #000000;
+  --surface: #141414;
+  --surface-2: #1A1A1A;
+  --text: #F5F0E8;
+  --text-mint: #F0FFE8;
+  --text-muted: rgba(245, 240, 232, 0.55);
+  --border: rgba(255, 255, 255, 0.06);
+  --border-subtle: rgba(255, 255, 255, 0.1);
+  --accent: #22FF6E;
+  --accent-contrast: #000000;
+  --warning: #FFB020;
+  --danger: #FF4D4D;
+  --success: #22FF6E;
+  --grey: #8A8A8A;
 
-  --radius-card: 14px;
-  --radius-control: 10px;
-  --radius: 14px;
+  --radius-card: 24px;
+  --radius-panel: 24px;
+  --radius-control: 12px;
+  --radius: 24px;
 
-  /* Light Theme */
-  --bg: #FAFAF8;
-  --surface: #FFFFFF;
-  --surface-2: #F3F2EF;
-  --text: #14130F;
-  --text-muted: #6B6A63;
-  --border: #E6E4DE;
-  --accent: #2B4C3F;
-  --accent-contrast: #FAFAF8;
-  --warning: #B7791F;
-  --danger: #B3382C;
-  --success: #2B4C3F;
+  --font-sans: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-display: "Archivo", "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Dark Theme */
-    --bg: #0C0C0B;
-    --surface: #141413;
-    --surface-2: #1C1C1A;
-    --text: #F2F1EC;
-    --text-muted: #9A988F;
-    --border: #272624;
-    --accent: #7FB59D;
-    --accent-contrast: #0C0C0B;
-    --warning: #E3B15C;
-    --danger: #E5776B;
-    --success: #7FB59D;
-  }
+[data-theme="light"] {
+  --bg: #FAFAF8;
+  --surface: #FFFFFF;
+  --surface-2: #F0EFEA;
+  --text: #14130F;
+  --text-mint: #1B382B;
+  --text-muted: #6B6A63;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-subtle: rgba(0, 0, 0, 0.12);
+  --accent: #15803D;
+  --accent-contrast: #FFFFFF;
+  --warning: #B7791F;
+  --danger: #DC2626;
+  --success: #15803D;
+  --grey: #71717A;
 }
 
 @theme {
@@ -45,21 +50,31 @@
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-text: var(--text);
+  --color-text-mint: var(--text-mint);
   --color-text-muted: var(--text-muted);
   --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
   --color-accent: var(--accent);
   --color-accent-contrast: var(--accent-contrast);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
+  --color-grey: var(--grey);
 
-  --radius-card: 14px;
-  --radius-control: 10px;
-  --radius-custom: var(--radius);
+  --radius-card: var(--radius-card);
+  --radius-panel: var(--radius-panel);
+  --radius-control: var(--radius-control);
 
-  --font-serif: var(--font-serif);
   --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-display: var(--font-display);
   --font-mono: var(--font-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg);
+  color: var(--text);
 }
 
 body {
@@ -71,4 +86,32 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

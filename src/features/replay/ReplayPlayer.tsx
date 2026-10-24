@@ -4,7 +4,7 @@ import { ReplayControls } from './ReplayControls';
 import { ReplayTimeline } from './ReplayTimeline';
 import { ReplaySummaryCard } from './ReplaySummaryCard';
 import { ReplayNotAvailable } from './ReplayNotAvailable';
-import { ShieldCheck, Hash, Terminal } from 'lucide-react';
+import { ShieldCheck, Hash, Terminal, Bot } from 'lucide-react';
 
 export const ReplayPlayer: React.FC = () => {
   const {
@@ -15,11 +15,16 @@ export const ReplayPlayer: React.FC = () => {
     currentEvent,
     totalSteps,
     isPlaying,
+    speed,
+    setSpeed,
+    cycleSpeed,
     play,
     pause,
     togglePlay,
     stepNext,
     stepPrev,
+    stepToNextGate,
+    hasNextGate,
     reset,
     jumpTo,
     refetch,
@@ -29,9 +34,12 @@ export const ReplayPlayer: React.FC = () => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Don't intercept if user is typing in an input
+      const target = e.target as HTMLElement | null;
       if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
+        target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target instanceof HTMLSelectElement ||
+        target?.isContentEditable
       ) {
         return;
       }
@@ -90,6 +98,17 @@ export const ReplayPlayer: React.FC = () => {
                   className="inline-flex items-center px-2.5 py-1 rounded-[10px] border border-accent/60 bg-accent/10 text-xs font-mono text-accent font-semibold tracking-tight"
                 >
                   REAL EXECUTION MODE
+                </span>
+              )}
+
+              {/* Model Provider Badge - ONLY shown if replay carries provider */}
+              {payload?.provider && (
+                <span
+                  role="note"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[10px] border border-accent/60 bg-accent/10 text-xs font-mono text-accent font-semibold tracking-tight"
+                >
+                  <Bot className="w-3.5 h-3.5" />
+                  <span>Provider: {payload.provider}</span>
                 </span>
               )}
 
@@ -154,11 +173,16 @@ export const ReplayPlayer: React.FC = () => {
               currentTime={currentTime}
               totalTime={totalTime}
               isPlaying={isPlaying}
+              speed={speed}
+              hasNextGate={hasNextGate}
               onPlay={play}
               onPause={pause}
               onTogglePlay={togglePlay}
               onStepNext={stepNext}
               onStepPrev={stepPrev}
+              onNextGate={stepToNextGate}
+              onSetSpeed={setSpeed}
+              onToggleSpeed={cycleSpeed}
               onReset={reset}
               onScrub={jumpTo}
             />
@@ -179,6 +203,7 @@ export const ReplayPlayer: React.FC = () => {
                 <ReplaySummaryCard
                   event={currentEvent}
                   totalEvents={totalSteps}
+                  payloadProvider={payload?.provider}
                 />
 
                 {/* Keyboard Shortcut Help */}
