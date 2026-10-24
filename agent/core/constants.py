@@ -13,6 +13,8 @@ EXIT_MAX_STEPS: int = 4
 EXIT_MODEL_FAILURE: int = 5
 
 DEFAULT_MODEL: str = os.getenv("GEMMA_MODEL", "gemma-4-26b-a4b-it")
+OPENAI_MODEL: str = os.getenv("OPENAI_MODEL", "gpt-4o")
+PROVIDERS: tuple[str, ...] = ("gemma", "openai")
 MAX_STEPS_DEFAULT: int = 80
 KEEP_SCREENSHOTS: int = 2
 SHOT_WIDTH: int = 1280

@@ -28,6 +28,7 @@ Hush features a modular core architecture with cryptographically chained audit l
 - `core/loopbreaker.py`: Perceptual difference hashing (`dhash`) to break repetitive action or wait loops.
 - `core/model_client.py`: Google GenAI Client wrapper with exponential backoff and error classification.
 - `core/notify.py`: Human escalation handler supporting console prompts and optional ntfy.sh push alerts.
+- `core/openai_client.py`: OpenAI ChatCompletion client wrapper supporting tool translation, backoff retries, and GenAI format compatibility.
 - `core/prompts.py`: System prompt, playbook, bootstrap templates, and resume message builders.
 - `core/retry.py`: Exponential backoff with jitter and GenAI response candidate extraction.
 - `core/shell_tool.py`: Subprocess command runner bounded by timeout, output truncation, and safety checks.
@@ -48,8 +49,9 @@ Usage: `python orchestrator.py [OPTIONS] [idea ...]`
 - `--account-switch`: Enable automated switching between Chrome profiles upon hitting service limits.
 - `--i-accept-account-switch-terms`: Acknowledge caution terms and risks for automated Chrome account switching non-interactively.
 - `--log-text`: Record raw clipboard and artifact payloads in audit logs instead of hashing and recording lengths.
+- `--provider {gemma,openai}`: Model provider to use for orchestration (default: `gemma`). When set to `openai`, uses the OpenAI Chat Completions API with function calling.
 - `--max-steps N`: Hard cap on the maximum number of orchestrator loop turns (default: `80`).
-- `-h`, `--help`: Show CLI options and descriptions. Works cleanly without `GEMINI_API_KEY` set.
+- `-h`, `--help`: Show CLI options and descriptions. Works cleanly without `GEMINI_API_KEY` or `OPENAI_API_KEY` set.
 
 ## Registered Tools
 
@@ -82,6 +84,8 @@ The tool schema defines **22 tools** by default, or **23 tools** when `--account
 ## Constants Quoted from Code
 
 - **Default Model**: `os.getenv("GEMMA_MODEL", "gemma-4-26b-a4b-it")`
+- **OpenAI Model**: `os.getenv("OPENAI_MODEL", "gpt-4o")`
+- **Supported Providers**: `PROVIDERS = ("gemma", "openai")`
 - **Default Max Steps**: `MAX_STEPS_DEFAULT = 80`
 - **Screenshot Width**: `SHOT_WIDTH = 1280`
 - **Context Screenshot Retention**: `KEEP_SCREENSHOTS = 2`
@@ -129,13 +133,24 @@ Automated Chrome account switching allows alternating profiles when Claude or Ge
    ```
    Or run with interactive terminal prompt (must enter `I UNDERSTAND` to proceed).
 
+## Model Providers
+
+Hush supports two model execution providers:
+- **Gemma (Default)**: Driven via Google GenAI SDK (`DEFAULT_MODEL = os.getenv("GEMMA_MODEL", "gemma-4-26b-a4b-it")`). Requires `GEMINI_API_KEY`.
+- **OpenAI**: Driven via OpenAI Chat Completions API (`OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")`). Requires `OPENAI_API_KEY`. Automatically translates Google GenAI tool declarations and message history into OpenAI function calling format, with deterministic tool call ID pairing and 90-second request timeouts. *(Implemented and unit-tested; not yet verified on a real desktop)*
+
 ## Demo Mode
 
 Run a complete simulated build workflow using mock applications and pre-scripted state transitions:
 
 ```bash
+# Using Gemma (default)
 set GEMINI_API_KEY=your-api-key
 python orchestrator.py --demo --demo-answer "SQLite" "a todo app"
+
+# Using OpenAI provider
+set OPENAI_API_KEY=your-api-key
+python orchestrator.py --demo --provider openai --demo-answer "SQLite" "a todo app"
 ```
 
 Demo mode renders synthetic 1280x720 PNG screens in-memory, writes real Python code into the run folder (`project/`), exercises human escalation, and requires zero mouse movements or real window focus.

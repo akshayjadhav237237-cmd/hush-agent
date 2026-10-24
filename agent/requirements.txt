@@ -4,3 +4,4 @@ pyperclip
 pygetwindow
 requests
 pillow
+openai

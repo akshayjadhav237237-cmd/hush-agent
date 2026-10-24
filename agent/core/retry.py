@@ -17,7 +17,10 @@ RETRYABLE_PATTERNS: tuple[str, ...] = (
 
 
 def is_retryable_error(exc: BaseException) -> bool:
-    """Return True if exception message matches any retryable pattern (case-insensitive)."""
+    """Return True if exception matches retryable status code or pattern (case-insensitive)."""
+    status = getattr(exc, "status_code", None)
+    if status in (429, 500, 503):
+        return True
     msg = str(exc).lower()
     return any(pattern.lower() in msg for pattern in RETRYABLE_PATTERNS)
 

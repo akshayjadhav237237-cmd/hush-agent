@@ -9,6 +9,8 @@ from core.constants import (
     DEFAULT_MODEL,
     EXIT_ERROR,
     MAX_STEPS_DEFAULT,
+    OPENAI_MODEL,
+    PROVIDERS,
     RUNS_DIR,
     resolve_project_dir,
 )
@@ -66,6 +68,12 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
         help="Include raw paste/clipboard text in audit logs instead of hash/length.",
     )
     parser.add_argument(
+        "--provider",
+        choices=PROVIDERS,
+        default="gemma",
+        help="Model provider to use for orchestration (default: gemma).",
+    )
+    parser.add_argument(
         "--max-steps",
         type=int,
         default=MAX_STEPS_DEFAULT,
@@ -85,6 +93,9 @@ def main(
     args = parse_args(argv)
 
     mode = "demo" if args.demo else "real"
+    provider = args.provider
+    model_name = OPENAI_MODEL if provider == "openai" else DEFAULT_MODEL
+    print(f"PROVIDER: {provider} / {model_name}")
 
     if args.resume:
         from core.artifacts import build_resume_message, list_artifacts
@@ -133,7 +144,7 @@ def main(
         audit = AuditLog(
             run_dir, run_id, mode=mode, log_text=args.log_text
         )
-        audit.log("run_start", idea=idea_text, mode=mode)
+        audit.log("run_start", idea=idea_text, mode=mode, provider=provider, model=model_name)
 
     project_dir = resolve_project_dir(mode, run_dir)
 
@@ -202,11 +213,18 @@ def main(
     tools = build_tools(switch_enabled=(switcher is not None))
 
     if model_factory:
-        model = model_factory(tools=tools, audit=audit)
+        try:
+            model = model_factory(provider=provider, model=model_name, tools=tools, audit=audit)
+        except TypeError:
+            model = model_factory(tools=tools, audit=audit)
+    elif provider == "openai":
+        from core.openai_client import OpenAIModelClient
+
+        model = OpenAIModelClient(model_name, tools, audit=audit)
     else:
         from core.model_client import ModelClient
 
-        model = ModelClient(DEFAULT_MODEL, tools, audit=audit)
+        model = ModelClient(model_name, tools, audit=audit)
 
     # Context & Registry
     from core.tool_registry import build_registry
