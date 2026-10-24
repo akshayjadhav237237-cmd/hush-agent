@@ -25,6 +25,25 @@ def _get(obj: Any, attr: str, default: Any = None) -> Any:
     return val if val is not None else default
 
 
+def _extract_usage(resp: Any) -> Optional[dict[str, int]]:
+    """Extract prompt and completion token counts from response usage."""
+    try:
+        usage = _get(resp, "usage")
+        if not usage:
+            return None
+        res: dict[str, int] = {}
+        for key in ("prompt_tokens", "completion_tokens"):
+            val = _get(usage, key)
+            if isinstance(val, int) and not isinstance(val, bool):
+                res[key] = val
+        return res or None
+    except Exception:
+        return None
+
+
+extract_usage = _extract_usage
+
+
 def _normalize_schema(val: Any) -> Any:
     """Normalize schema dictionary types to lowercase strings."""
     if isinstance(val, dict):
@@ -50,9 +69,7 @@ def convert_tools_to_openai(tools: Any) -> list[dict[str, Any]]:
         for item in tools:
             if hasattr(item, "function_declarations"):
                 declarations.extend(item.function_declarations or [])
-            elif hasattr(item, "name"):
-                declarations.append(item)
-            elif isinstance(item, dict) and "type" in item:
+            elif hasattr(item, "name") or (isinstance(item, dict) and "type" in item):
                 declarations.append(item)
     elif hasattr(tools, "name"):
         declarations = [tools]
@@ -67,10 +84,8 @@ def convert_tools_to_openai(tools: Any) -> list[dict[str, Any]]:
             raw_params = params.to_json_dict()
         elif hasattr(params, "model_dump"):
             raw_params = params.model_dump(exclude_none=True)
-        elif isinstance(params, dict):
-            raw_params = params
         else:
-            raw_params = {"type": "object", "properties": {}}
+            raw_params = params if isinstance(params, dict) else {"type": "object", "properties": {}}
 
         openai_tools.append({
             "type": "function",
@@ -203,10 +218,8 @@ def convert_openai_response_to_genai_content(resp: Any) -> Any:
                 args = json.loads(raw_args) if raw_args.strip() else {}
             except Exception:
                 args = {"raw": raw_args}
-        elif isinstance(raw_args, dict):
-            args = raw_args
         else:
-            args = {}
+            args = raw_args if isinstance(raw_args, dict) else {}
         call_id = f"call_{i}"
         fc = types.FunctionCall(name=_get(func, "name", ""), args=args, id=call_id)
         parts.append(types.Part(function_call=fc))
@@ -233,14 +246,12 @@ class OpenAIModelClient:
         self.sleep = sleep
         self.rand = rand
         self.audit = audit
+        self.last_usage: Optional[dict[str, int]] = None
 
         if client is None:
             if not os.getenv("OPENAI_API_KEY"):
-                raise ValueError(
-                    "OPENAI_API_KEY environment variable is not set. Please set it to use OpenAIModelClient."
-                )
+                raise ValueError("OPENAI_API_KEY environment variable is not set. Please set it to use OpenAIModelClient.")
             import openai
-
             self.client = openai.OpenAI(timeout=DEFAULT_TIMEOUT)
         else:
             self.client = client
@@ -251,7 +262,7 @@ class OpenAIModelClient:
         """Generate content from OpenAI model with backoff retries and audit logging."""
         messages = convert_contents_to_openai_messages(contents)
 
-        def _call() -> Any:
+        def _call() -> tuple[Any, Any]:
             kwargs: dict[str, Any] = {
                 "model": self.model_name,
                 "messages": messages,
@@ -264,14 +275,14 @@ class OpenAIModelClient:
             content = convert_openai_response_to_genai_content(resp)
             if content is None:
                 raise RuntimeError("empty response: model returned no content or tool calls")
-            return content
+            return content, resp
 
         def _on_retry(attempt: int, exc: Exception, delay: float) -> None:
             if self.audit:
                 self.audit.log("retry", attempt=attempt, error=str(exc)[:200], delay=round(delay, 2))
 
         try:
-            return with_backoff(
+            content, resp = with_backoff(
                 _call,
                 retries=REQUEST_RETRIES,
                 base=BACKOFF_BASE,
@@ -280,5 +291,7 @@ class OpenAIModelClient:
                 rand=self.rand,
                 on_retry=_on_retry,
             )
+            self.last_usage = _extract_usage(resp)
+            return content
         except Exception as e:
             raise ModelUnavailable(f"OpenAI generation failed after backoff retries: {e}") from e

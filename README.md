@@ -1,5 +1,7 @@
 # Hush
 
+[![Agent Tests](https://github.com/akshayjadhav237237-cmd/hush-agent/actions/workflows/agent-tests.yml/badge.svg)](https://github.com/akshayjadhav237237-cmd/hush-agent/actions/workflows/agent-tests.yml)
+
 > Builds quietly. Speaks only when it must.
 
 Hush is a Windows desktop automation orchestrator. Google Gemma 4 serves as the central control plane, coordinating Claude for architecture, Gemini Deep Research for investigation, and Antigravity for code generation. Safe tasks execute silently. Hush halts and requests human intervention only when judgment is strictly required.

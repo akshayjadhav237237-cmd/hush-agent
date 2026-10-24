@@ -6,9 +6,17 @@ Modular autonomous desktop orchestration agent built with Google Gemma 4.
 
 Hush orchestrates multi-agent desktop workflows by using Google Gemma 4 (via native function calling and visual screenshot inspection) to drive Claude (architect & prompt-writer), Gemini Deep Research (researcher), and Antigravity (IDE coding agent). Hush progresses autonomously and silently whenever possible, escalating to the operator only when progress cannot continue without human intervention (login, captcha, payment, ambiguous requirement, destructive action approval, or repeated failure).
 
-Hush features a modular core architecture with cryptographically chained audit logging, atomic checkpointing and resume, simulated demo mode, an asynchronous global kill switch, an image-hashing loop breaker, automatic backoff and limit waiting, and optional multi-profile account switching.
+Hush features a modular core architecture with cryptographically chained audit logging, atomic checkpointing and resume, simulated demo mode, an asynchronous global kill switch, an image-hashing loop breaker, automatic backoff and limit waiting, optional multi-profile account switching, and side-by-side run comparison.
 
-## Module Map (`agent/core/`)
+## Module Map
+
+### Orchestrator & CLI Tools (`agent/`)
+
+- `orchestrator.py`: Main entry point for launching, resuming, or running simulated demo orchestration workflows.
+- `compare_runs.py`: Tamper-evident side-by-side run comparison tool verifying audit chains and analyzing steps, retries, gates, kills, tokens, wall time, and costs.
+- `export_replay.py`: Audit replay exporter converting completed or interrupted runs into redacted JSON replay logs.
+
+### Core Architecture (`agent/core/`)
 
 - `core/accounts.py`: Chrome profile account switching with cooldowns, confirmation gates, and usage limits.
 - `core/artifacts.py`: Local run artifact storage and resume prompt generation for long-text transfer.
@@ -26,9 +34,9 @@ Hush features a modular core architecture with cryptographically chained audit l
 - `core/limits.py`: Usage limit pause and countdown manager with periodic kill switch checks.
 - `core/loop.py`: Main model-tool execution loop, failure escalations, and safety gate dispatching.
 - `core/loopbreaker.py`: Perceptual difference hashing (`dhash`) to break repetitive action or wait loops.
-- `core/model_client.py`: Google GenAI Client wrapper with exponential backoff and error classification.
+- `core/model_client.py`: Google GenAI Client wrapper with exponential backoff, usage tracking, and error classification.
 - `core/notify.py`: Human escalation handler supporting console prompts and optional ntfy.sh push alerts.
-- `core/openai_client.py`: OpenAI ChatCompletion client wrapper supporting tool translation, backoff retries, and GenAI format compatibility.
+- `core/openai_client.py`: OpenAI ChatCompletion client wrapper supporting tool translation, backoff retries, usage tracking, and GenAI format compatibility.
 - `core/prompts.py`: System prompt, playbook, bootstrap templates, and resume message builders.
 - `core/retry.py`: Exponential backoff with jitter and GenAI response candidate extraction.
 - `core/shell_tool.py`: Subprocess command runner bounded by timeout, output truncation, and safety checks.
@@ -49,7 +57,7 @@ Usage: `python orchestrator.py [OPTIONS] [idea ...]`
 - `--account-switch`: Enable automated switching between Chrome profiles upon hitting service limits.
 - `--i-accept-account-switch-terms`: Acknowledge caution terms and risks for automated Chrome account switching non-interactively.
 - `--log-text`: Record raw clipboard and artifact payloads in audit logs instead of hashing and recording lengths.
-- `--provider {gemma,openai}`: Model provider to use for orchestration (default: `gemma`). When set to `openai`, uses the OpenAI Chat Completions API with function calling.
+- `--provider {gemma,openai}`: Model provider to use for orchestration (default: `gemma`). Selects between `gemma` (Google GenAI SDK, requires `GEMINI_API_KEY`) and `openai` (OpenAI Chat Completions API with function calling, requires `OPENAI_API_KEY`). Both providers support automatic exponential backoff retries, error recovery, and token usage tracking.
 - `--max-steps N`: Hard cap on the maximum number of orchestrator loop turns (default: `80`).
 - `-h`, `--help`: Show CLI options and descriptions. Works cleanly without `GEMINI_API_KEY` or `OPENAI_API_KEY` set.
 
@@ -112,10 +120,11 @@ The tool schema defines **22 tools** by default, or **23 tools** when `--account
 - **Cryptographic Audit Trail**: Each event in `audit.jsonl` is linked to the previous line via SHA-256 hash chaining (`prev` field). Validated with `verify_chain()`. *(Implemented and unit-tested)*
 - **Secret Redaction**: Redacts patterns for Google API keys (`AIza...`), Anthropic/OpenAI keys (`sk-...`), GitHub tokens (`ghp_...`, `github_pat_...`), and HTTP Authorization headers (`Bearer ...`) from all audit logs and error messages. *(Implemented and unit-tested)*
 - **Artifact Pipeline**: Tools `save_artifact` and `paste_artifact` transfer long text (reports, prompts) directly between disk and clipboard, preventing large text injection errors into model call arguments. *(Implemented and unit-tested)*
+- **Token Usage Auditing**: Records `prompt_tokens` and `completion_tokens` directly within `model_text` audit records for each interaction step. *(Implemented and unit-tested)*
 
 ## Account Switching
 
-Automated Chrome account switching allows alternating profiles when Claude or Gemini hit rate limits.
+Automated Chrome account switching allows alternating profiles when Claude or Gemini hit rate limits. *(Implemented and unit-tested; not yet verified on a real desktop)*
 
 ### Caution Notice
 
@@ -136,12 +145,24 @@ Automated Chrome account switching allows alternating profiles when Claude or Ge
 ## Model Providers
 
 Hush supports two model execution providers:
-- **Gemma (Default)**: Driven via Google GenAI SDK (`DEFAULT_MODEL = os.getenv("GEMMA_MODEL", "gemma-4-26b-a4b-it")`). Requires `GEMINI_API_KEY`.
-- **OpenAI**: Driven via OpenAI Chat Completions API (`OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")`). Requires `OPENAI_API_KEY`. Automatically translates Google GenAI tool declarations and message history into OpenAI function calling format, with deterministic tool call ID pairing and 90-second request timeouts. *(Implemented and unit-tested; not yet verified on a real desktop)*
+- **Gemma (Default)**: Driven via Google GenAI SDK (`DEFAULT_MODEL = os.getenv("GEMMA_MODEL", "gemma-4-26b-a4b-it")`). Requires `GEMINI_API_KEY`. Captures token usage metadata from API responses. *(Implemented and unit-tested; not yet verified on a real desktop)*
+- **OpenAI**: Driven via OpenAI Chat Completions API (`OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o")`). Requires `OPENAI_API_KEY`. Automatically translates Google GenAI tool declarations and message history into OpenAI function calling format, with deterministic tool call ID pairing and 90-second request timeouts. Captures token usage metadata from API responses. *(Implemented and unit-tested; not yet verified on a real desktop)*
+
+## Token Usage Tracking
+
+Both model clients capture token consumption metrics on every generation call:
+
+- **Client Tracking (`last_usage`)**:
+  - `ModelClient` (Gemma): Extracts usage metadata (`prompt_token_count` and `candidates_token_count`) from Google GenAI SDK responses via `extract_usage()`, populating `model.last_usage = {"prompt_tokens": int, "completion_tokens": int}`.
+  - `OpenAIModelClient` (OpenAI): Extracts usage metrics (`prompt_tokens` and `completion_tokens`) directly from `ChatCompletion.usage` after successful generation, setting `model.last_usage`.
+- **Audit Logging**:
+  - In `core/loop.py`, `model_text` events recorded in `audit.jsonl` include `prompt_tokens` and `completion_tokens` from `model.last_usage` for each turn.
+  - When the model returns function calls without text content, a `model_text` record with empty text is still logged to ensure token counts are never dropped from the tamper-evident audit trail.
+- **Verification Status**: *(Implemented and unit-tested)*
 
 ## Demo Mode
 
-Run a complete simulated build workflow using mock applications and pre-scripted state transitions:
+Run a complete simulated build workflow using mock applications and pre-scripted state transitions: *(Implemented and unit-tested)*
 
 ```bash
 # Using Gemma (default)
@@ -157,7 +178,7 @@ Demo mode renders synthetic 1280x720 PNG screens in-memory, writes real Python c
 
 ## Exporting Replays
 
-Convert any completed or interrupted run into a redacted, shareable JSON replay:
+Convert any completed or interrupted run into a redacted, shareable JSON replay: *(Implemented and unit-tested)*
 
 ```bash
 python export_replay.py latest
@@ -166,6 +187,62 @@ python export_replay.py 20261022-120000
 ```
 
 Validates the audit chain integrity and outputs `replay.json` containing step summaries, timings, and tool calls with all clipboard text redacted.
+
+## Comparing Runs
+
+Hush includes a comparison utility (`compare_runs.py`) to analyze and contrast performance, safety, and cost metrics across multiple agent executions using their audit logs: *(Implemented and unit-tested)*
+
+### Usage
+
+```bash
+python compare_runs.py <run_id_a> <run_id_b> [--price-in X --price-out Y]
+```
+
+- `<run_id_a>`: First run ID (located in `runs/`) or direct path to an `audit.jsonl` file.
+- `<run_id_b>`: Second run ID (located in `runs/`) or direct path to an `audit.jsonl` file.
+- `--price-in X`: Optional token pricing for input tokens in USD per 1M tokens (e.g. `2.50`).
+- `--price-out Y`: Optional token pricing for output tokens in USD per 1M tokens (e.g. `10.00`).
+
+### Features
+
+- **Cryptographic Verification**: Calls `verify_chain()` on both run audit logs prior to analysis. If either log has been altered, corrupted, or has broken SHA-256 parent links, comparison refuses to proceed and reports a validation failure.
+- **Side-by-Side Metric Comparison**: Parses sanitized audit events and generates an aligned tabular view comparing:
+  - `provider`: Model provider (`gemma` vs `openai`).
+  - `model`: Specific model checkpoint or identifier.
+  - `steps`: Total orchestrator loop steps executed.
+  - `retries`: Number of backoff retries triggered during model requests.
+  - `gate count`: Number of safety or human intervention gates encountered (e.g., loop breaker, human questions).
+  - `kill count`: Emergency kill switch triggers detected.
+  - `prompt_tokens`: Cumulative prompt tokens consumed.
+  - `completion_tokens`: Cumulative completion tokens generated.
+  - `wall_time`: Total run duration in seconds (computed from first to last audit timestamp).
+  - `cost`: Total estimated run cost (calculated when `--price-in` and `--price-out` are provided).
+
+### Example Output
+
+```text
+Metric            | Run A (20261022-120000) | Run B (20261022-120617)
+------------------+-------------------------+------------------------
+provider          | gemma                   | openai
+model             | gemma-4-26b-a4b-it      | gpt-4o
+steps             | 4                       | 4
+retries           | 0                       | 0
+gate count        | 0                       | 0
+kill count        | 0                       | 0
+prompt_tokens     | 1250                    | 1420
+completion_tokens | 380                     | 410
+wall_time         | 12.4s                   | 9.8s
+cost              | $0.0069                 | $0.0077
+```
+
+## Continuous Integration (CI)
+
+Hush includes automated CI testing configured in `.github/workflows/agent-tests.yml`: *(Implemented and unit-tested)*
+
+- **Triggers**: Executes on `push` and `pull_request` targeting the `main` branch when changes are made to files in `agent/**` or `.github/workflows/agent-tests.yml`.
+- **Environment**: Matrix job running on `ubuntu-latest` with Python 3.12 (`actions/setup-python@v5`).
+- **Hermetic & Offline**: Installs dependencies from `agent/requirements.txt` and `agent/requirements-dev.txt` and executes `pytest -q` directly from the `agent` working directory.
+- **No Secrets Required**: The test suite runs entirely offline against mock desktops, simulated world states, and synthetic API responses without requiring external network connectivity or API credentials (`GEMINI_API_KEY`, `OPENAI_API_KEY`).
 
 ## Known Limitations
 

@@ -72,11 +72,28 @@ def run_loop(
 
         contents.append(content)
 
-        # 3. Audit text parts emitted by model
-        for part in getattr(content, "parts", []):
-            text = getattr(part, "text", None)
-            if text and ctx.audit:
-                ctx.audit.log("model_text", text=text)
+        # 3. Audit text parts emitted by model with usage fields
+        usage = getattr(model, "last_usage", None)
+        text_parts = [
+            p.text for p in getattr(content, "parts", []) if getattr(p, "text", None)
+        ]
+        if text_parts:
+            for idx, text in enumerate(text_parts):
+                log_kwargs: dict[str, Any] = {"text": text}
+                if idx == 0 and usage:
+                    if "prompt_tokens" in usage:
+                        log_kwargs["prompt_tokens"] = usage["prompt_tokens"]
+                    if "completion_tokens" in usage:
+                        log_kwargs["completion_tokens"] = usage["completion_tokens"]
+                if ctx.audit:
+                    ctx.audit.log("model_text", **log_kwargs)
+        elif usage and ctx.audit:
+            log_kwargs = {"text": ""}
+            if "prompt_tokens" in usage:
+                log_kwargs["prompt_tokens"] = usage["prompt_tokens"]
+            if "completion_tokens" in usage:
+                log_kwargs["completion_tokens"] = usage["completion_tokens"]
+            ctx.audit.log("model_text", **log_kwargs)
 
         # 4. Extract function calls
         calls = [
