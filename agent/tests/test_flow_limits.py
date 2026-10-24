@@ -163,8 +163,11 @@ def test_max_switches_and_cooldown_rules_enforced_end_to_end(tmp_path: Any) -> N
         return fake_time
 
     profiles = ["Profile 1", "Profile 2", "Profile 3"]
+    fake_chrome = tmp_path / "chrome.exe"
+    fake_chrome.write_text("")
     switcher = AccountSwitcher(
         profiles=profiles,
+        chrome_path=str(fake_chrome),
         popen=lambda *args, **kw: None,
         clock=mock_clock,
     )

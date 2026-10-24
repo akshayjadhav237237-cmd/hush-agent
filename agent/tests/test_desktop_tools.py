@@ -157,7 +157,11 @@ def test_failsafe_exception_propagates_uncaught() -> None:
     mock_pyautogui.hotkey.side_effect = FailSafeException("Failsafe corner trip on hotkey")
     mock_pyautogui.screenshot.side_effect = FailSafeException("Failsafe corner trip on shot")
 
-    dt = DesktopTools(pyautogui=mock_pyautogui, sleep=lambda _: None)
+    dt = DesktopTools(
+        pyautogui=mock_pyautogui,
+        pyperclip=MagicMock(),
+        sleep=lambda _: None,
+    )
 
     # click() propagates
     with pytest.raises(FailSafeException):

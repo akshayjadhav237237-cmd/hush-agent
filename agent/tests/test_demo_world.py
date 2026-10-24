@@ -15,9 +15,9 @@ from core.demo.world import (
 from core.types import Desktop
 
 
-def test_funcs_returns_standard_desktop_tools() -> None:
+def test_funcs_returns_standard_desktop_tools(tmp_path: Any) -> None:
     """Verify funcs() returns all required tool functions with expected behavior."""
-    world = DemoWorld(project_dir="/test/project", sleep=lambda s: None)
+    world = DemoWorld(project_dir=str(tmp_path / "project"), sleep=lambda s: None)
     tools = world.funcs()
 
     expected_tools = {
@@ -78,9 +78,9 @@ def test_protocol_methods_return_expected_types(tmp_path: Any) -> None:
     assert tools["read_clipboard"]() == "Sample clipboard text"
 
 
-def test_scripted_flow_advances_states_correctly() -> None:
+def test_scripted_flow_advances_states_correctly(tmp_path: Any) -> None:
     """Verify scripted flow advances Claude -> Gemini -> Claude -> Antigravity."""
-    world = DemoWorld(project_dir="/test/project", sleep=lambda s: None)
+    world = DemoWorld(project_dir=str(tmp_path / "project"), sleep=lambda s: None)
     tools = world.funcs()
 
     # Step 1: Open Claude and paste initial prompt -> Claude gives research prompt
@@ -118,15 +118,16 @@ def test_scripted_flow_advances_states_correctly() -> None:
     assert world.build_round == 1
 
 
-def test_antigravity_invocation_calls_write_files_callback() -> None:
+def test_antigravity_invocation_calls_write_files_callback(tmp_path: Any) -> None:
     """Verify Antigravity invocations trigger write_files callback for both rounds."""
     recorded_calls: list[tuple[str, int]] = []
+    pdir = str(tmp_path / "demo_app")
 
     def mock_write(project_dir: str, round_num: int) -> None:
         recorded_calls.append((project_dir, round_num))
 
     world = DemoWorld(
-        project_dir="/workspace/demo_app",
+        project_dir=pdir,
         write_files=mock_write,
         sleep=lambda s: None,
     )
@@ -135,7 +136,7 @@ def test_antigravity_invocation_calls_write_files_callback() -> None:
     # Trigger Round 1 in Antigravity
     tools["open_app"]("antigravity")
     tools["paste_text"](BUILD_PROMPT_1)
-    assert recorded_calls == [("/workspace/demo_app", 1)]
+    assert recorded_calls == [(pdir, 1)]
     assert world.build_round == 1
 
     # Advance through NEEDS_HUMAN to Round 2
@@ -151,13 +152,13 @@ def test_antigravity_invocation_calls_write_files_callback() -> None:
     # Trigger Round 2 in Antigravity
     tools["open_app"]("antigravity")
     tools["paste_text"](BUILD_PROMPT_2)
-    assert recorded_calls == [("/workspace/demo_app", 1), ("/workspace/demo_app", 2)]
+    assert recorded_calls == [(pdir, 1), (pdir, 2)]
 
 
-def test_limit_scenario_triggers_usage_limit_notice() -> None:
+def test_limit_scenario_triggers_usage_limit_notice(tmp_path: Any) -> None:
     """Verify limit_scenario=True triggers usage limit notice in Antigravity."""
     world = DemoWorld(
-        project_dir="/workspace/limit_app",
+        project_dir=str(tmp_path / "limit_app"),
         limit_scenario=True,
         sleep=lambda s: None,
     )
@@ -176,10 +177,10 @@ def test_limit_scenario_triggers_usage_limit_notice() -> None:
     assert "Waited" in wait_status
 
 
-def test_needs_human_flow_pauses_and_unpauses() -> None:
+def test_needs_human_flow_pauses_and_unpauses(tmp_path: Any) -> None:
     """Verify NEEDS_HUMAN pauses execution until answer is provided."""
     world = DemoWorld(
-        project_dir="/workspace/human_app",
+        project_dir=str(tmp_path / "human_app"),
         human_answer="PostgreSQL",
         sleep=lambda s: None,
     )

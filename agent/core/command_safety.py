@@ -168,14 +168,18 @@ def check_command(command: str, project_dir: str) -> str | None:
             return "BLOCKED: UNC network paths are disallowed"
 
         # Resolve path
-        if path_token.startswith(("~", "%", "$")):
+        if re.match(r"^[a-zA-Z]:[\\/]", path_token):
+            if os.name == "nt":
+                resolved = os.path.realpath(path_token)
+            else:
+                return f"BLOCKED: path '{token}' escapes project directory"
+        elif path_token.startswith(("~", "%", "$")):
             expanded = os.path.expanduser(os.path.expandvars(path_token))
             if expanded.startswith(("~", "$")):
                 return f"BLOCKED: path '{token}' escapes project directory"
+            resolved = os.path.realpath(os.path.join(project_dir, expanded))
         else:
-            expanded = path_token
-
-        resolved = os.path.realpath(os.path.join(project_dir, expanded))
+            resolved = os.path.realpath(os.path.join(project_dir, path_token))
         try:
             common = os.path.commonpath([resolved, project_real])
             if (
