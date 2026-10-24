@@ -194,7 +194,7 @@ def main(
     if desktop_factory:
         desktop = desktop_factory(project_dir=project_dir)
     elif args.demo:
-        print("DEMO MODE: simulated desktop, real Gemma calls")
+        print(f"DEMO MODE: simulated desktop, real {provider} calls")
         from core.demo.world import DemoWorld
 
         desktop = DemoWorld(

@@ -245,3 +245,17 @@ def test_loop_model_unavailable_escalates_and_fails(loop_context: RunContext) ->
     assert code == EXIT_MODEL_FAILURE
     assert loop_context.notifier.ask_human.call_count == 3
     loop_context.audit.log.assert_any_call("model_failure", step=0, error="Quota exhausted")
+
+
+def test_loop_non_retryable_model_error_notifies_once_and_exits(loop_context: RunContext) -> None:
+    desktop = FakeDesktop()
+    registry = {}
+
+    err = ModelUnavailable("OpenAI error 400: invalid_request_error: tool_call_id mismatch")
+    model = ScriptedModel([err])
+
+    code = run_loop(loop_context, desktop, registry, model, "Start idea")
+    assert code == EXIT_MODEL_FAILURE
+    assert loop_context.notifier.ask_human.call_count == 1
+    loop_context.audit.log.assert_any_call("model_failure", step=0, error=str(err))
+

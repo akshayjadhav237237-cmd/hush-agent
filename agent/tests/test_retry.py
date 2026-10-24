@@ -272,3 +272,29 @@ def test_extract_content_normal_and_edge_cases() -> None:
 
     cand_no_parts_attr = DummyCandidate(content=ContentWithoutParts(), finish_reason="STOP")
     assert extract_content(DummyResponse([cand_no_parts_attr])) is None
+
+
+def test_400_invalid_request_error_is_not_retryable() -> None:
+    """Verify 400 invalid_request_error raises immediately without retry."""
+    class Custom400(Exception):
+        def __init__(self, msg: str) -> None:
+            super().__init__(msg)
+            self.status_code = 400
+
+    err1 = Custom400("An assistant message with 'tool_calls' must be followed by tool messages")
+    assert not is_retryable_error(err1)
+
+    err2 = Exception("400: invalid_request_error: tool_call_id mismatch")
+    assert not is_retryable_error(err2)
+
+    calls = 0
+    def bad_fn() -> None:
+        nonlocal calls
+        calls += 1
+        raise err1
+
+    with pytest.raises(Custom400) as exc_info:
+        with_backoff(bad_fn, retries=5)
+    assert calls == 1
+    assert "tool_calls" in str(exc_info.value)
+

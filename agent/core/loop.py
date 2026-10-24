@@ -16,6 +16,7 @@ from core.constants import (
 from core.killswitch import is_failsafe
 from core.loopbreaker import action_kind, dhash
 from core.model_client import ModelUnavailable
+from core.retry import is_non_retryable_error
 from core.vision import png_part, strip_old_images
 
 if TYPE_CHECKING:
@@ -53,6 +54,13 @@ def run_loop(
             content = model.generate(contents)
         except ModelUnavailable as exc:
             save_checkpoint(ctx.run_dir, ctx.state)
+            if is_non_retryable_error(exc):
+                notify_fn = registry.get("notify_human", ctx.notifier.ask_human)
+                notify_fn(f"Non-retryable model error: {exc}")
+                if ctx.audit:
+                    ctx.audit.log("model_failure", step=step, error=str(exc))
+                return EXIT_MODEL_FAILURE
+
             recovered = False
             for _ in range(3):
                 ctx.notifier.ask_human(

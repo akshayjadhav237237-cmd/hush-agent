@@ -18,177 +18,171 @@ BACKOFF_CAP: float = 60.0
 
 
 def _get(obj: Any, attr: str, default: Any = None) -> Any:
-    """Retrieve attribute from object or dict key."""
     val = getattr(obj, attr, None)
-    if val is None and isinstance(obj, dict):
-        return obj.get(attr, default)
-    return val if val is not None else default
+    return val if val is not None else (obj.get(attr, default) if isinstance(obj, dict) else default)
 
 
 def _extract_usage(resp: Any) -> Optional[dict[str, int]]:
-    """Extract prompt and completion token counts from response usage."""
-    try:
-        usage = _get(resp, "usage")
-        if not usage:
-            return None
-        res: dict[str, int] = {}
-        for key in ("prompt_tokens", "completion_tokens"):
-            val = _get(usage, key)
-            if isinstance(val, int) and not isinstance(val, bool):
-                res[key] = val
-        return res or None
-    except Exception:
+    usage = _get(resp, "usage")
+    if not usage:
         return None
+    res = {k: v for k in ("prompt_tokens", "completion_tokens") if isinstance(v := _get(usage, k), int) and not isinstance(v, bool)}
+    return res or None
 
 
 extract_usage = _extract_usage
 
 
 def _normalize_schema(val: Any) -> Any:
-    """Normalize schema dictionary types to lowercase strings."""
     if isinstance(val, dict):
-        return {
-            k: (v.lower() if k == "type" and isinstance(v, str)
-                else str(v.value).lower() if k == "type" and hasattr(v, "value")
-                else _normalize_schema(v))
-            for k, v in val.items()
-        }
-    if isinstance(val, list):
-        return [_normalize_schema(item) for item in val]
-    return val
+        return {k: (v.lower() if k == "type" and isinstance(v, str) else _normalize_schema(v)) for k, v in val.items()}
+    return [_normalize_schema(i) for i in val] if isinstance(val, list) else val
 
 
 def convert_tools_to_openai(tools: Any) -> list[dict[str, Any]]:
     """Convert Google GenAI Tool declarations into OpenAI function tool definitions."""
     if not tools:
         return []
-    declarations: list[Any] = []
+    decls: list[Any] = []
     if hasattr(tools, "function_declarations"):
-        declarations = list(tools.function_declarations or [])
+        decls = list(tools.function_declarations or [])
     elif isinstance(tools, list):
         for item in tools:
-            if hasattr(item, "function_declarations"):
-                declarations.extend(item.function_declarations or [])
-            elif hasattr(item, "name") or (isinstance(item, dict) and "type" in item):
-                declarations.append(item)
+            decls.extend(item.function_declarations if hasattr(item, "function_declarations") else [item])
     elif hasattr(tools, "name"):
-        declarations = [tools]
+        decls = [tools]
 
-    openai_tools: list[dict[str, Any]] = []
-    for decl in declarations:
-        if isinstance(decl, dict) and decl.get("type") == "function":
-            openai_tools.append(decl)
+    out: list[dict[str, Any]] = []
+    for d in decls:
+        if isinstance(d, dict) and d.get("type") == "function":
+            out.append(d)
             continue
-        params = getattr(decl, "parameters", None)
-        if hasattr(params, "to_json_dict"):
-            raw_params = params.to_json_dict()
-        elif hasattr(params, "model_dump"):
-            raw_params = params.model_dump(exclude_none=True)
-        else:
-            raw_params = params if isinstance(params, dict) else {"type": "object", "properties": {}}
+        p = getattr(d, "parameters", None)
+        raw = p.to_json_dict() if hasattr(p, "to_json_dict") else p.model_dump(exclude_none=True) if hasattr(p, "model_dump") else p if isinstance(p, dict) else {"type": "object", "properties": {}}
+        out.append({"type": "function", "function": {"name": getattr(d, "name", ""), "description": getattr(d, "description", "") or "", "parameters": _normalize_schema(raw)}})
+    return out
 
-        openai_tools.append({
-            "type": "function",
-            "function": {
-                "name": getattr(decl, "name", ""),
-                "description": getattr(decl, "description", "") or "",
-                "parameters": _normalize_schema(raw_params),
-            },
-        })
-    return openai_tools
+
+def validate_openai_messages(messages: list[dict[str, Any]]) -> None:
+    """Validate that every assistant tool_calls message is followed immediately by exactly its tool messages."""
+    i = 0
+    while i < len(messages):
+        msg = messages[i]
+        role, tcs = msg.get("role"), msg.get("tool_calls")
+        if role == "assistant" and tcs:
+            for j, tc in enumerate(tcs):
+                idx = i + 1 + j
+                if idx >= len(messages):
+                    raise ValueError(f"Message index {i}: assistant with tool_calls missing tool response for id {tc.get('id')!r}")
+                tm = messages[idx]
+                if tm.get("role") != "tool":
+                    raise ValueError(f"Message index {idx}: expected role 'tool' after assistant tool_calls, got {tm.get('role')!r}")
+                if tm.get("tool_call_id") != tc.get("id"):
+                    raise ValueError(f"Message index {idx}: expected tool_call_id {tc.get('id')!r}, got {tm.get('tool_call_id')!r}")
+                if not isinstance(tm.get("content"), str):
+                    raise ValueError(f"Message index {idx}: tool message content must be string")
+            i += 1 + len(tcs)
+            continue
+        if role == "tool":
+            raise ValueError(f"Message index {i}: unexpected tool message without preceding assistant tool_calls")
+        i += 1
+
+
+def _format_fr(fr: Any) -> str:
+    resp = _get(fr, "response")
+    raw = resp if resp is not None else _get(fr, "content", "No result")
+    return json.dumps(raw) if isinstance(raw, (dict, list)) else str(raw if raw is not None else "No result")
+
+
+def _pack_user_media(texts: list[str], images: list[tuple[bytes, str]]) -> dict[str, Any]:
+    if images:
+        items: list[dict[str, Any]] = [{"type": "text", "text": t} for t in texts]
+        for b, m in images:
+            items.append({"type": "image_url", "image_url": {"url": f"data:{m};base64,{base64.b64encode(b).decode('ascii')}"}})
+        return {"role": "user", "content": items}
+    return {"role": "user", "content": "\n".join(texts)}
 
 
 def convert_contents_to_openai_messages(contents: list[Any]) -> list[dict[str, Any]]:
-    """Convert Google GenAI Content history into OpenAI ChatCompletion messages."""
+    """Convert Google GenAI Content history into strictly ordered OpenAI ChatCompletion messages."""
     messages: list[dict[str, Any]] = []
-    pending_tool_calls: list[tuple[str, str]] = []
-    call_counter = 0
+    call_counter, k = 0, 0
 
-    for content in contents:
-        role = _get(content, "role", "user")
-        parts = _get(content, "parts", []) or []
+    while k < len(contents):
+        content = contents[k]
+        role, parts = _get(content, "role", "user"), _get(content, "parts", []) or []
 
         if role in ("model", "assistant"):
-            texts: list[str] = []
-            tool_calls: list[dict[str, Any]] = []
+            texts, tcs = [], []
             for p in parts:
-                text_val = _get(p, "text")
-                if text_val:
-                    texts.append(str(text_val))
-                fc = _get(p, "function_call")
-                if fc is not None:
+                if t := _get(p, "text"):
+                    texts.append(str(t))
+                if (fc := _get(p, "function_call")) is not None:
                     cid = _get(fc, "id") or f"call_{call_counter}"
                     call_counter += 1
-                    fname = _get(fc, "name", "")
-                    fargs = _get(fc, "args", {})
-                    args_str = json.dumps(fargs) if isinstance(fargs, dict) else str(fargs or "{}")
-                    tool_calls.append({
-                        "id": cid,
-                        "type": "function",
-                        "function": {"name": fname, "arguments": args_str},
-                    })
-                    pending_tool_calls.append((cid, fname))
+                    fa = _get(fc, "args", {})
+                    tcs.append({"id": cid, "type": "function", "function": {"name": _get(fc, "name", ""), "arguments": json.dumps(fa) if isinstance(fa, dict) else str(fa or "{}")}})
 
-            msg: dict[str, Any] = {"role": "assistant", "content": "\n".join(texts) if texts else None}
-            if tool_calls:
-                msg["tool_calls"] = tool_calls
-            messages.append(msg)
+            asst_msg: dict[str, Any] = {"role": "assistant", "content": "\n".join(texts) if texts else None}
+            if tcs:
+                asst_msg["tool_calls"] = tcs
+            messages.append(asst_msg)
+
+            if tcs:
+                user_c = contents[k + 1] if (k + 1 < len(contents) and _get(contents[k + 1], "role", "user") not in ("model", "assistant")) else None
+                if user_c:
+                    k += 1
+                frs, u_texts, u_imgs = [], [], []
+                for p in (_get(user_c, "parts", []) or []):
+                    if (fr := _get(p, "function_response")) is not None:
+                        frs.append(fr)
+                    elif t := _get(p, "text"):
+                        u_texts.append(str(t))
+                    elif (inl := _get(p, "inline_data")) is not None and (b := _get(inl, "data")):
+                        u_imgs.append((b, _get(inl, "mime_type", "image/png")))
+
+                paired: dict[int, str] = {}
+                used_fr: set[int] = set()
+                # 1. Match by id if present
+                for j, fr in enumerate(frs):
+                    if (fid := _get(fr, "id")):
+                        for i, tc in enumerate(tcs):
+                            if i not in paired and tc["id"] == fid:
+                                paired[i], _ = _format_fr(fr), used_fr.add(j)
+                                break
+                # 2. Match by position
+                for i, tc in enumerate(tcs):
+                    if i not in paired and i < len(frs) and i not in used_fr:
+                        if not (fn := _get(frs[i], "name", "")) or fn == tc["function"]["name"]:
+                            paired[i], _ = _format_fr(frs[i]), used_fr.add(i)
+                # 3. Match by name
+                for i, tc in enumerate(tcs):
+                    if i not in paired:
+                        for j, fr in enumerate(frs):
+                            if j not in used_fr and _get(fr, "name", "") == tc["function"]["name"]:
+                                paired[i], _ = _format_fr(fr), used_fr.add(j)
+                                break
+
+                for i, tc in enumerate(tcs):
+                    messages.append({"role": "tool", "tool_call_id": tc["id"], "content": paired.get(i, "No result")})
+
+                if u_imgs or u_texts:
+                    messages.append(_pack_user_media(u_texts, u_imgs))
+            k += 1
         else:
-            func_responses: list[Any] = []
-            texts = []
-            images: list[tuple[bytes, str]] = []
-
+            texts, images = [], []
             for p in parts:
-                fr = _get(p, "function_response")
-                if fr is not None:
-                    func_responses.append(fr)
+                if _get(p, "function_response") is not None:
                     continue
-                text_val = _get(p, "text")
-                if text_val:
-                    texts.append(str(text_val))
-                    continue
-                inline = _get(p, "inline_data")
-                if inline is not None:
-                    img_data = _get(inline, "data")
-                    mime = _get(inline, "mime_type", "image/png")
-                    if img_data:
-                        images.append((img_data, mime))
+                if t := _get(p, "text"):
+                    texts.append(str(t))
+                elif (inl := _get(p, "inline_data")) is not None and (b := _get(inl, "data")):
+                    images.append((b, _get(inl, "mime_type", "image/png")))
+            if images or texts:
+                messages.append(_pack_user_media(texts, images))
+            k += 1
 
-            for fr in func_responses:
-                fid = _get(fr, "id")
-                if fid:
-                    tool_call_id = fid
-                    pending_tool_calls = [item for item in pending_tool_calls if item[0] != fid]
-                elif pending_tool_calls:
-                    fname = _get(fr, "name", "")
-                    match_idx = next((i for i, item in enumerate(pending_tool_calls) if item[1] == fname), 0)
-                    tool_call_id, _ = pending_tool_calls.pop(match_idx)
-                else:
-                    tool_call_id = f"call_{call_counter}"
-                    call_counter += 1
-
-                resp_obj = _get(fr, "response", {})
-                content_str = json.dumps(resp_obj) if isinstance(resp_obj, (dict, list)) else str(resp_obj)
-                messages.append({"role": "tool", "tool_call_id": tool_call_id, "content": content_str})
-
-            if images:
-                for idx, (pid, pname) in enumerate(list(pending_tool_calls)):
-                    if pname == "screenshot":
-                        pending_tool_calls.pop(idx)
-                        messages.append({
-                            "role": "tool",
-                            "tool_call_id": pid,
-                            "content": json.dumps({"result": "screenshot captured"}),
-                        })
-                        break
-                content_items: list[dict[str, Any]] = [{"type": "text", "text": t} for t in texts]
-                for img_bytes, mime in images:
-                    b64_str = base64.b64encode(img_bytes).decode("ascii")
-                    content_items.append({"type": "image_url", "image_url": {"url": f"data:{mime};base64,{b64_str}"}})
-                messages.append({"role": "user", "content": content_items})
-            elif texts:
-                messages.append({"role": "user", "content": "\n".join(texts)})
-
+    validate_openai_messages(messages)
     return messages
 
 
@@ -197,32 +191,20 @@ def convert_openai_response_to_genai_content(resp: Any) -> Any:
     from google.genai import types
 
     choices = _get(resp, "choices", [])
-    if not choices:
-        return None
-    msg = _get(choices[0], "message")
-    if msg is None:
+    if not choices or (msg := _get(choices[0], "message")) is None:
         return None
 
     parts: list[Any] = []
-    content_text = _get(msg, "content")
-    if content_text:
-        parts.append(types.Part.from_text(text=content_text))
+    if txt := _get(msg, "content"):
+        parts.append(types.Part.from_text(text=txt))
 
     for i, tc in enumerate(_get(msg, "tool_calls") or []):
-        func = _get(tc, "function")
-        if func is None:
+        if (func := _get(tc, "function")) is None:
             continue
         raw_args = _get(func, "arguments", "")
-        if isinstance(raw_args, str):
-            try:
-                args = json.loads(raw_args) if raw_args.strip() else {}
-            except Exception:
-                args = {"raw": raw_args}
-        else:
-            args = raw_args if isinstance(raw_args, dict) else {}
-        call_id = f"call_{i}"
-        fc = types.FunctionCall(name=_get(func, "name", ""), args=args, id=call_id)
-        parts.append(types.Part(function_call=fc))
+        args = json.loads(raw_args) if isinstance(raw_args, str) and raw_args.strip() else raw_args if isinstance(raw_args, dict) else {}
+        cid = f"call_{i}"
+        parts.append(types.Part(function_call=types.FunctionCall(name=_get(func, "name", ""), args=args, id=cid)))
 
     return types.Content(role="model", parts=parts) if parts else None
 
@@ -240,7 +222,6 @@ class OpenAIModelClient:
         rand: Callable[[], float] = random.random,
         audit: Optional[Any] = None,
     ) -> None:
-        """Initialize OpenAIModelClient with model name, tools, client, and retry settings."""
         self.model_name = model_name
         self.tools = tools
         self.sleep = sleep
@@ -259,15 +240,10 @@ class OpenAIModelClient:
         self.openai_tools = convert_tools_to_openai(tools)
 
     def generate(self, contents: list[Any]) -> Any:
-        """Generate content from OpenAI model with backoff retries and audit logging."""
         messages = convert_contents_to_openai_messages(contents)
 
         def _call() -> tuple[Any, Any]:
-            kwargs: dict[str, Any] = {
-                "model": self.model_name,
-                "messages": messages,
-                "timeout": DEFAULT_TIMEOUT,
-            }
+            kwargs: dict[str, Any] = {"model": self.model_name, "messages": messages, "timeout": DEFAULT_TIMEOUT}
             if self.openai_tools:
                 kwargs["tools"] = self.openai_tools
 
@@ -282,15 +258,7 @@ class OpenAIModelClient:
                 self.audit.log("retry", attempt=attempt, error=str(exc)[:200], delay=round(delay, 2))
 
         try:
-            content, resp = with_backoff(
-                _call,
-                retries=REQUEST_RETRIES,
-                base=BACKOFF_BASE,
-                cap=BACKOFF_CAP,
-                sleep=self.sleep,
-                rand=self.rand,
-                on_retry=_on_retry,
-            )
+            content, resp = with_backoff(_call, retries=REQUEST_RETRIES, base=BACKOFF_BASE, cap=BACKOFF_CAP, sleep=self.sleep, rand=self.rand, on_retry=_on_retry)
             self.last_usage = _extract_usage(resp)
             return content
         except Exception as e:

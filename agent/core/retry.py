@@ -16,8 +16,35 @@ RETRYABLE_PATTERNS: tuple[str, ...] = (
 )
 
 
+NON_RETRYABLE_PATTERNS: tuple[str, ...] = (
+    "400",
+    "invalid_request_error",
+    "invalid_request",
+    "bad_request",
+)
+
+
+def is_non_retryable_error(exc: BaseException) -> bool:
+    """Return True if exception matches non-retryable pattern (e.g. 400 invalid_request_error)."""
+    status = getattr(exc, "status_code", None)
+    if status == 400:
+        return True
+    msg = str(exc).lower()
+    if any(p in msg for p in NON_RETRYABLE_PATTERNS):
+        return True
+    cause = getattr(exc, "__cause__", None)
+    if cause is not None:
+        if getattr(cause, "status_code", None) == 400:
+            return True
+        if any(p in str(cause).lower() for p in NON_RETRYABLE_PATTERNS):
+            return True
+    return False
+
+
 def is_retryable_error(exc: BaseException) -> bool:
     """Return True if exception matches retryable status code or pattern (case-insensitive)."""
+    if is_non_retryable_error(exc):
+        return False
     status = getattr(exc, "status_code", None)
     if status in (429, 500, 503):
         return True

@@ -225,3 +225,24 @@ def test_main_provider_routing_openai(tmp_path: Any, monkeypatch: pytest.MonkeyP
 
     captured = capsys.readouterr()
     assert "PROVIDER: openai / gpt-4o" in captured.out
+
+
+def test_main_demo_mode_prints_provider(tmp_path: Any, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    fake_runs = str(tmp_path / "runs")
+    monkeypatch.setattr("core.cli.RUNS_DIR", fake_runs)
+    monkeypatch.setattr("core.constants.RUNS_DIR", fake_runs)
+
+    with patch("core.model_client.ModelClient", return_value=FakeModel()), \
+         patch("core.loop.run_loop", return_value=EXIT_OK):
+        code = main(["test", "demo", "--demo", "--demo-answer", "sqlite"])
+        assert code == EXIT_OK
+    captured = capsys.readouterr()
+    assert "DEMO MODE: simulated desktop, real gemma calls" in captured.out
+
+    with patch("core.openai_client.OpenAIModelClient", return_value=FakeModel()), \
+         patch("core.loop.run_loop", return_value=EXIT_OK):
+        code = main(["test", "demo", "--demo", "--provider", "openai", "--demo-answer", "sqlite"])
+        assert code == EXIT_OK
+    captured = capsys.readouterr()
+    assert "DEMO MODE: simulated desktop, real openai calls" in captured.out
+
