@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TAGLINE } from '@/data/brand';
+import { GITHUB_URL } from '@/data/brand';
 import { COPY } from '@/data/copy';
 import { ArrowRight } from 'lucide-react';
 
@@ -21,7 +21,7 @@ export const Hero: React.FC = () => {
         }
       })
       .catch(() => {
-        // Fall back gracefully to radial gradient
+        // Fall back gracefully to background gradient
       });
 
     return () => {
@@ -29,16 +29,17 @@ export const Hero: React.FC = () => {
     };
   }, []);
 
-  const taglineText =
-    TAGLINE || `${COPY.hero.titleLine1} ${COPY.hero.titleLine2}`;
+  const isGithubAvailable =
+    (GITHUB_URL as string) !== 'TODO' &&
+    (GITHUB_URL as string).trim().length > 0;
 
   return (
     <section
       id="hero"
-      aria-labelledby="hero-wordmark"
-      className="relative m-4 sm:m-7 min-h-[calc(100vh-32px)] rounded-[40px] overflow-hidden flex flex-col justify-between p-8 sm:p-12 lg:p-16 border border-border/40 shadow-2xl"
+      aria-labelledby="hero-headline"
+      className="relative m-3 sm:m-6 lg:m-8 rounded-[28px] sm:rounded-[36px] overflow-hidden border border-border bg-surface/40 backdrop-blur-sm shadow-2xl flex flex-col items-center justify-center text-center p-6 sm:p-12 lg:p-16 min-h-[calc(90vh-2rem)] sm:min-h-[calc(88vh-3rem)]"
     >
-      {/* Background Media or Radial Gradient */}
+      {/* Background Media or Radial Glow */}
       {hasMedia === 'video' && (
         <video
           autoPlay
@@ -60,14 +61,14 @@ export const Hero: React.FC = () => {
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
           background:
-            'radial-gradient(circle at 50% 30%, #0a1f44 0%, #030712 60%, #000000 100%)',
+            'radial-gradient(ellipse at 50% 35%, rgba(34, 255, 110, 0.08) 0%, rgba(10, 31, 68, 0.25) 45%, rgba(0, 0, 0, 0.95) 100%)',
         }}
         aria-hidden="true"
       />
 
-      {/* Top Area: Eyebrow Tag / Mono Label */}
-      <div className="pt-16 sm:pt-14 flex items-center justify-between z-10">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full font-mono text-xs border border-white/10 bg-black/40 text-text-muted backdrop-blur-sm select-none">
+      {/* Eyebrow Tag / Mono Label */}
+      <div className="pt-12 sm:pt-6 mb-6 sm:mb-8 z-10">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full font-mono text-xs border border-white/10 dark:border-white/10 bg-black/40 text-text-muted backdrop-blur-sm select-none">
           <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" aria-hidden="true" />
           <span className="text-text font-semibold">[ HUSH ]</span>
           <span className="text-white/30">•</span>
@@ -75,47 +76,65 @@ export const Hero: React.FC = () => {
         </div>
       </div>
 
-      {/* Bottom Area: Giant Wordmark (left) and Tagline / CTA / Scroll (right) */}
-      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pb-4 sm:pb-6 z-10 mt-auto">
-        {/* Giant wordmark bottom-left */}
-        <div className="select-none">
-          <h1
-            id="hero-wordmark"
-            className="font-display font-[800] text-[18vw] sm:text-[24vw] lg:text-[28vw] leading-[0.85] tracking-tighter text-text select-none whitespace-nowrap"
-          >
-            HUSH
-            <span className="text-accent align-super text-[0.45em] ml-1 font-normal select-none">
-              *
-            </span>
-          </h1>
-        </div>
+      {/* Main Headline */}
+      <div className="max-w-4xl mx-auto z-10">
+        <h1
+          id="hero-headline"
+          className="font-display font-[800] text-4xl sm:text-6xl md:text-7xl lg:text-[5.25rem] leading-[1.06] tracking-tight text-text"
+        >
+          <span className="block text-text-mint">{COPY.hero.titleLine1}</span>
+          <span className="block font-serif italic font-normal text-accent mt-1 sm:mt-2">
+            {COPY.hero.titleLine2}
+          </span>
+        </h1>
 
-        {/* Bottom-right: Tagline, Pill CTA button, Scroll indicator */}
-        <div className="flex flex-col items-start lg:items-end max-w-md lg:text-right pb-2 shrink-0">
-          <p className="text-base sm:text-lg text-text-muted font-sans leading-relaxed mb-6">
-            {taglineText}
-          </p>
+        {/* Subhead */}
+        <p className="mt-6 sm:mt-8 text-base sm:text-lg lg:text-xl leading-relaxed text-text-muted max-w-2xl mx-auto font-sans">
+          {COPY.hero.subhead}
+        </p>
 
+        <p className="mt-3 text-xs font-mono text-text-muted tracking-wide">
+          Works with Graphify for codebase memory.
+        </p>
+
+        {/* CTAs */}
+        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4">
           <a
             href="#simulator"
-            className="bg-[#F5F0E8] text-black rounded-full px-6 py-3 font-medium text-sm flex items-center gap-3 hover:opacity-95 hover:scale-[1.02] active:scale-[0.98] transition-all group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-text text-bg rounded-full px-7 py-3.5 text-sm font-semibold hover:opacity-95 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             <span>{COPY.hero.ctaPrimary}</span>
             <span
-              className="w-5 h-5 rounded-full bg-black text-[#F5F0E8] flex items-center justify-center shrink-0 transition-transform group-hover:translate-x-0.5"
+              className="w-5 h-5 rounded-full bg-bg text-text flex items-center justify-center shrink-0 transition-transform group-hover:translate-x-0.5"
               aria-hidden="true"
             >
               <ArrowRight className="w-3 h-3" strokeWidth={2.5} />
             </span>
           </a>
 
-          <div
-            className="font-mono text-xs text-text-muted mt-3 select-none flex items-center gap-1.5"
-            aria-hidden="true"
+          {isGithubAvailable && (
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-border bg-surface-2/70 text-text hover:bg-surface-2 rounded-full px-6 py-3.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            >
+              <span>{COPY.hero.ctaSecondary}</span>
+            </a>
+          )}
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="mt-10 sm:mt-12 flex items-center justify-center">
+          <a
+            href="#simulator"
+            className="inline-flex items-center gap-1.5 font-mono text-xs text-text-muted hover:text-accent transition-colors tracking-widest uppercase select-none"
           >
             <span>SCROLL</span>
-            <span className="animate-bounce">↓</span>
-          </div>
+            <span className="animate-bounce" aria-hidden="true">
+              ↓
+            </span>
+          </a>
         </div>
       </div>
     </section>
