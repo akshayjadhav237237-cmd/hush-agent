@@ -63,7 +63,7 @@ Account switching is strictly browser-only and limited to web interfaces for Cla
 
 ## What is verified
 
-Hush maintains a strict boundary between automated code contracts and physical hardware validation. All core logic, safety constraints, state machines, and parsing logic are validated through an offline unit test suite consisting of **219 passing pytest tests**.
+Hush maintains a strict boundary between automated code contracts and physical hardware validation. All core logic, safety constraints, state machines, and parsing logic are validated through an offline unit test suite consisting of **274 passing pytest tests**.
 
 | Safety Feature | Verification Status | Verification Detail |
 | :--- | :--- | :--- |
@@ -90,7 +90,7 @@ Hush maintains a strict boundary between automated code contracts and physical h
 
 ## Accomplishments that we're proud of
 
-- **Fast, comprehensive unit test suite:** We built 219 unit tests across 28 test suites in pytest. The full suite completes in under 15 seconds. It exercises the state machine, tool registry (22 base tools, 23 with profile switching), loop breaker, rate limiter, and safety confinement without requiring live network APIs or physical desktop hardware.
+- **Fast, comprehensive unit test suite:** We built 274 unit tests across 34 test suites in pytest. The full suite completes in under 25 seconds. It exercises the state machine, tool registry (22 base tools, 23 with profile switching), loop breaker, rate limiter, and safety confinement without requiring live network APIs or physical desktop hardware.
 - **Tamper-evident SHA-256 chained audit log:** Every model prompt, tool invocation, human intervention gate, and exit code is recorded in `audit.jsonl`. Each record includes a SHA-256 hash pointer to the previous entry, creating an immutable audit trail. API keys (Gemini, OpenAI, GitHub tokens) and authorization headers are scrubbed before writing to disk.
 - **In-memory simulated desktop mode (`--demo`):** Testing desktop GUI agents typically requires physical screens or fragile headless X servers. We built a synthetic desktop engine that produces 1280x720 PNG screenshots and mock window hierarchies in memory. This enables full end-to-end evaluation of loop execution, screenshot downsampling, and tool dispatch in headless CI.
 - **Self-contained showcase web app:** We engineered an interactive showcase site and audit log replay viewer. The site builds into static assets with zero external runtime dependencies and deploys directly to GitHub Pages.
