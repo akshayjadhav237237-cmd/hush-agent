@@ -49,7 +49,7 @@ export const Safety: React.FC = () => {
             Safety Guardrails &amp; Controls
           </h2>
           <p className="mt-4 text-base sm:text-lg text-text-muted leading-relaxed">
-            Autonomous agent execution requires explicit containment. Hush combines policy command sandboxing, process limits, hardware interrupts, and planned forensic audit trails.
+            Autonomous agent execution requires explicit containment. Hush combines policy command containment, process limits, hardware interrupts, and cryptographic audit trails.
           </p>
         </div>
 

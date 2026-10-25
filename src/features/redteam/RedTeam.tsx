@@ -119,7 +119,7 @@ export const RedTeam: React.FC = () => {
             <span className="font-mono text-xs uppercase tracking-wider text-text-muted">Blocked Attacks</span>
             <div className="flex items-baseline gap-2 mt-2">
               <span className="font-mono text-3xl font-bold text-danger">{blockedCount}</span>
-              <span className="text-xs text-danger/80 font-mono">100% caught</span>
+              <span className="text-xs text-danger/80 font-mono">all test cases caught</span>
             </div>
           </div>
 
@@ -127,7 +127,7 @@ export const RedTeam: React.FC = () => {
             <span className="font-mono text-xs uppercase tracking-wider text-text-muted">Allowed Controls</span>
             <div className="flex items-baseline gap-2 mt-2">
               <span className="font-mono text-3xl font-bold text-success">{allowedCount}</span>
-              <span className="text-xs text-success/80 font-mono">100% permitted</span>
+              <span className="text-xs text-success/80 font-mono">all test cases permitted</span>
             </div>
           </div>
 

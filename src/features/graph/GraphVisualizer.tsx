@@ -102,7 +102,7 @@ export const GraphVisualizer: React.FC = () => {
             </h3>
 
             <p className="text-xs sm:text-sm text-text-muted leading-relaxed">
-              The graph export contains remote references. Sandboxed offline policy prevents embedding external network resources.
+              The graph export contains remote references. Offline containment policy prevents embedding external network resources.
             </p>
 
             <div className="pt-2 text-left bg-surface border border-border rounded-[8px] p-3 max-h-24 overflow-y-auto">
@@ -120,7 +120,7 @@ export const GraphVisualizer: React.FC = () => {
           </div>
         </div>
         <p className="text-center text-xs font-mono text-text-muted">
-          Sandbox policy requires fully local, self-contained HTML graph artifacts.
+          Containment policy requires fully local, self-contained HTML graph artifacts.
         </p>
       </div>
     );

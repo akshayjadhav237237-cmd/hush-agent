@@ -38,7 +38,7 @@ export const SafetySummary: React.FC<SafetySummaryProps> = ({
         {/* Thin vertical divider */}
         <div className="hidden md:block w-px bg-border my-1 self-stretch" aria-hidden="true" />
 
-        {/* Metric 2: Tool Sandboxing */}
+        {/* Metric 2: Tool Containment */}
         <div className="flex-1 min-w-[120px] text-center py-2 px-3">
           <div className="text-2xl sm:text-3xl font-mono font-bold text-text">
             {BASE_TOOL_COUNT} / {SWITCHING_TOOL_COUNT}

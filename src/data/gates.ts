@@ -28,8 +28,8 @@ export const ATTENTION_GATES: Gate[] = [
   {
     id: "gate-destructive-command",
     title: "Destructive or Non-Allowlisted Command",
-    detects: "Unrecognized terminal commands, recursive deletion (rm -rf), privilege escalation (sudo/chmod), or out-of-sandbox disk modifications.",
-    action: "Immediately blocks command execution at sandbox boundary, records alert in audit log, and awaits operator confirmation.",
+    detects: "Unrecognized terminal commands, recursive deletion (rm -rf), privilege escalation (sudo/chmod), or out-of-workspace disk modifications.",
+    action: "Immediately blocks command execution at command allowlist boundary, records alert in audit log, and awaits operator confirmation.",
     icon: "Terminal",
     enforcement: "code"
   },

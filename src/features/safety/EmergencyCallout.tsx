@@ -48,7 +48,7 @@ export const EmergencyCallout: React.FC = () => {
               Defensive Containment
             </span>
             <h3 className="text-lg sm:text-xl font-semibold text-text tracking-tight">
-              Emergency Stop &amp; Command Sandbox
+              Emergency Stop &amp; Command Guardrail
             </h3>
           </div>
         </div>
@@ -149,7 +149,7 @@ export const EmergencyCallout: React.FC = () => {
               </h4>
             </div>
             <p className="text-xs text-text-muted leading-relaxed mb-4">
-              All shell commands pass through validation in <code className="font-mono text-text">run_cmd</code> before execution. Allowed binaries execute inside WORKDIR and PROJECT_DIR. Disallowed patterns or binaries are rejected at the sandbox boundary.
+              All shell commands pass through validation in <code className="font-mono text-text">run_cmd</code> before execution. Allowed binaries execute inside WORKDIR and PROJECT_DIR. Disallowed patterns or binaries are rejected at the command allowlist boundary.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -187,7 +187,7 @@ export const EmergencyCallout: React.FC = () => {
 
           <div className="mt-4 pt-3 border-t border-border/70 text-xs font-mono text-text-muted flex items-center justify-between">
             <span>Enforcement:</span>
-            <span className="text-accent font-semibold">run_cmd sandbox boundary</span>
+            <span className="text-accent font-semibold">run_cmd allowlist boundary</span>
           </div>
         </div>
       </div>

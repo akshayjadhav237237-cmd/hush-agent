@@ -156,13 +156,13 @@ export const ARCHITECTURE_NODES: Record<string, ArchitectureNodeData> = {
     category: 'subagent',
     categoryLabel: 'Subagent',
     privacyTier: 'sandboxed',
-    privacyLabel: 'Sandboxed Workspace',
+    privacyLabel: 'Contained Workspace',
     executionDomain: 'Sandboxed Container',
     description:
-      'Applies code modifications, executes tests, and stages diffs in an isolated sandbox.',
+      'Applies code modifications, executes tests, and stages diffs in a contained workspace.',
     detailedFunction:
       'Implements code changes based on specifications from Google Gemma 4 and Claude. Runs unit tests and validates builds inside the isolated workspace before requesting commits.',
-    implementation: 'Sandboxed workspace runtime with isolated test execution',
+    implementation: 'Contained workspace runtime with isolated test execution',
     capabilities: [
       'Workspace code generation and patch application',
       'Test suite execution and error remediation',
@@ -170,7 +170,7 @@ export const ARCHITECTURE_NODES: Record<string, ArchitectureNodeData> = {
       'Build verification and lint checking'
     ],
     securityProtocol:
-      'Confined to project sandbox. Operations outside boundaries route to the Attention Gate.',
+      'Confined to project workspace. Operations outside boundaries route to the Attention Gate.',
     coordinates: { x: 830, y: 480 },
     samplePayload: {
       input: 'Implement database adapter with connection pooling.',
@@ -326,7 +326,7 @@ export const SCENARIOS: Scenario[] = [
       { step: 2, agent: 'Google Gemma 4', action: 'Inspects workspace state and prepares plan.' },
       { step: 3, agent: 'Claude', action: 'Synthesizes modular architecture specification.' },
       { step: 4, agent: 'Gemini Deep Research', action: 'Retrieves verified documentation and references.' },
-      { step: 5, agent: 'Antigravity', action: 'Implements code changes in sandbox.' },
+      { step: 5, agent: 'Antigravity', action: 'Implements code changes in workspace.' },
       { step: 6, agent: 'Graphify', action: 'Extracts syntax trees locally and updates code graph.' },
       { step: 7, agent: 'Attention Gate', action: 'Enforces safety boundaries before system mutations.' }
     ]
@@ -364,7 +364,7 @@ export const SCENARIOS: Scenario[] = [
   },
   {
     id: 'coding',
-    title: 'Sandboxed Implementation',
+    title: 'Contained Implementation',
     shortBadge: 'Coding',
     summary: 'Google Gemma 4 directs Antigravity to edit files and passes diffs to Graphify for local AST extraction.',
     activeNodeIds: ['user', 'gemma', 'antigravity', 'graphify'],

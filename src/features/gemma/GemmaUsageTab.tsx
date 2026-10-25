@@ -16,7 +16,7 @@ const USAGE_DETAILS = [
   {
     icon: <ShieldAlert className="w-5 h-5 text-accent" strokeWidth={1.5} aria-hidden="true" />,
     role: 'Attention Gatekeeper',
-    metrics: ['Ambiguity detection', 'Sandbox rule verification', 'Human handoff triaging'],
+    metrics: ['Ambiguity detection', 'Guardrail rule verification', 'Human handoff triaging'],
   },
 ];
 
@@ -105,7 +105,7 @@ export const GemmaUsageTab: React.FC = () => {
           <div className="p-4 rounded-[10px] bg-surface-2 border border-border flex flex-col justify-between">
             <span className="text-xs font-mono text-text-muted mb-1">03. EXECUTION</span>
             <p className="text-xs font-semibold text-text mb-1">Tool Execution</p>
-            <p className="text-xs text-text-muted">Research compiled or code synthesized in sandbox.</p>
+            <p className="text-xs text-text-muted">Research compiled or code synthesized in workspace.</p>
           </div>
 
           <div className="p-4 rounded-[10px] bg-surface-2 border border-border flex flex-col justify-between">

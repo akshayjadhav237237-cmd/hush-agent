@@ -140,7 +140,7 @@ Hush treats **Google Gemma 4** (`gemma-4-26b-a4b-it`) as an uncompromising contr
 
 Hush embeds [Graphify](https://github.com/Graphify-Labs/graphify) to solve the classic agent problem of **editing blind** on large codebases. Instead of repeatedly stuffing raw files into model context, Graphify extracts an abstract syntax tree (AST) locally using `tree-sitter`.
 
-- **100% Local Parsing**: Code extraction runs entirely on your local machine; zero source code is transmitted to cloud endpoints for AST indexing.
+- **Local AST Parsing**: Code extraction runs entirely on your local machine; zero source code is transmitted to cloud endpoints for AST indexing.
 - **6 Dedicated Native Graph Tools**:
   - `graph_build`: Initial AST extraction and clustering.
   - `graph_update`: Incremental graph refresh following file modifications.
@@ -163,19 +163,19 @@ Hush includes **13 defense-in-depth safety gates** implemented across [`agent/co
 
 | # | Defense Boundary | Implementation | Status |
 |:-:|:---|:---|:---:|
-| 1 | **Command Allowlist** | Permits only 10 binaries: `git`, `npm`, `node`, `python`, `pip`, `dir`, `type`, `echo`, `mkdir`, `cd`. Operator chaining (`&&`, `;`, `\|`) and redirection (`>`, `<`) are strictly blocked. | *Unit-tested* |
-| 2 | **Filesystem Confinement** | Path arguments and command cwd are strictly verified with `os.path.commonpath`. Directory traversal (`..`), drive hopping (`C:\Windows`), and UNC network paths are rejected. | *Unit-tested* |
-| 3 | **Hard Step Ceiling** | `MAX_STEPS = 80` terminates execution to avoid runaway billing or infinite loops. | *Unit-tested* |
-| 4 | **Global Kill Hotkey** | Dedicated background thread polling `GetAsyncKeyState` at 20 Hz for `Ctrl+Alt+K`, terminating orchestrator and subprocesses with exit code 3. | *Unit-tested* |
-| 5 | **Hardware Mouse-Corner Abort** | Instant PyAutoGUI failsafe trips when pointer reaches `(0, 0)`, aborting with exit code 2. | *Unit-tested* |
-| 6 | **Perceptual Loop Breaker** | Difference hashing (`dhash`) detects visual freezing; breaks out after 3 identical interactive actions or 15 wait intervals. | *Unit-tested* |
-| 7 | **Cryptographic Audit Log** | Tamper-evident JSONL audit record with SHA-256 hash chaining (`prev` field) verifiable via `verify_chain()`. | *Unit-tested* |
-| 8 | **Automated Secret Redaction** | Strips API keys (`AIza...`, `sk-...`, `ghp_...`, `github_pat_...`) and `Bearer` headers from all logs and console output. | *Unit-tested* |
-| 9 | **Atomic Checkpoints** | Clean atomic serialization (`checkpoint.json`) after every step allows resuming with `--resume latest`. | *Unit-tested* |
-| 10 | **Deterministic Demo World** | Offline sandbox (`--demo`) with synthetic 1280x720 PNG screenshots and mock workflows for safe evaluation. | *Unit-tested* |
-| 11 | **Graph Stall Detection** | SHA-256 hashing of `GRAPH_REPORT.md` detects zero-progress coding loops across build rounds. | *Unit-tested* |
-| 12 | **Service Limit Cooldown** | Automated countdown timer pausing operations when rate limits occur while polling the kill switch. | *Unit-tested* |
-| 13 | **Multi-Profile Account Switch** | Chrome profile rotation bounded by a hard cap of 2 switches, 120s cooldown, and explicit operator consent. | *Unit-tested* |
+| 1 | **Command Allowlist** | Permits only 10 binaries: `git`, `npm`, `node`, `python`, `pip`, `dir`, `type`, `echo`, `mkdir`, `cd`. Operator chaining (`&&`, `;`, `\|`) and redirection (`>`, `<`) are strictly blocked. | *Implemented, unit-tested* |
+| 2 | **Filesystem Confinement** | Path arguments and command cwd are strictly verified with `os.path.commonpath`. Directory traversal (`..`), drive hopping (`C:\Windows`), and UNC network paths are rejected. | *Implemented, unit-tested* |
+| 3 | **Hard Step Ceiling** | `MAX_STEPS = 80` terminates execution to avoid runaway billing or infinite loops. | *Implemented, unit-tested* |
+| 4 | **Global Kill Hotkey** | Dedicated background thread polling `GetAsyncKeyState` at 20 Hz for `Ctrl+Alt+K`, terminating orchestrator and subprocesses with exit code 3. | *Implemented, unit-tested (unverified on real desktop)* |
+| 5 | **Hardware Mouse-Corner Abort** | Instant PyAutoGUI failsafe trips when pointer reaches `(0, 0)`, aborting with exit code 2. | *Implemented, unit-tested (unverified on real desktop)* |
+| 6 | **Perceptual Loop Breaker** | Difference hashing (`dhash`) detects visual freezing; breaks out after 3 identical interactive actions or 15 wait intervals. | *Implemented, unit-tested (unverified on real desktop)* |
+| 7 | **Cryptographic Audit Log** | Tamper-evident JSONL audit record with SHA-256 hash chaining (`prev` field) verifiable via `verify_chain()`. | *Implemented, unit-tested* |
+| 8 | **Automated Secret Redaction** | Strips API keys (`AIza...`, `sk-...`, `ghp_...`, `github_pat_...`) and `Bearer` headers from all logs and console output. | *Implemented, unit-tested* |
+| 9 | **Atomic Checkpoints** | Clean atomic serialization (`checkpoint.json`) after every step allows resuming with `--resume latest`. | *Implemented, unit-tested (unverified on real desktop)* |
+| 10 | **Deterministic Demo World** | Offline simulated environment (`--demo`) with synthetic 1280x720 PNG screenshots and mock workflows for safe evaluation. | *Implemented, unit-tested* |
+| 11 | **Graph Stall Detection** | SHA-256 hashing of `GRAPH_REPORT.md` detects zero-progress coding loops across build rounds. | *Planned (unverified on real desktop)* |
+| 12 | **Service Limit Cooldown** | Automated countdown timer pausing operations when rate limits occur while polling the kill switch. | *Implemented, unit-tested* |
+| 13 | **Multi-Profile Account Switch** | Chrome profile rotation bounded by a hard cap of 2 switches, 120s cooldown, and explicit operator consent. | *Implemented, unit-tested (unverified on real desktop)* |
 
 > [!NOTE]
 > *The command allowlist is an operational guardrail, not an operating system sandbox; permitted interpreters like `python` and `node` can execute user-level code within the workspace context.*
@@ -259,6 +259,19 @@ python compare_runs.py runs/run_a runs/run_b --price-in 0.15 --price-out 0.60
 
 ---
 
+### 5. Verifying Cryptographic Audit Trail
+Hush logs every action, prompt, tool invocation, and gate to `audit.jsonl` with SHA-256 hash chaining (`prev` field). To verify that an audit trail has not been tampered with or corrupted:
+
+```bash
+# Verify cryptographic hash chain using verify_chain()
+python -c "from core.audit import verify_chain; ok, n, err = verify_chain('runs/<RUN_ID>/audit.jsonl'); print(f'PASS: {n} events verified' if ok else f'FAIL: {err}')"
+
+# Or export and verify replay data in one step:
+python export_replay.py <RUN_ID>
+```
+
+---
+
 ## 🛑 Emergency Kill Controls
 
 You maintain total physical control over Hush at all times:
@@ -275,7 +288,7 @@ You maintain total physical control over Hush at all times:
 |:---|:---|:---|
 | **Vision & Mouse** | `screenshot`, `click`, `scroll` | High-res full-screen capture, coordinate clicking, and scrolling. |
 | **Keyboard & Window** | `paste_text`, `press_keys`, `focus_window`, `open_app`, `open_url` | Text entry via clipboard, shortcut chords, and window targeting. |
-| **System & Shell** | `read_clipboard`, `run_cmd`, `wait` | Clipboard extraction, sandboxed command execution, and pauses. |
+| **System & Shell** | `read_clipboard`, `run_cmd`, `wait` | Clipboard extraction, allowlisted command execution, and pauses. |
 | **Artifacts** | `save_artifact`, `paste_artifact` | Zero-truncation storage and pasting for massive source code files. |
 | **Knowledge Graph** | `graph_build`, `graph_update`, `graph_report`, `graph_query`, `graph_explain`, `graph_path` | Local AST parsing, relationship tracing, and stall detection. |
 | **Policy & Gates** | `report_limit`, `notify_human`, `finish`, `switch_account` | Cooldown management, human escalation, and Chrome profile rotation. |

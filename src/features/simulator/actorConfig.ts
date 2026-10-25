@@ -44,7 +44,7 @@ export const ACTOR_CONFIG: Record<SimulatorActor, ActorMeta> = {
   antigravity: {
     id: 'antigravity',
     label: 'Antigravity',
-    role: 'Sandboxed code generation',
+    role: 'Workspace-contained code generation',
     icon: Terminal,
     badgeClassName: 'border border-border bg-surface text-text-muted',
   },

@@ -33,13 +33,13 @@ export const GraphSection: React.FC = () => {
           </p>
         </div>
 
-        {/* Interactive Viewer / Sandbox */}
+        {/* Interactive Viewer */}
         <div className="space-y-3">
           <div className="flex items-center justify-between text-xs font-mono text-text-muted">
             <span className="uppercase tracking-wider font-semibold">
               Spatial Graph Visualization
             </span>
-            <span>HTML Export Sandbox</span>
+            <span>HTML Export Viewer</span>
           </div>
           <GraphVisualizer />
         </div>

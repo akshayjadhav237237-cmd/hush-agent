@@ -11,7 +11,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "What is simulated vs real in this project?",
-    a: "The TypeScript web application, interactive state machine, command allowlist sandbox, and attention gate flows are fully implemented. The wedding photographer build trace demonstrates real orchestrator execution patterns in a recorded walkthrough so evaluators can inspect every decision, terminal output, and gate event without live API keys or long research waits."
+    a: "The TypeScript web application, interactive state machine, command allowlist guardrail, and attention gate flows are fully implemented. The wedding photographer build trace demonstrates real orchestrator execution patterns in a recorded walkthrough so evaluators can inspect every decision, terminal output, and gate event without live API keys or long research waits."
   },
   {
     q: "What are the known limitations (including UI click/coordinate accuracy)?",

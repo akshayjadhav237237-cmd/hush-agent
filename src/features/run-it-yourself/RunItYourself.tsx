@@ -318,7 +318,7 @@ setx NTFY_TOPIC "your-private-topic"`}
                 Unit-Tested Suite with Simulated Desktop
               </h4>
               <p className="text-xs text-text-muted">
-                Run pytest across the test suite in <code className="font-mono text-text">agent/tests/</code> to verify safety sandboxing and audit trails.
+                Run pytest across the test suite in <code className="font-mono text-text">agent/tests/</code> to verify safety containment and audit trails.
               </p>
             </div>
           </div>

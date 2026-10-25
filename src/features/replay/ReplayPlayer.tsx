@@ -81,23 +81,20 @@ export const ReplayPlayer: React.FC = () => {
           <div className="flex flex-col gap-2">
             {/* Badges bar */}
             <div className="flex flex-wrap items-center gap-2">
-              {/* Demo Mode Badge */}
-              {payload?.mode === 'demo' && (
-                <span
-                  role="note"
-                  className="inline-flex items-center px-2.5 py-1 rounded-[10px] border border-warning/60 bg-warning/10 text-xs font-mono text-warning font-semibold tracking-tight"
-                >
-                  DEMO MODE: simulated desktop, real Gemma calls
-                </span>
-              )}
-
-              {/* Real Mode Badge */}
-              {payload?.mode === 'real' && (
+              {/* Desktop Origin Badge: clearly states simulated desktop unless metadata proves real */}
+              {payload?.mode === 'real' ? (
                 <span
                   role="note"
                   className="inline-flex items-center px-2.5 py-1 rounded-[10px] border border-accent/60 bg-accent/10 text-xs font-mono text-accent font-semibold tracking-tight"
                 >
-                  REAL EXECUTION MODE
+                  REAL DESKTOP EXECUTION
+                </span>
+              ) : (
+                <span
+                  role="note"
+                  className="inline-flex items-center px-2.5 py-1 rounded-[10px] border border-warning/60 bg-warning/10 text-xs font-mono text-warning font-semibold tracking-tight"
+                >
+                  SIMULATED DESKTOP (Demo Mode)
                 </span>
               )}
 
@@ -147,7 +144,7 @@ export const ReplayPlayer: React.FC = () => {
               Execution Replay & Audit Trace
             </h2>
             <p className="text-xs sm:text-sm text-text-muted leading-relaxed max-w-2xl">
-              Step-by-step telemetry reconstructed from cryptographic append-only audit records. Redacted for privacy.
+              Step-by-step telemetry reconstructed from cryptographic append-only audit records. Redacted for privacy. Recorded in a simulated desktop environment (--demo).
             </p>
           </div>
         </div>

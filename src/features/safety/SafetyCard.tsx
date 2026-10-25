@@ -8,7 +8,7 @@ interface SafetyCardProps {
 }
 
 const ENFORCEMENT_METADATA: Record<string, { layer: string; scope: string }> = {
-  'safety-command-allowlist': { layer: 'POSIX Sandbox', scope: 'Child Processes' },
+  'safety-command-allowlist': { layer: 'Process Guardrail', scope: 'Child Processes' },
   'safety-workspace-only': { layer: 'Path Boundary Validator', scope: 'File Operations' },
   'safety-step-cap': { layer: 'Iteration Counter', scope: 'Runtime Loop Engine' },
   'safety-mouse-corner-abort': { layer: 'OS Pointer Hook', scope: 'Hardware Interruption' },

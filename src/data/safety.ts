@@ -13,7 +13,7 @@ export const SAFETY_ITEMS: SafetyItem[] = [
   {
     id: "safety-workspace-only",
     title: "Workspace filesystem containment",
-    description: "Filesystem sandboxing enforcing all command execution and graph extraction to stay strictly within WORKDIR and PROJECT_DIR, preventing path traversal outside the project root.",
+    description: "Filesystem containment enforcing all command execution and graph extraction to stay strictly within WORKDIR and PROJECT_DIR, preventing path traversal outside the project root.",
     implemented: true,
     statusLabel: "Implemented, unit-tested",
     desktopVerified: true,

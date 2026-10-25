@@ -39,7 +39,7 @@ export const Gates: React.FC = () => {
           </span>
           <span className="inline-flex items-center gap-1.5 text-text-muted font-medium">
             <ShieldCheck className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} aria-hidden="true" />
-            Continuous Sandbox Enforcement
+            Continuous Guardrail Enforcement
           </span>
         </div>
 
