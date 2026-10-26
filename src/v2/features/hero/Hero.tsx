@@ -26,7 +26,6 @@ export const Hero: React.FC = () => {
           alt="Hush autonomous desktop orchestrator hero video"
           className="absolute inset-0"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent pointer-events-none z-10" />
 
         {/* Bottom-Left Wordmark & Bottom-Right Area */}
         <div className="relative z-20 w-full h-full flex flex-col justify-end px-6 sm:px-10 lg:px-16 pb-8 sm:pb-12 pt-28">
