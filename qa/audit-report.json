@@ -1,0 +1,23 @@
+{
+  "success": true,
+  "fontCheck": true,
+  "fontResult": {
+    "found": true,
+    "fontFamily": "Almarai, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif",
+    "text": "HUSH*"
+  },
+  "externalRequestsCount": 0,
+  "externalRequests": [],
+  "metrics1440": {
+    "heroWidth": 1440,
+    "h1Width": 829.0625,
+    "containerWidth": 1380,
+    "h1Text": "HUSH\n*"
+  },
+  "metrics390": {
+    "heroWidth": 390,
+    "h1Width": 273.28125,
+    "containerWidth": 366,
+    "h1Text": "HUSH\n*"
+  }
+}

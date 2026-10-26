@@ -33,9 +33,15 @@ export const Hero: React.FC = () => {
           
           {/* Bottom-Left Wordmark */}
           <div className="absolute bottom-[2vw] left-[4vw] z-20 flex items-start select-none">
-            <h1 className="font-normal font-sans text-[32vw] sm:text-[30vw] md:text-[28vw] lg:text-[24vw] xl:text-[340px] tracking-[-0.04em] leading-[0.8] text-[#E4E2D0] flex items-start">
+            <h1 
+              style={{ fontFamily: 'var(--font-hero)' }}
+              className="font-normal text-[26vw] sm:text-[25vw] md:text-[24vw] lg:text-[22vw] xl:text-[310px] tracking-[-0.04em] leading-[0.8] text-[#E4E2D0] flex items-start"
+            >
               {COPY_V2.hero.wordmark}
-              <span className="text-[6vw] sm:text-[5vw] lg:text-[60px] text-[#E4E2D0] ml-1 sm:ml-2 font-normal select-none">
+              <span 
+                style={{ fontFamily: 'var(--font-hero)' }}
+                className="text-[5vw] sm:text-[4.5vw] lg:text-[54px] text-[#E4E2D0] ml-1 sm:ml-2 font-normal select-none"
+              >
                 *
               </span>
             </h1>
