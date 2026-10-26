@@ -70,16 +70,16 @@ Hush maintains a strict boundary between automated code contracts and physical h
 | **Command allowlist** | Implemented, unit-tested | Validated against 10 permitted binaries, blocked operators, redirection, and prohibited flags (`test_command_safety.py`). |
 | **Workspace filesystem containment** | Implemented, unit-tested | Path normalization, drive escape checks, and directory traversal blocks validated across edge cases (`test_command_safety.py`). |
 | **Step cap (`MAX_STEPS = 80`)** | Implemented, unit-tested | Termination at turn 80 with exit code 4 verified in synthetic execution loops (`test_loop.py`). |
-| **Mouse-corner failsafe** | Implemented, unit-tested; not yet verified on a real desktop | `pyautogui.FailSafeException` handling, exit code 2 dispatch, and audit logging verified with mocked desktop drivers (`test_killswitch.py`). |
-| **Human-notify gate** | Implemented, unit-tested; not yet verified on a real desktop | Console pause, prompt display, auto-answer mocks, and `ntfy.sh` secret scrubbing verified offline (`test_notify.py`). |
+| **Mouse-corner failsafe** | Implemented, tested via synthetic injection; physical hardware verification pending | `pyautogui.FailSafeException` handling, exit code 2 dispatch, and audit logging verified with mocked desktop drivers (`test_killswitch.py`). |
+| **Human-notify gate** | Implemented, unit-tested; physical hardware verification pending | Console pause, prompt display, auto-answer mocks, and `ntfy.sh` secret scrubbing verified offline (`test_notify.py`). |
 | **Graph no-progress alert** | Planned (`GRAPH_STALL_VERIFIED = false`) | Specification and hashing architecture designed; end-to-end multi-round stall tripping pending completion. |
 | **Cryptographically chained audit log** | Implemented, unit-tested | SHA-256 chain continuity, tamper detection via `verify_chain()`, and automated secret scrubbing verified (`test_audit.py`). |
-| **Atomic checkpoints and resume** | Implemented, unit-tested; not yet verified on a real desktop | State serialization, checkpoint writing, corrupt file handling, and discovery of `--resume latest` verified (`test_checkpoint.py`). |
+| **Atomic checkpoints and resume** | Implemented, unit-tested; physical hardware verification pending | State serialization, checkpoint writing, corrupt file handling, and discovery of `--resume latest` verified (`test_checkpoint.py`). |
 | **Simulated demo mode** | Implemented, unit-tested | Synthetic 1280x720 PNG rendering, deterministic code generation, and simulated limit triggers verified offline (`test_demo_*.py`). |
-| **Global kill hotkey (`Ctrl+Alt+K`)** | Implemented, unit-tested; not yet verified on a real desktop | 20 Hz polling thread, key state interception, and exit code 3 termination verified via mocked OS inputs (`test_killswitch.py`). |
-| **Perceptual loop breaker** | Implemented, unit-tested; not yet verified on a real desktop | 64-bit `dhash` computation, Hamming distance checks, and action/wait threshold tripping verified on synthetic PNG frames (`test_loopbreaker.py`). |
+| **Global kill hotkey (`Ctrl+Alt+K`)** | Implemented, tested via synthetic injection; physical hardware verification pending | 20 Hz polling thread, key state interception, and exit code 3 termination verified via mocked OS inputs (`test_killswitch.py`). |
+| **Perceptual loop breaker** | Implemented, unit-tested; physical hardware verification pending | 64-bit `dhash` computation, Hamming distance checks, and action/wait threshold tripping verified on synthetic PNG frames (`test_loopbreaker.py`). |
 | **Service limit wait** | Implemented, unit-tested | Countdown pause execution and active kill-switch check routines verified offline (`test_limits.py`). |
-| **Multi-profile account switching** | Implemented, unit-tested; not yet verified on a real desktop | 2-switch maximum, 120s cooldown timer, terms confirmation gate, and Antigravity rejection verified (`test_accounts.py`). |
+| **Multi-profile account switching** | Implemented, unit-tested; physical hardware verification pending | 2-switch maximum, 120s cooldown timer, terms confirmation gate, and Antigravity rejection verified (`test_accounts.py`). |
 
 ## Challenges we ran into
 
