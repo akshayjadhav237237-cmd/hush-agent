@@ -148,3 +148,10 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Mobile Navigation Drawer: strictly hidden on desktop 640px+ */
+@media (min-width: 640px) {
+  #mobile-nav-dialog {
+    display: none !important;
+  }
+}

@@ -63,6 +63,17 @@ export const Nav: React.FC = () => {
     };
   }, []);
 
+  // Auto-close mobile drawer on desktop resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 640) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Accessible Dialog: Lock body scroll & trap focus when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {

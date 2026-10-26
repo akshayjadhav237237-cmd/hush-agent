@@ -1,5 +1,4 @@
 import React from 'react';
-import { Nav } from '@/v2/features/hero/Nav';
 import { Hero } from '@/v2/features/hero/Hero';
 import { Manifesto } from '@/v2/features/manifesto/Manifesto';
 import { Bento } from '@/v2/features/bento/Bento';
@@ -14,9 +13,7 @@ import { Section } from '@/v2/ui/Section';
 export const App: React.FC = () => {
   return (
     <div className="v2 min-h-screen bg-black v2-text-primary antialiased selection:bg-[var(--v2-accent)]/20 selection:text-[var(--v2-headline)] relative">
-      {/* Floating Pill Navigation */}
-      <Nav />
-
+      
       <main>
         {/* 1. Hero */}
         <Hero />
