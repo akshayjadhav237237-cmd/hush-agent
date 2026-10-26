@@ -1,0 +1,72 @@
+{
+  "claude": {
+    "url": "https://claude.ai",
+    "login_indicators": [
+      "a[href*='/login']",
+      "button:has-text('Log In')",
+      "input[type='email']",
+      "button:has-text('Continue with Google')"
+    ],
+    "prompt_box": [
+      "div[contenteditable='true']",
+      "textarea[placeholder*='How can Claude help']",
+      "fieldset div[contenteditable]",
+      "div.ProseMirror[contenteditable='true']"
+    ],
+    "send_button": [
+      "button[aria-label*='Send']",
+      "button:has-text('Send')",
+      "button[data-testid='send-button']"
+    ],
+    "stop_control": [
+      "button[aria-label*='Stop']",
+      "button:has-text('Stop generating')"
+    ],
+    "reply_text": [
+      "[data-is-streaming='false'] .font-claude-message",
+      ".font-claude-message",
+      "div.prose",
+      ".standard-markdown"
+    ],
+    "copy_button": [
+      "button[aria-label*='Copy']",
+      "button:has-text('Copy')"
+    ]
+  },
+  "gemini": {
+    "url": "https://gemini.google.com",
+    "login_indicators": [
+      "a[href*='accounts.google.com']",
+      "a:has-text('Sign in')",
+      "button:has-text('Sign in')"
+    ],
+    "prompt_box": [
+      "div[contenteditable='true'][role='combobox']",
+      "rich-textarea p",
+      "textarea[aria-label*='Enter a prompt']"
+    ],
+    "send_button": [
+      "button[aria-label*='Send prompt']",
+      "button.send-button",
+      "button[data-testid='send-button']"
+    ],
+    "stop_control": [
+      "button[aria-label*='Stop generating']",
+      "button:has-text('Stop')"
+    ],
+    "reply_text": [
+      ".model-response-text",
+      "message-content",
+      ".response-container-content"
+    ],
+    "mode_selector": [
+      "button[aria-label*='Model selector']",
+      "mat-select",
+      "button:has-text('Deep Research')"
+    ],
+    "deep_research_confirm": [
+      "button:has-text('Start research')",
+      "button:has-text('Confirm')"
+    ]
+  }
+}

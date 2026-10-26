@@ -72,12 +72,14 @@ class ModelClient:
         tools: Any,
         *,
         client: Optional[Any] = None,
+        fallback_model: Optional[str] = None,
         sleep: Callable[[float], None] = time.sleep,
         rand: Callable[[], float] = random.random,
         audit: Optional[Any] = None,
     ) -> None:
         """Initialize ModelClient with model name, tools, client, and retry settings."""
         self.model_name = model_name
+        self.fallback_model = fallback_model
         self.tools = tools
         self.sleep = sleep
         self.rand = rand
@@ -110,23 +112,23 @@ class ModelClient:
 
         config = self.make_config(self.tools)
 
-        def _call() -> tuple[Any, Any]:
-            resp = self.client.models.generate_content(
-                model=self.model_name,
-                contents=contents,
-                config=config,
-            )
-            content = extract_content(resp)
-            if content is None:
-                raise RuntimeError("empty response: model returned no candidates or content was blocked")
-            return content, resp
+        def _call_for_model(m_name: str) -> tuple[Any, Any]:
+            def _call() -> tuple[Any, Any]:
+                resp = self.client.models.generate_content(
+                    model=m_name,
+                    contents=contents,
+                    config=config,
+                )
+                content = extract_content(resp)
+                if content is None:
+                    raise RuntimeError("empty response: model returned no candidates or content was blocked")
+                return content, resp
 
-        def _on_retry(attempt: int, exc: Exception, delay: float) -> None:
-            if self.audit:
-                self.audit.log("retry", attempt=attempt, error=str(exc)[:200], delay=round(delay, 2))
+            def _on_retry(attempt: int, exc: Exception, delay: float) -> None:
+                if self.audit:
+                    self.audit.log("retry", model=m_name, attempt=attempt, error=str(exc)[:200], delay=round(delay, 2))
 
-        try:
-            content, resp = with_backoff(
+            return with_backoff(
                 _call,
                 retries=5,
                 base=2.0,
@@ -135,7 +137,19 @@ class ModelClient:
                 rand=self.rand,
                 on_retry=_on_retry,
             )
+
+        try:
+            content, resp = _call_for_model(self.model_name)
             self.last_usage = extract_usage(resp)
             return content
         except Exception as e:
+            if self.fallback_model and self.fallback_model != self.model_name:
+                if self.audit:
+                    self.audit.log("model_fallback", from_model=self.model_name, to_model=self.fallback_model, error=str(e)[:200])
+                try:
+                    content, resp = _call_for_model(self.fallback_model)
+                    self.last_usage = extract_usage(resp)
+                    return content
+                except Exception as fb_err:
+                    raise ModelUnavailable(f"Both primary ({self.model_name}) and fallback ({self.fallback_model}) models failed: {fb_err}") from fb_err
             raise ModelUnavailable(f"Model generation failed after backoff retries: {e}") from e

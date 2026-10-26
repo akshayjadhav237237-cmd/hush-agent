@@ -74,6 +74,26 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
         help="Model provider to use for orchestration (default: gemma).",
     )
     parser.add_argument(
+        "--doctor",
+        action="store_true",
+        help="Run environment and capability diagnostics for real desktop automation.",
+    )
+    parser.add_argument(
+        "--doctor-ui",
+        action="store_true",
+        help="Test Claude and Gemini web selectors live in Chrome over CDP.",
+    )
+    parser.add_argument(
+        "--calibrate",
+        action="store_true",
+        help="Calibrate UI coordinates for Antigravity desktop automation.",
+    )
+    parser.add_argument(
+        "--plan-only",
+        action="store_true",
+        help="Generate project plan without executing any actions on the desktop.",
+    )
+    parser.add_argument(
         "--max-steps",
         type=int,
         default=MAX_STEPS_DEFAULT,
@@ -95,6 +115,23 @@ def main(
     mode = "demo" if args.demo else "real"
     provider = args.provider
     model_name = OPENAI_MODEL if provider == "openai" else DEFAULT_MODEL
+
+    if getattr(args, "doctor", False):
+        from core.doctor import run_doctor
+        project_dir = resolve_project_dir("real", "")
+        repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        verification_dir = os.path.join(repo_root, "verification")
+        code, _ = run_doctor(project_dir, verification_dir=verification_dir)
+        return code
+
+    if getattr(args, "doctor_ui", False):
+        from core.browser_driver import run_doctor_ui
+        return run_doctor_ui()
+
+    if getattr(args, "calibrate", False):
+        from core.antigravity_driver import run_calibration
+        return run_calibration()
+
     print(f"PROVIDER: {provider} / {model_name}")
 
     if args.resume:
@@ -243,6 +280,7 @@ def main(
         state=state,
         max_steps=args.max_steps,
         log_text=args.log_text,
+        plan_only=getattr(args, "plan_only", False),
     )
     registry = build_registry(ctx, desktop)
 

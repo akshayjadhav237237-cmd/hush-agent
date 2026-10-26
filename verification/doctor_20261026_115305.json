@@ -1,0 +1,92 @@
+{
+  "timestamp": "2026-10-26T11:53:05.498198+05:30",
+  "overall": "FAIL",
+  "tos_warning": "Terms of Service Notice: Scripting consumer chat UIs (Claude, Gemini) may conflict with their platform terms of service. Use only your own accounts and ensure compliance with all applicable policies.",
+  "project_dir": "C:\\Users\\aksha\\Documents\\antigravity\\jolly-hawking\\agent\\workspace\\project",
+  "checks": [
+    {
+      "name": "Python Version",
+      "status": "PASS",
+      "detail": "Python 3.13.9 (>= 3.10 required)",
+      "fix_hint": null
+    },
+    {
+      "name": "Required Packages",
+      "status": "PASS",
+      "detail": "All 10 runtime packages imported successfully",
+      "fix_hint": null
+    },
+    {
+      "name": "Gemini API Credentials",
+      "status": "FAIL",
+      "detail": "GEMINI_API_KEY environment variable is not set",
+      "fix_hint": "Set your key in Windows: setx GEMINI_API_KEY \"your_key\""
+    },
+    {
+      "name": "Push Notifications (ntfy.sh)",
+      "status": "WARN",
+      "detail": "NTFY_TOPIC is unset; mobile push notifications disabled",
+      "fix_hint": "Optional: setx NTFY_TOPIC \"your-private-topic\""
+    },
+    {
+      "name": "Display Resolution & DPI Scaling",
+      "status": "WARN",
+      "detail": "1920x1080 resolution @ 125% DPI scaling (non-standard)",
+      "fix_hint": "Set Display Scaling to 100% in Windows Settings for exact coordinate calibration."
+    },
+    {
+      "name": "Monitor Configuration",
+      "status": "PASS",
+      "detail": "1 physical monitor detected",
+      "fix_hint": null
+    },
+    {
+      "name": "Google Chrome & Profiles",
+      "status": "PASS",
+      "detail": "Found at C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe (Profiles: Default, Profile 1)",
+      "fix_hint": null
+    },
+    {
+      "name": "Graphify Code Knowledge Graph",
+      "status": "PASS",
+      "detail": "Installed at C:\\Users\\aksha\\.local\\bin\\graphify.EXE",
+      "fix_hint": null
+    },
+    {
+      "name": "Clipboard Round-Trip",
+      "status": "PASS",
+      "detail": "Read and write clipboard verified with integrity restoration",
+      "fix_hint": null
+    },
+    {
+      "name": "Emergency Kill Hotkey (Ctrl+Alt+K)",
+      "status": "PASS",
+      "detail": "Win32 GetAsyncKeyState 20 Hz polling thread hook verified",
+      "fix_hint": null
+    },
+    {
+      "name": "Mouse-Corner Hardware Failsafe",
+      "status": "PASS",
+      "detail": "pyautogui.FAILSAFE is enabled (trips instantly at coordinate 0,0)",
+      "fix_hint": null
+    },
+    {
+      "name": "Antigravity IDE",
+      "status": "PASS",
+      "detail": "Found application shortcut: C:\\Users\\aksha\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Antigravity.lnk",
+      "fix_hint": null
+    },
+    {
+      "name": "Available Disk Space",
+      "status": "PASS",
+      "detail": "53.7 GB free in project drive",
+      "fix_hint": null
+    },
+    {
+      "name": "Project Directory Writable",
+      "status": "PASS",
+      "detail": "Write/read/delete verified in C:\\Users\\aksha\\Documents\\antigravity\\jolly-hawking\\agent\\workspace\\project",
+      "fix_hint": null
+    }
+  ]
+}

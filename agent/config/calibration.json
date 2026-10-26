@@ -1,0 +1,13 @@
+{
+  "agent_input": {
+    "x": 1050,
+    "y": 800,
+    "hotkey": "ctrl+l",
+    "description": "Antigravity Agent prompt input box"
+  },
+  "editor_area": {
+    "x": 600,
+    "y": 450,
+    "description": "Central editor file area"
+  }
+}

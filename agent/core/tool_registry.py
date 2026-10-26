@@ -97,4 +97,27 @@ def build_registry(ctx: RunContext, desktop: Desktop) -> dict[str, ToolFunc]:
 
         registry["switch_account"] = _switch_account
 
+    # 8. Browser automation tools (only registered if browser is provided)
+    if getattr(ctx, "browser", None) is not None:
+        browser_inst = ctx.browser
+
+        def _browser_send_prompt(app: str, prompt: str) -> str:
+            return browser_inst.send_prompt(app, prompt)
+
+        def _browser_wait_done(app: str, timeout_seconds: Optional[int] = None) -> str:
+            done = browser_inst.wait_done(app, timeout_seconds=timeout_seconds)
+            return "Generation completed." if done else "Timed out waiting for completion."
+
+        def _browser_get_reply(app: str, artifact_name: str) -> str:
+            summary, _ = browser_inst.get_reply(app, ctx.run_dir, artifact_name)
+            return summary
+
+        def _browser_select_mode(app: str, mode: str) -> str:
+            return browser_inst.select_mode(app, mode)
+
+        registry["browser_send_prompt"] = _browser_send_prompt
+        registry["browser_wait_done"] = _browser_wait_done
+        registry["browser_get_reply"] = _browser_get_reply
+        registry["browser_select_mode"] = _browser_select_mode
+
     return registry

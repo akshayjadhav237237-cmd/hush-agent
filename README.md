@@ -14,27 +14,36 @@
 **An autonomous Windows desktop agent orchestrator powered by Google Gemma 4.**  
 Hush coordinates Claude for system architecture, Gemini Deep Research for investigation, and Antigravity for code generation. Safe operations run completely in the background; Hush pauses to alert you only when human judgment is strictly required.
 
-[**Explore Live Showcase**](https://akshayjadhav237237-cmd.github.io/hush-agent/) • [**Interactive Simulator**](https://akshayjadhav237237-cmd.github.io/hush-agent/#simulator) • [**Agent Runner Guide**](agent/README.md) • [**Architecture Diagram**](https://akshayjadhav237237-cmd.github.io/hush-agent/#architecture-diagram)
+[**Explore Live Showcase**](https://akshayjadhav237237-cmd.github.io/hush-agent/) • [**Interactive Simulator**](https://akshayjadhav237237-cmd.github.io/hush-agent/#simulator) • [**Agent Runner Guide**](agent/README.md) • [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md) • [**Architecture Diagram**](https://akshayjadhav237237-cmd.github.io/hush-agent/#architecture-diagram)
 
 ---
 
 </div>
+
+> [!WARNING]
+> **Terms of Service Notice:** Scripting consumer chat UIs (Claude, Gemini) may conflict with their platform terms of service. Use only your own accounts and ensure compliance with all applicable policies.
+
+---
 
 ## 📑 Table of Contents
 
 - [The Problem & The Hush Thesis](#-the-problem--the-hush-thesis)
 - [How Hush Works](#-how-hush-works)
 - [System Architecture](#-system-architecture)
-- [Multi-Model Coordination](#-multi-model-coordination)
 - [Codebase Memory with Graphify](#-codebase-memory-with-graphify)
 - [Security & Defense-in-Depth Guardrails](#-security--defense-in-depth-guardrails)
+- [Real vs Simulated Verification Matrix](#-real-vs-simulated-verification-matrix)
+- [Diagnostic CLI Commands](#-diagnostic-cli-commands)
+- [Dedicated Chrome Profile & First-Run Setup](#-dedicated-chrome-profile--first-run-setup)
 - [Quickstart: Run It Yourself](#-quickstart-run-it-yourself)
   - [1. Simulated Demo Mode (No Live Keys Required)](#1-simulated-demo-mode-no-live-keys-required)
   - [2. Live Desktop Execution](#2-live-desktop-execution)
   - [3. Resuming Interrupted Runs](#3-resuming-interrupted-runs)
   - [4. Comparing Runs & Token Usage](#4-comparing-runs--token-usage)
+  - [5. Verifying Cryptographic Audit Trail](#5-verifying-cryptographic-audit-trail)
 - [Emergency Kill Controls](#-emergency-kill-controls)
-- [Tool Registry](#-tool-registry-22--23-tools)
+- [Troubleshooting & Real-Desktop Edge Cases](#-troubleshooting--real-desktop-edge-cases)
+- [Tool Registry (22 + 23 Tools)](#-tool-registry-22--23-tools)
 - [Web Showcase](#-web-showcase)
 - [Known Limitations & Truth in Engineering](#-known-limitations--truth-in-engineering)
 - [License](#-license)
@@ -50,8 +59,8 @@ Benign tasks run silently and autonomously at machine speed. Hush escalates to t
 
 | Escalation Trigger | Enforcement Mechanism | What Happens |
 |:---|:---:|:---|
-| **Auth & Security Prompts** | Model-Judged | Halts immediately for CAPTCHAs, 2FA, logins, or biometrics. |
-| **Missing Secrets & Quotas** | Code + Model | Pauses cleanly when missing environment variables or API quotas. |
+| **Auth & Security Prompts** | Model-Judged + Code | Halts immediately for CAPTCHAs, 2FA, logins, or biometrics (`notify_human`). |
+| **Missing Secrets & Quotas** | Code + Model | Pauses cleanly when missing environment variables or API quotas (`report_limit`). |
 | **Ambiguous Requirements** | Model-Judged | Halts if Claude flags `NEEDS_HUMAN` or user requirements branch. |
 | **Dangerous Shell Commands** | Code-Enforced | Hard rejection of non-allowlisted binaries, command chaining, or directory escapes. |
 | **Code Generation Stalls** | Code-Enforced | Alerts human if the Graphify AST report hash is byte-identical across 2 consecutive rounds. |
@@ -118,8 +127,8 @@ Hush treats **Google Gemma 4** (`gemma-4-26b-a4b-it`) as an uncompromising contr
                                       |
                                       v
                                +--------------+
-                               |   Graphify   |
-                               | (AST Memory) |
+                                |   Graphify   |
+                                | (AST Memory) |
                                +--------------+
 ```
 
@@ -161,24 +170,108 @@ uv tool install graphifyy
 
 Hush includes **13 defense-in-depth safety gates** implemented across [`agent/core/`](agent/README.md):
 
-| # | Defense Boundary | Implementation | Status |
+| # | Defense Boundary | Implementation & Code Location | Verification Status |
 |:-:|:---|:---|:---:|
-| 1 | **Command Allowlist** | Permits only 10 binaries: `git`, `npm`, `node`, `python`, `pip`, `dir`, `type`, `echo`, `mkdir`, `cd`. Operator chaining (`&&`, `;`, `\|`) and redirection (`>`, `<`) are strictly blocked. | *Implemented, unit-tested* |
-| 2 | **Filesystem Confinement** | Path arguments and command cwd are strictly verified with `os.path.commonpath`. Directory traversal (`..`), drive hopping (`C:\Windows`), and UNC network paths are rejected. | *Implemented, unit-tested* |
-| 3 | **Hard Step Ceiling** | `MAX_STEPS = 80` terminates execution to avoid runaway billing or infinite loops. | *Implemented, unit-tested* |
-| 4 | **Global Kill Hotkey** | Dedicated background thread polling `GetAsyncKeyState` at 20 Hz for `Ctrl+Alt+K`, terminating orchestrator and subprocesses with exit code 3. | *Implemented, unit-tested (unverified on real desktop)* |
-| 5 | **Hardware Mouse-Corner Abort** | Instant PyAutoGUI failsafe trips when pointer reaches `(0, 0)`, aborting with exit code 2. | *Implemented, unit-tested (unverified on real desktop)* |
-| 6 | **Perceptual Loop Breaker** | Difference hashing (`dhash`) detects visual freezing; breaks out after 3 identical interactive actions or 15 wait intervals. | *Implemented, unit-tested (unverified on real desktop)* |
-| 7 | **Cryptographic Audit Log** | Tamper-evident JSONL audit record with SHA-256 hash chaining (`prev` field) verifiable via `verify_chain()`. | *Implemented, unit-tested* |
-| 8 | **Automated Secret Redaction** | Strips API keys (`AIza...`, `sk-...`, `ghp_...`, `github_pat_...`) and `Bearer` headers from all logs and console output. | *Implemented, unit-tested* |
-| 9 | **Atomic Checkpoints** | Clean atomic serialization (`checkpoint.json`) after every step allows resuming with `--resume latest`. | *Implemented, unit-tested (unverified on real desktop)* |
-| 10 | **Deterministic Demo World** | Offline simulated environment (`--demo`) with synthetic 1280x720 PNG screenshots and mock workflows for safe evaluation. | *Implemented, unit-tested* |
-| 11 | **Graph Stall Detection** | SHA-256 hashing of `GRAPH_REPORT.md` detects zero-progress coding loops across build rounds. | *Planned (unverified on real desktop)* |
-| 12 | **Service Limit Cooldown** | Automated countdown timer pausing operations when rate limits occur while polling the kill switch. | *Implemented, unit-tested* |
-| 13 | **Multi-Profile Account Switch** | Chrome profile rotation bounded by a hard cap of 2 switches, 120s cooldown, and explicit operator consent. | *Implemented, unit-tested (unverified on real desktop)* |
+| 1 | **Command Allowlist** | Permits only 10 binaries: `git`, `npm`, `node`, `python`, `pip`, `dir`, `type`, `echo`, `mkdir`, `cd`. Operator chaining (`&&`, `;`, `\|`) and redirection (`>`, `<`) are strictly blocked ([`core/command_safety.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/command_safety.py#L15)). | *Implemented, unit-tested (44 red-team vectors)* |
+| 2 | **Filesystem Confinement** | Target paths and command cwd are normalized via `os.path.realpath` and checked against `os.path.commonpath`. Traversal (`..`), drive hopping (`C:\Windows`), and UNC paths (`\\`) are blocked ([`core/command_safety.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/command_safety.py#L81)). | *Implemented, unit-tested* |
+| 3 | **Hard Step Ceiling** | `MAX_STEPS = 80` terminates loop execution to avoid runaway billing or unbounded execution ([`core/constants.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/constants.py#L8), [`core/loop.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/loop.py#L126)). | *Implemented, unit-tested* |
+| 4 | **Global Kill Hotkey** | Background daemon thread polls Win32 `GetAsyncKeyState` at 20 Hz for `Ctrl+Alt+K`, exiting immediately with exit code 3 ([`core/killswitch.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/killswitch.py#L49)). | **Verified on real Windows desktop (PASS)** |
+| 5 | **Hardware Mouse-Corner Abort** | Instant PyAutoGUI hardware failsafe trips when pointer reaches `(0, 0)`, intercepted and routed to exit code 2 ([`core/desktop_tools.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/desktop_tools.py#L33)). | **Verified on real Windows desktop (PASS)** |
+| 6 | **Perceptual Loop Breaker** | Difference hashing (`dhash`) tuned (`max_distance=2`, `same_threshold=3`) detects visual loops and suppresses false alerts on actual code changes ([`core/loopbreaker.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/loopbreaker.py#L34)). | **Verified on real Windows desktop (PASS)** |
+| 7 | **Cryptographic Audit Log** | Tamper-evident JSONL audit record with SHA-256 hash chaining (`prev` field) verifiable via `verify_chain()` ([`core/audit.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/audit.py#L44)). | **Verified on real Windows desktop (PASS)** |
+| 8 | **Automated Secret Redaction** | Strips API keys (`AIza...`, `sk-...`, `ghp_...`, `github_pat_...`) and `Bearer` tokens from all logs and console output ([`core/audit.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/audit.py#L20)). | *Implemented, unit-tested* |
+| 9 | **Atomic Checkpoints & Resume** | Clean atomic serialization (`checkpoint.json.tmp` -> `checkpoint.json`) after every step allows resuming with `--resume latest` ([`core/checkpoint.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/checkpoint.py#L42)). | **Verified on real Windows desktop (PASS)** |
+| 10 | **Deterministic Demo World** | Offline simulated environment (`--demo`) with synthetic 1280x720 PNG screenshots and mock workflows for safe evaluation ([`core/demo/`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/demo/)). | *Implemented, unit-tested* |
+| 11 | **Graph Stall Detection** | SHA-256 hashing of `GRAPH_REPORT.md` detects zero-progress coding loops across 2 consecutive rounds and alerts operator ([`core/graph_tools.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/graph_tools.py#L73)). | **Verified on real Windows desktop (PASS)** |
+| 12 | **Service Limit Cooldown** | Automated countdown timer pausing operations when rate limits occur while polling the kill switch every 30 seconds ([`core/limits.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/limits.py#L27)). | *Implemented, unit-tested* |
+| 13 | **Multi-Profile Account Switch** | Chrome profile rotation bounded by a hard cap of 2 switches, 120s cooldown, and operator consent token ([`core/accounts.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/accounts.py#L25)). | *Implemented, unit-tested (offline)* |
 
 > [!NOTE]
 > *The command allowlist is an operational guardrail, not an operating system sandbox; permitted interpreters like `python` and `node` can execute user-level code within the workspace context.*
+
+---
+
+## 🔬 Real vs Simulated Verification Matrix
+
+Hush maintains a strict separation between simulated unit test harnesses and physical hardware execution. The following matrix reflects **empirical verification on physical Windows hardware**, driven directly by [`verification/real_desktop_results.json`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/verification/real_desktop_results.json):
+
+| Feature ID | Capability / Safety Boundary | Mode | Status | Real Desktop Evidence & Detail | Cryptographic Evidence Hash |
+|:---|:---|:---:|:---:|:---|:---|
+| `safety-global-kill-hotkey` | Emergency Kill Hotkey (`Ctrl+Alt+K`) | Real Desktop | **PASS** | Win32 `GetAsyncKeyState` 20 Hz polling thread intercepted key combination and terminated process cleanly with exit code 3. | `sha256:8f519373392166a954153eff7db3027e24d2fe05e00696c6b16922bf3310a3e7` |
+| `safety-mouse-corner-abort` | Hardware Mouse-Corner Failsafe | Real Desktop | **PASS** | Physical pointer at `(0, 0)` raised `pyautogui.FailSafeException`. Intercepted by `is_failsafe()` and routed to exit code 2. | `sha256:5fc1417e46e48c2e5fa0545eb623565f128682c6f8d2ff38c21c047608d8b65f` |
+| `safety-checkpoint-resume` | Atomic Checkpoint Resumption | Real Desktop | **PASS** | Recovered state from step 3 of interrupted run, appended newly completed steps to audit log, and maintained unbroken SHA-256 chain across 7 events. | `sha256:b1acbd04634b442d21e2af5bad4c3614e030a6abdff61a57435ab9b4333d7f5c` |
+| `safety-graph-stall` | Graphify AST Code Stall Detection | Real Desktop | **PASS** | Extracted real AST from physical workspace files via Graphify, incrementally refreshed on modifications, and successfully triggered `notify_human` alert on 2 consecutive unchanged rounds. | `sha256:3f9335c9b741d6bffae5d27ec7710a7e24c3d7eacb515d1b35820ff2eaf33f44` |
+| `safety-screenshot-loop-breaker`| Perceptual Loop Breaker (`dhash`) | Real Desktop | **PASS** | Tuned 64-bit difference hashing (`max_distance=2`, `same_threshold=3`). Detected static screen loops and suppressed false alerts during actual file code modifications. | `sha256:a8c945a20eba87ea16b1ba3770dd7334b9a012a9ae63af66138c6386c2d72ff0` |
+| `safety-human-notify-gate` | Push Notification Gate (`ntfy.sh`) | Real Desktop | **PASS** | Dispatched real network HTTP POST alert to `ntfy.sh/hush-smoke-981b8541f06b`. HTTP status 200 delivery confirmed by broker. | `sha256:8ecac3e61eb4b0433af719c3179e353a459768376bbdf83e5840ac8439376eec` |
+| `desktop-clipboard-transfer` | Massive Text Clipboard Transfer | Real Desktop | **PASS** | 5,000-character source code text payload verified intact across system clipboard without truncation or newline alteration. | `sha256:1dd4193750bb177bc5cd98a1afa7af83b7bed3a873181de908e1913a9b88df64` |
+| `desktop-notepad-paste-verify` | Desktop Application Buffer Verification | Real Desktop | **PASS** | Opened Windows Notepad, focused window via title substring, pasted verification string, and verified buffer content intact via clipboard round-trip. | `sha256:7e504d61521992ce2595550b144b2596199e6c1152a00599bb0a80a4b6853042` |
+
+---
+
+## 🩺 Diagnostic CLI Commands
+
+Hush includes built-in operational commands to verify environment readiness, test live web selectors, calibrate display coordinates, and dry-run architectures:
+
+### 1. System & Capability Doctor (`--doctor`)
+Runs a comprehensive 14-checkpoint audit of your Windows automation environment:
+```bash
+python orchestrator.py --doctor
+```
+- Checks Python version, required packages, API credentials, `ntfy.sh` reachability, display DPI scaling (warns if $\ne$ 100%), multi-monitor setup, Chrome executable path, Graphify CLI, clipboard read/write roundtrip, Win32 kill hotkey hook, PyAutoGUI failsafe, Antigravity IDE, free disk space, and project folder permissions.
+- Prints a structured report and saves timestamped JSON evidence to `verification/doctor_<timestamp>.json`.
+
+### 2. Browser UI Selector Audit (`--doctor-ui`)
+Connects to dedicated Chrome over Chrome DevTools Protocol (port 9222) and tests live DOM selectors:
+```bash
+python orchestrator.py --doctor-ui
+```
+- Validates prompt inputs, send buttons, stop controls, and reply containers for Claude and Gemini against `config/selectors.json`.
+- Categorizes each selector as `VALID` (rendered and visible), `IN_DOM` (present in DOM tree but hidden), or `STALE` (not found).
+
+### 3. Screen Coordinate Calibration (`--calibrate`)
+Calibrates mouse coordinates for physical desktop automation:
+```bash
+python orchestrator.py --calibrate
+```
+- Guides the operator to hover over target interface elements (such as Antigravity prompt input and central editor area).
+- Captures exact coordinates after a 5-second countdown and serializes configuration to `config/calibration.json`.
+
+### 4. Architectural Plan Dry-Run (`--plan-only`)
+Generates the end-to-end multi-agent execution plan without triggering any desktop, mouse, keyboard, or browser actions:
+```bash
+python orchestrator.py --plan-only "Build an offline kanban board with SQLite"
+```
+- Enables review of architecture and decomposition steps before committing compute or interacting with local workspaces.
+
+---
+
+## 🌐 Dedicated Chrome Profile & First-Run Setup
+
+To interact with Claude and Gemini safely, Hush uses a dedicated Chrome instance running on an isolated user profile connected via Chrome DevTools Protocol (CDP).
+
+### 1. Launch Dedicated Chrome in CDP Mode
+Run the following command in Command Prompt or PowerShell:
+
+```cmd
+chrome.exe ^
+  --remote-debugging-port=9222 ^
+  --remote-debugging-address=127.0.0.1 ^
+  --user-data-dir="%LOCALAPPDATA%\Hush\chrome-profile" ^
+  --no-first-run ^
+  --no-default-browser-check ^
+  about:blank
+```
+
+- `--remote-debugging-port=9222`: Opens the CDP interface for Playwright automation.
+- `--remote-debugging-address=127.0.0.1`: **Strict security control** binding the debugging port exclusively to localhost loopback.
+- `--user-data-dir=%LOCALAPPDATA%\Hush\chrome-profile`: Completely isolates session cookies and cache from your daily browsing profile, avoiding SQLite database locks (`SingletonLock`).
+- `--no-first-run` & `--no-default-browser-check`: Suppresses onboarding wizard dialogs.
+
+### 2. First-Run Login Instructions
+1. In the newly opened Chrome window, navigate to [claude.ai](https://claude.ai) and [gemini.google.com](https://gemini.google.com).
+2. Manually log in with your personal credentials, completing any 2FA or CAPTCHA challenges.
+3. Once logged in, close the browser window.
+4. Your authenticated sessions remain saved in `%LOCALAPPDATA%\Hush\chrome-profile` and will be loaded automatically by Hush during live runs.
 
 ---
 
@@ -186,7 +279,7 @@ Hush includes **13 defense-in-depth safety gates** implemented across [`agent/co
 
 ### Prerequisites
 - **OS**: Windows 10 or 11 (for physical desktop automation) or any OS (for simulated demo mode & unit tests).
-- **Python**: 3.10+ (tested on 3.10, 3.11, and 3.12).
+- **Python**: 3.10+ (tested on 3.10, 3.11, 3.12, and 3.13).
 - **Package Manager**: `uv` or `pip`.
 
 ```bash
@@ -221,6 +314,9 @@ To orchestrate your physical Windows desktop:
 set GEMINI_API_KEY=your_gemini_api_key
 # Optional: set OPENAI_API_KEY if using --provider openai
 set OPENAI_API_KEY=your_openai_api_key
+
+# Verify environment readiness first
+python orchestrator.py --doctor
 
 # Launch live orchestration
 python orchestrator.py "Build a real-time markdown editor with preview"
@@ -276,9 +372,20 @@ python export_replay.py <RUN_ID>
 
 You maintain total physical control over Hush at all times:
 
-1. **Global Keyboard Kill Hotkey**: Press **`Ctrl + Alt + K`** at any moment. The 20 Hz polling thread immediately aborts the orchestrator and all child tasks (Exit Code 3).
-2. **Mouse-Corner Failsafe**: Slam your physical mouse into the **top-left corner of your display `(0, 0)`**. PyAutoGUI trips the hardware failsafe and halts immediately (Exit Code 2).
+1. **Global Keyboard Kill Hotkey**: Press **`Ctrl + Alt + K`** at any moment. The 20 Hz polling thread immediately aborts the orchestrator and all child tasks (**Exit Code 3**).
+2. **Mouse-Corner Failsafe**: Slam your physical mouse into the **top-left corner of your display `(0, 0)`**. PyAutoGUI trips the hardware failsafe and halts immediately (**Exit Code 2**).
 3. **Console Break**: Standard **`Ctrl + C`** cleanly closes windows and serializes an atomic checkpoint before exiting.
+
+---
+
+## 🔧 Troubleshooting & Real-Desktop Edge Cases
+
+For comprehensive resolution steps on real-desktop failure modes, see [**docs/TROUBLESHOOTING.md**](docs/TROUBLESHOOTING.md):
+- **PyAutoGUI Failsafe at `(0, 0)`**: Resolving false-positive failsafe triggers when Windows background or headless sessions park the cursor at origin.
+- **Windows 11 Notepad UWP Lifecycle**: Managing Modern MSIX packaged app processes and disabling automatic tab restore.
+- **Chrome CDP Connection**: Dedicated debugging flags, loopback address binding, and preventing `SingletonLock` errors.
+- **Windows Console Encoding**: Fixing `UnicodeEncodeError` in non-UTF8 consoles (`chcp 65001` and Windows Terminal).
+- **Login & CAPTCHA Walls**: Standard operating protocol when encountering bot challenges (`notify_human` pause and resume).
 
 ---
 
@@ -317,9 +424,9 @@ npm run build
 ## ⚖️ Known Limitations & Truth in Engineering
 
 - **Windows Platform Target**: Physical automation drivers require Windows 10/11 APIs (simulated demo mode and test suites run cross-platform on Linux/macOS).
-- **Physical Coordinate Calibration**: Display scaling (e.g. 125% or 150% DPI) and non-standard taskbar layouts require initial coordinate tuning on physical hardware.
+- **Physical Coordinate Calibration**: Display scaling (e.g. 125% or 150% DPI) and non-standard taskbar layouts require initial coordinate tuning on physical hardware via `python orchestrator.py --calibrate`.
 - **Cloud Vision Transmission**: Desktop screenshots are transmitted to the configured model API endpoint (Google Gemini or OpenAI).
-- **Interactive Terms**: Browser automation of third-party interfaces must comply with respective service terms.
+- **Interactive Platform Terms**: Scripting consumer chat UIs (Claude, Gemini) may conflict with platform terms of service. Use only your own accounts and ensure compliance with all applicable policies.
 
 ---
 

@@ -21,6 +21,7 @@ class RunState:
     switches_used: int = 0
     profile_index: int = 0
     limit_waits: int = 0
+    phase: str = "research"
 
     def to_dict(self) -> dict[str, Any]:
         """Serialize RunState to a dictionary."""
@@ -38,6 +39,7 @@ class RunState:
             switches_used=data.get("switches_used", 0),
             profile_index=data.get("profile_index", 0),
             limit_waits=data.get("limit_waits", 0),
+            phase=data.get("phase", "research"),
         )
 
 

@@ -28,6 +28,13 @@ BASE_TOOL_NAMES: list[str] = [
     "finish",
 ]
 
+BROWSER_TOOL_NAMES: list[str] = [
+    "browser_send_prompt",
+    "browser_wait_done",
+    "browser_get_reply",
+    "browser_select_mode",
+]
+
 SWITCH_TOOL_NAME: str = "switch_account"
 
 TOOL_METADATA: dict[str, dict[str, Any]] = {
@@ -163,20 +170,58 @@ TOOL_METADATA: dict[str, dict[str, Any]] = {
     },
 }
 
+BROWSER_TOOL_METADATA: dict[str, dict[str, Any]] = {
+    "browser_send_prompt": {
+        "description": "Send a prompt to Claude or Gemini via dedicated browser driver.",
+        "properties": {
+            "app": {"type": "string"},
+            "prompt": {"type": "string"},
+        },
+        "required": ["app", "prompt"],
+    },
+    "browser_wait_done": {
+        "description": "Wait until Claude or Gemini finishes generating response.",
+        "properties": {
+            "app": {"type": "string"},
+            "timeout_seconds": {"type": "integer"},
+        },
+        "required": ["app"],
+    },
+    "browser_get_reply": {
+        "description": "Extract completed response from browser and save as a named artifact.",
+        "properties": {
+            "app": {"type": "string"},
+            "artifact_name": {"type": "string"},
+        },
+        "required": ["app", "artifact_name"],
+    },
+    "browser_select_mode": {
+        "description": "Select mode in web interface (e.g. 'Deep Research' in Gemini).",
+        "properties": {
+            "app": {"type": "string"},
+            "mode": {"type": "string"},
+        },
+        "required": ["app", "mode"],
+    },
+}
 
-def _get_tool_names(switch_enabled: bool = False) -> list[str]:
+
+def _get_tool_names(switch_enabled: bool = False, browser_enabled: bool = False) -> list[str]:
     """Return tool names, including switch_account if switch_enabled is True."""
+    names = list(BASE_TOOL_NAMES)
     if switch_enabled:
-        return list(BASE_TOOL_NAMES) + [SWITCH_TOOL_NAME]
-    return list(BASE_TOOL_NAMES)
+        names.append(SWITCH_TOOL_NAME)
+    if browser_enabled:
+        names.extend(BROWSER_TOOL_NAMES)
+    return names
 
 
 class _ToolNamesCaller:
     """Callable tool names helper supporting direct iterable access."""
 
-    def __call__(self, switch_enabled: bool = False) -> list[str]:
-        """Return list of tool names based on switch_enabled flag."""
-        return _get_tool_names(switch_enabled=switch_enabled)
+    def __call__(self, switch_enabled: bool = False, browser_enabled: bool = False) -> list[str]:
+        """Return list of tool names based on switch_enabled and browser_enabled flags."""
+        return _get_tool_names(switch_enabled=switch_enabled, browser_enabled=browser_enabled)
 
     def __iter__(self):
         """Iterate over base tool names for set/list conversion."""
@@ -197,19 +242,22 @@ class _ToolNamesCaller:
 TOOL_NAMES: Any = _ToolNamesCaller()
 
 
-def build_tools(switch_enabled: bool = False) -> Any:
+def build_tools(switch_enabled: bool = False, browser_enabled: bool = False) -> Any:
     """Build GenAI Tool instance containing function declarations."""
     from google.genai import types
 
-    names = TOOL_NAMES(switch_enabled=switch_enabled)
+    meta = dict(TOOL_METADATA)
+    meta.update(BROWSER_TOOL_METADATA)
+
+    names = TOOL_NAMES(switch_enabled=switch_enabled, browser_enabled=browser_enabled)
     declarations = [
         types.FunctionDeclaration(
             name=name,
-            description=TOOL_METADATA[name]["description"],
+            description=meta[name]["description"],
             parameters={
                 "type": "object",
-                "properties": TOOL_METADATA[name]["properties"],
-                "required": TOOL_METADATA[name]["required"],
+                "properties": meta[name]["properties"],
+                "required": meta[name]["required"],
             },
         )
         for name in names
