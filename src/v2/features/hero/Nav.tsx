@@ -129,20 +129,20 @@ export const Nav: React.FC = () => {
       {/* Black pill tab attached FLUSH to the top edge of the hero container, centered horizontally */}
       <nav
         aria-label="Main Navigation"
-        className="absolute top-0 left-1/2 -translate-x-1/2 z-40 w-full max-w-4xl rounded-t-none rounded-b-[28px] border-x border-b border-white/[0.08] bg-[#0A0A0A]/90 backdrop-blur-md px-6 sm:px-10 py-[18px] flex items-center justify-between"
+        className="absolute top-0 left-1/2 -translate-x-1/2 z-40 w-auto max-w-max rounded-t-none rounded-b-[20px] sm:rounded-b-[22px] border-x border-b border-white/[0.1] bg-black px-4 sm:px-8 py-2 sm:py-2.5 flex items-center justify-center shadow-2xl"
       >
-        {/* Brand / Logo or Mobile title */}
+        {/* Mobile brand mark (visible only on mobile) */}
         <a
           href="#hero"
           aria-label="Hush Home"
-          className="font-display font-extrabold text-[var(--v2-text)] tracking-tight text-base sm:text-lg flex items-center gap-1.5 select-none focus-visible:outline-2 focus-visible:outline-[var(--v2-accent)] rounded-sm"
+          className="sm:hidden font-display font-extrabold text-[var(--v2-text)] tracking-tight text-sm mr-3 flex items-center gap-1 select-none focus-visible:outline-2 focus-visible:outline-[var(--v2-accent)] rounded-sm"
         >
           HUSH
-          <span className="w-2 h-2 rounded-full bg-[var(--v2-accent)]" aria-hidden="true" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--v2-accent)]" aria-hidden="true" />
         </a>
 
-        {/* Desktop Links: 4-5 links with ~56px gap (gap-10 sm:gap-14), regular font weight 400, 16px text-base, cream-grey text */}
-        <div className="hidden sm:flex items-center gap-10 sm:gap-14 font-normal text-base">
+        {/* Desktop Links: centered, compact, sleek font matching reference */}
+        <div className="hidden sm:flex items-center gap-7 sm:gap-9 font-normal text-sm">
           {COPY_V2.nav.map((item) => {
             const isAnchor = item.href.startsWith('#');
             const targetId = isAnchor ? item.href.slice(1) : '';
@@ -161,15 +161,15 @@ export const Nav: React.FC = () => {
                     : 'text-[#CFCFC8] hover:text-white'
                 }`}
               >
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-1">
                   {item.label}
                   {item.external && (
-                    <ArrowUpRight className="w-4 h-4 opacity-70" aria-hidden="true" />
+                    <ArrowUpRight className="w-3.5 h-3.5 opacity-70" aria-hidden="true" />
                   )}
                 </span>
                 {isActive && (
                   <span
-                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[var(--v2-accent)]"
+                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--v2-accent)]"
                     aria-hidden="true"
                   />
                 )}
@@ -187,9 +187,9 @@ export const Nav: React.FC = () => {
           aria-controls="mobile-nav-dialog"
           aria-haspopup="dialog"
           aria-label="Open navigation menu"
-          className="sm:hidden p-2 text-[#CFCFC8] hover:text-white rounded-full focus-visible:outline-2 focus-visible:outline-[var(--v2-accent)] transition-colors"
+          className="sm:hidden p-1 text-[#CFCFC8] hover:text-white rounded-full focus-visible:outline-2 focus-visible:outline-[var(--v2-accent)] transition-colors"
         >
-          <Menu className="w-6 h-6" aria-hidden="true" />
+          <Menu className="w-5 h-5" aria-hidden="true" />
         </button>
       </nav>
 
