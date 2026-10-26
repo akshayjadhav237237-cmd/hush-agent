@@ -9,7 +9,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: path.resolve(import.meta.dirname, 'index.html'),
-        v2: path.resolve(import.meta.dirname, 'v2.html'),
+        v1: path.resolve(import.meta.dirname, 'v1.html'),
       },
     },
   },
