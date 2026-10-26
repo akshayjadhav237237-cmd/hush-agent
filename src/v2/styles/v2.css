@@ -1,0 +1,146 @@
+@import "tailwindcss";
+
+@import "@fontsource-variable/inter-tight/index.css";
+@import "@fontsource-variable/space-grotesk/index.css";
+@import "@fontsource/cormorant-garamond/500.css";
+@import "@fontsource/cormorant-garamond/600.css";
+@import "@fontsource/instrument-serif/400-italic.css";
+@import "@fontsource-variable/geist-mono/index.css";
+
+.v2 {
+  color-scheme: dark;
+  --v2-bg: #000000;
+  --v2-card: #141414;
+  --v2-card-2: #1B1B1B;
+  --v2-line: rgba(255, 255, 255, 0.08);
+  --v2-text: #F5F0E8;
+  --v2-headline: #EFFFE6;
+  --v2-muted: rgba(245, 240, 232, 0.55);
+  --v2-accent: #2EF27A;
+  --v2-link: #7C93F5;
+  --v2-diff-del-bg: #170909;
+  --v2-diff-del: #FF6B6B;
+  --v2-diff-add-bg: #08150C;
+  --v2-diff-add: #2EF27A;
+  --v2-warning: #FFB020;
+
+  --v2-radius-card: 28px;
+  --v2-radius-manifesto: 40px;
+  --v2-radius-pill: 999px;
+
+  --v2-font-display: "Inter Tight Variable", "Inter Tight", system-ui, -apple-system, sans-serif;
+  --v2-font-body: "Space Grotesk Variable", "Space Grotesk", system-ui, sans-serif;
+  --v2-font-serif: "Cormorant Garamond", Georgia, serif;
+  --v2-font-italic: "Instrument Serif", Georgia, serif;
+  --v2-font-mono: "Geist Mono Variable", "Geist Mono", monospace;
+
+  background-color: var(--v2-bg);
+  color: var(--v2-text);
+  font-family: var(--v2-font-body);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Fallbacks & font smoothing */
+.v2 * {
+  box-sizing: border-box;
+}
+
+.v2 :focus-visible {
+  outline: 2px solid var(--v2-accent);
+  outline-offset: 2px;
+}
+
+/* Typography Utility Classes scoped to v2 */
+.v2 .font-display {
+  font-family: var(--v2-font-display);
+  letter-spacing: -0.04em;
+}
+
+.v2 .font-body {
+  font-family: var(--v2-font-body);
+}
+
+.v2 .font-serif-title {
+  font-family: var(--v2-font-serif);
+}
+
+.v2 .font-italic-accent {
+  font-family: var(--v2-font-italic);
+  font-style: italic;
+}
+
+.v2 .font-mono-tag {
+  font-family: var(--v2-font-mono);
+}
+
+/* Color utility classes to eliminate raw hex in components */
+.v2 .v2-text-primary { color: var(--v2-text); }
+.v2 .v2-text-headline { color: var(--v2-headline); }
+.v2 .v2-text-muted { color: var(--v2-muted); }
+.v2 .v2-text-accent { color: var(--v2-accent); }
+.v2 .v2-text-link { color: var(--v2-link); }
+.v2 .v2-text-warning { color: var(--v2-warning); }
+.v2 .v2-text-diff-del { color: var(--v2-diff-del); }
+.v2 .v2-text-diff-add { color: var(--v2-diff-add); }
+
+.v2 .v2-bg-black { background-color: var(--v2-bg); }
+.v2 .v2-bg-card { background-color: var(--v2-card); }
+.v2 .v2-bg-card-2 { background-color: var(--v2-card-2); }
+.v2 .v2-bg-accent { background-color: var(--v2-accent); }
+.v2 .v2-bg-warning { background-color: var(--v2-warning); }
+.v2 .v2-bg-diff-del { background-color: var(--v2-diff-del-bg); }
+.v2 .v2-bg-diff-add { background-color: var(--v2-diff-add-bg); }
+
+.v2 .v2-border-line { border-color: var(--v2-line); }
+.v2 .v2-border-accent { border-color: var(--v2-accent); }
+.v2 .v2-border-warning { border-color: var(--v2-warning); }
+.v2 .v2-border-diff-del { border-color: rgba(255, 107, 107, 0.25); }
+.v2 .v2-border-diff-add { border-color: rgba(46, 242, 122, 0.25); }
+
+/* Section Spacing */
+.v2-section-spacing {
+  padding-top: 96px;
+  padding-bottom: 96px;
+}
+
+@media (min-width: 1024px) {
+  .v2-section-spacing {
+    padding-top: 160px;
+    padding-bottom: 160px;
+  }
+}
+
+/* Replay player variable remapping under .v2 */
+.v2 .v2-replay-scope {
+  --bg: var(--v2-bg);
+  --surface: var(--v2-card);
+  --surface-2: var(--v2-card-2);
+  --text: var(--v2-text);
+  --text-mint: var(--v2-headline);
+  --text-muted: var(--v2-muted);
+  --border: var(--v2-line);
+  --border-subtle: var(--v2-line);
+  --accent: var(--v2-accent);
+  --accent-contrast: #000000;
+  --warning: var(--v2-warning);
+  --danger: var(--v2-diff-del);
+  --success: var(--v2-accent);
+  --radius-card: var(--v2-radius-card);
+  --radius-panel: var(--v2-radius-card);
+  --radius-control: 12px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .v2,
+  .v2 *,
+  .v2 *::before,
+  .v2 *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

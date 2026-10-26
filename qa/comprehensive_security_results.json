@@ -1,0 +1,104 @@
+{
+  "timestamp": "2026-10-26T07:32:30.481Z",
+  "checks": {
+    "Secret Scan (Working Diff & Staged)": {
+      "pass": true,
+      "details": {
+        "diffSecretHitsCount": 0,
+        "hits": []
+      }
+    },
+    "Secret Scan (Git History Real Secrets)": {
+      "pass": true,
+      "details": {
+        "historyRealSecretHitsCount": 0,
+        "hits": []
+      }
+    },
+    "Network Boundary V2 fetch() Scan": {
+      "pass": true,
+      "details": {
+        "totalV2FetchCalls": 1,
+        "validFetches": [
+          {
+            "file": "src\\v2\\features\\replay\\ReplaySection.tsx",
+            "call": "fetch(realUrl)"
+          }
+        ],
+        "invalidFetches": []
+      }
+    },
+    "No Google Fonts link tag in v2.html": {
+      "pass": true,
+      "details": {
+        "hasGoogleFontsLinkInV2Html": false
+      }
+    },
+    "Self-hosted npm fonts in src/v2/styles/v2.css": {
+      "pass": true,
+      "details": {
+        "usesFontsource": true
+      }
+    },
+    "No External CDN links in V2": {
+      "pass": true,
+      "details": {
+        "cdnMatchesCount": 0,
+        "cdnMatches": []
+      }
+    },
+    "No Third-Party Analytics or Tracking Pixels in V2": {
+      "pass": true,
+      "details": {
+        "trackerMatchesCount": 0,
+        "trackerMatches": []
+      }
+    },
+    "External URL Allowlist (Strict Allowed Domains Only)": {
+      "pass": true,
+      "details": {
+        "totalExternalUrlsFound": 3,
+        "disallowedCount": 0,
+        "allowedUrls": [
+          {
+            "file": "src\\v2\\data\\copy.v2.ts",
+            "url": "https://graphify.com",
+            "allowed": true
+          },
+          {
+            "file": "src\\v2\\data\\copy.v2.ts",
+            "url": "https://ai.google.dev",
+            "allowed": true
+          },
+          {
+            "file": "v2.html",
+            "url": "https://akshayjadhav237237-cmd.github.io/hush-agent/v2.html",
+            "allowed": true
+          }
+        ],
+        "disallowedUrls": []
+      }
+    },
+    "Deploy workflow was NEVER modified since creation": {
+      "pass": true,
+      "details": {
+        "commitsCount": 1,
+        "commits": [
+          "44f9630 Add GitHub Pages deployment workflow"
+        ],
+        "workingTreeStatus": "clean (unmodified)"
+      }
+    },
+    "Deploy workflow triggers strictly on main and workflow_dispatch only": {
+      "pass": true,
+      "details": {
+        "onlyMainTrigger": true,
+        "rawTriggers": "name: Deploy GitHub Pages\r\n\r\non:\r\n  push:\r\n    branches:\r\n      - main\r\n  workflow_dispatch:\r\n\r\npermissions:\r\n  contents: read\r\n  pages: write\r\n  id-token: write\r\n\r\nconcurrency:\r\n  group: 'pages'\r\n  cancel-in-progress: false"
+      }
+    }
+  },
+  "summary": {
+    "passed": true,
+    "failures": []
+  }
+}
