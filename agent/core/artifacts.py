@@ -116,11 +116,16 @@ def build_resume_message(idea: str, artifacts: list[str], state: Any) -> str:
 
     existing_str = ", ".join(sorted(artifacts)) if artifacts else "none"
 
+    phase_str = ""
+    if state is not None and getattr(state, "phase", None):
+        phase_str = f"- Current phase: {getattr(state, 'phase')}\n"
+
     return (
         f"Resuming interrupted run:\n"
         f"- Original idea: {idea}\n"
         f"- Existing artifacts: {existing_str}\n"
         f"- Current build round: {round_num}\n"
+        f"{phase_str}"
         f"- Next expected stage: {next_stage}\n\n"
         f"Directives:\n"
         f"- Finished stages MUST NOT be redone.\n"

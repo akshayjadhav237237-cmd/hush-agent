@@ -50,3 +50,5 @@ class RunContext:
     state: Any  # RunState
     max_steps: int
     log_text: bool = False
+    browser: Optional[Any] = None
+    plan_only: bool = False

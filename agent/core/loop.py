@@ -1,6 +1,7 @@
 """Main execution loop orchestrating model interactions, tools, and safety gates."""
 from __future__ import annotations
 
+import time
 from typing import TYPE_CHECKING, Any
 
 from core.audit import redact
@@ -23,6 +24,22 @@ if TYPE_CHECKING:
     from core.types import Desktop, RunContext, ToolFunc
 
 CONTINUE_NUDGE: str = "Please continue with a tool call or call finish."
+
+
+def format_tool_error(tool_name: str, exc: BaseException) -> str:
+    """Format human-readable tool execution error ending with guidance on what to do next."""
+    msg = redact(str(exc))
+    hint = "What to do next: "
+    lower = msg.lower()
+    if "timeout" in lower:
+        hint += "Retry the action with a longer wait, or check if the target app is responding."
+    elif "not found" in lower or "cannot find" in lower or "no such" in lower:
+        hint += "Take a screenshot to locate the target or verify the window/element title."
+    elif "permission" in lower or "access denied" in lower:
+        hint += "Ask the human operator to grant required permissions."
+    else:
+        hint += "Take a screenshot to inspect current state and try an alternative approach."
+    return f"ERROR in {tool_name}: {msg}. {hint}"
 
 
 def run_loop(
@@ -124,12 +141,37 @@ def run_loop(
             strip_old_images(contents, keep=KEEP_SCREENSHOTS)
             continue
 
+        # Check plan_only dry-run mode
+        if getattr(ctx, "plan_only", False):
+            print("\n--- PLAN-ONLY DRY RUN ---")
+            for t in text_parts:
+                print(t)
+            if calls:
+                print("\nIntended tool calls:")
+                for c in calls:
+                    print(f"- {getattr(c, 'name', '')}({getattr(c, 'args', {})})")
+            print("-------------------------\n")
+            if ctx.audit:
+                ctx.audit.log("plan_only_complete", plan="\n".join(text_parts))
+            return EXIT_OK
+
         # 5. Dispatch function calls
         response_parts: list[Any] = []
         for call in calls:
             tool_name = getattr(call, "name", "")
             raw_args = getattr(call, "args", {}) or {}
             tool_args = dict(raw_args)
+
+            # Update phase state machine based on tools invoked
+            if hasattr(ctx, "state") and ctx.state:
+                if tool_name == "finish":
+                    ctx.state.phase = "done"
+                elif tool_name in ("run_cmd", "browser_send_prompt", "paste_text") or (tool_name == "save_artifact" and "build" in str(tool_args.get("name", ""))):
+                    ctx.state.phase = "build"
+                elif tool_name == "save_artifact" and "plan" in str(tool_args.get("name", "")):
+                    ctx.state.phase = "plan"
+                elif tool_name in ("save_artifact", "open_url") and "research" in str(tool_args.get("name", "")):
+                    ctx.state.phase = "research"
 
             # Kill switch check before every tool execution
             if ctx.kill.is_set():
@@ -174,22 +216,30 @@ def run_loop(
                     ctx.audit.log("screenshot", dhash=h)
 
             else:
-                # General tool registry dispatch
+                # General tool registry dispatch with bounded retries & backoff
                 fn = registry.get(tool_name)
                 if fn is None:
-                    res_str = f"Unknown tool: {tool_name}"
+                    res_str = f"Unknown tool: {tool_name}. What to do next: Check available tools in schema."
                 else:
-                    try:
-                        res_str = str(fn(**tool_args))
-                    except BaseException as exc:
-                        if is_failsafe(exc):
-                            if ctx.audit:
-                                ctx.audit.log("failsafe_abort")
-                            print(
-                                "FailSafe aborted by user moving mouse to corner."
-                            )
-                            return EXIT_FAILSAFE
-                        res_str = f"ERROR: {redact(str(exc))}"
+                    retries = 2
+                    delay = 0.1
+                    for attempt in range(retries + 1):
+                        try:
+                            res_str = str(fn(**tool_args))
+                            break
+                        except BaseException as exc:
+                            if is_failsafe(exc):
+                                if ctx.audit:
+                                    ctx.audit.log("failsafe_abort")
+                                print(
+                                    "FailSafe aborted by user moving mouse to corner."
+                                )
+                                return EXIT_FAILSAFE
+                            if attempt < retries and not is_non_retryable_error(exc):
+                                time.sleep(delay)
+                                delay *= 2
+                                continue
+                            res_str = format_tool_error(tool_name, exc)
 
                 if ctx.audit:
                     ctx.audit.log(
