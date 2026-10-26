@@ -1,0 +1,407 @@
+{
+  "suite": "QA Subagent Q1 (Visual, Responsive & Motion QA Specialist)",
+  "timestamp": "2026-10-26T07:49:02.133Z",
+  "buildStatus": {
+    "pass": true,
+    "details": "tsc && vite build passed with code 0"
+  },
+  "viewports": {
+    "390px": {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "screenshot": "C:\\Users\\aksha\\Documents\\antigravity\\hush-landing-v2\\qa\\q1\\v2-viewport-390px.png",
+      "metrics": {
+        "documentScrollWidth": 390,
+        "bodyScrollWidth": 390,
+        "windowInnerWidth": 390,
+        "documentClientWidth": 390,
+        "zeroOverflow": true
+      },
+      "pass": true
+    },
+    "768px": {
+      "name": "tablet",
+      "width": 768,
+      "height": 1024,
+      "screenshot": "C:\\Users\\aksha\\Documents\\antigravity\\hush-landing-v2\\qa\\q1\\v2-viewport-768px.png",
+      "metrics": {
+        "documentScrollWidth": 768,
+        "bodyScrollWidth": 768,
+        "windowInnerWidth": 768,
+        "documentClientWidth": 768,
+        "zeroOverflow": true
+      },
+      "pass": true
+    },
+    "1440px": {
+      "name": "desktop",
+      "width": 1440,
+      "height": 900,
+      "screenshot": "C:\\Users\\aksha\\Documents\\antigravity\\hush-landing-v2\\qa\\q1\\v2-viewport-1440px.png",
+      "metrics": {
+        "documentScrollWidth": 1440,
+        "bodyScrollWidth": 1440,
+        "windowInnerWidth": 1440,
+        "documentClientWidth": 1440,
+        "zeroOverflow": true
+      },
+      "pass": true
+    }
+  },
+  "keyboardNav": {
+    "focusOutlineSample": [
+      {
+        "tagName": "a",
+        "text": "How it works",
+        "outlineWidth": "2px",
+        "outlineStyle": "solid",
+        "outlineColor": "rgba(234, 241, 226, 0.573)",
+        "boxShadow": "none",
+        "visibleFocus": true
+      },
+      {
+        "tagName": "a",
+        "text": "Gates",
+        "outlineWidth": "2px",
+        "outlineStyle": "solid",
+        "outlineColor": "rgba(245, 241, 232, 0.565)",
+        "boxShadow": "none",
+        "visibleFocus": true
+      },
+      {
+        "tagName": "a",
+        "text": "Replay",
+        "outlineWidth": "2px",
+        "outlineStyle": "solid",
+        "outlineColor": "rgba(245, 240, 232, 0.55)",
+        "boxShadow": "none",
+        "visibleFocus": true
+      },
+      {
+        "tagName": "a",
+        "text": "FAQ",
+        "outlineWidth": "2px",
+        "outlineStyle": "solid",
+        "outlineColor": "rgba(245, 240, 232, 0.55)",
+        "boxShadow": "none",
+        "visibleFocus": true
+      },
+      {
+        "tagName": "a",
+        "text": "GitHub",
+        "outlineWidth": "2px",
+        "outlineStyle": "solid",
+        "outlineColor": "rgba(245, 240, 232, 0.55)",
+        "boxShadow": "none",
+        "visibleFocus": true
+      },
+      {
+        "tagName": "button",
+        "text": "Play background video",
+        "outlineWidth": "2px",
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(238, 240, 228)",
+        "boxShadow": "none",
+        "visibleFocus": true
+      }
+    ],
+    "allSampledElementsHaveVisibleFocus": true,
+    "focusScreenshot": "C:\\Users\\aksha\\Documents\\antigravity\\hush-landing-v2\\qa\\q1\\v2-focus-outline-nav.png",
+    "accordion": {
+      "initialExpanded": "false",
+      "enterExpanded": "true",
+      "enterClosed": "false",
+      "spaceExpanded": "true",
+      "enterPass": true,
+      "spacePass": true,
+      "faqScreenshot": "C:\\Users\\aksha\\Documents\\antigravity\\hush-landing-v2\\qa\\q1\\v2-accordion-enter.png"
+    }
+  },
+  "reducedMotion": {
+    "videoCount": 0,
+    "cssDurations": {
+      "animationDuration": "1e-05s",
+      "transitionDuration": "1e-05s"
+    },
+    "textVisibility": {
+      "totalWordsSampled": 30,
+      "totalLinesSampled": 40,
+      "minWordOpacity": 1,
+      "minLineOpacity": 1,
+      "allWordRevealVisible": true,
+      "allLineRevealVisible": true,
+      "keyElementsAllVisible": true
+    },
+    "screenshot": "C:\\Users\\aksha\\Documents\\antigravity\\hush-landing-v2\\qa\\q1\\v2-reduced-motion-1440px.png",
+    "pass": true
+  },
+  "contrastCheck": {
+    "totalEvaluated": 20,
+    "evaluations": [
+      {
+        "name": "Hero Wordmark (HUSH.)",
+        "fileRef": "src/v2/features/hero/Hero.tsx:34",
+        "sample": "HUSH",
+        "fontSize": "140px",
+        "fontWeight": 800,
+        "isLarge": true,
+        "fgColor": "rgb(245, 240, 232)",
+        "bgColor": "rgb(0, 0, 0)",
+        "actualRatio": "18.51:1",
+        "requiredRatio": "3:1",
+        "pass": true
+      },
+      {
+        "name": "Hero Tagline (Mono Upper)",
+        "fileRef": "src/v2/features/hero/Hero.tsx:42",
+        "sample": "BUILDS QUIETLY. SPEAKS ONLY WH",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "isLarge": false,
+        "fgColor": "rgba(245, 240, 232, 0.55)",
+        "bgColor": "rgb(0, 0, 0)",
+        "actualRatio": "5.64:1",
+        "requiredRatio": "4.5:1",
+        "pass": true
+      },
+      {
+        "name": "Hero Paragraph (Lead Copy)",
+        "fileRef": "src/v2/features/hero/Hero.tsx:49",
+        "sample": "Describe what you want made. H",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "isLarge": false,
+        "fgColor": "rgb(245, 240, 232)",
+        "bgColor": "rgb(0, 0, 0)",
+        "actualRatio": "18.51:1",
+        "requiredRatio": "4.5:1",
+        "pass": true
+      },
+      {
+        "name": "Hero CTA Pill Button (\"Watch a replay\")",
+        "fileRef": "src/v2/ui/PillButton.tsx:30",
+        "sample": "Watch a replay",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "isLarge": false,
+        "fgColor": "rgb(0, 0, 0)",
+        "bgColor": "rgb(245, 240, 232)",
+        "actualRatio": "18.51:1",
+        "requiredRatio": "4.5:1",
+        "pass": true
+      },
+      {
+        "name": "Hero GitHub Link (\"View on GitHub ↗\")",
+        "fileRef": "src/v2/features/hero/Hero.tsx:58",
+        "sample": "View on GitHub",
+        "fontSize": "14px",
+        "fontWeight": 500,
+        "isLarge": false,
+        "fgColor": "rgba(245, 240, 232, 0.55)",
+        "bgColor": "rgb(0, 0, 0)",
+        "actualRatio": "5.64:1",
+        "requiredRatio": "4.5:1",
+        "pass": true
+      },
+      {
+        "name": "Hero Scroll Cue (\"SCROLL\")",
+        "fileRef": "src/v2/features/hero/Hero.tsx:71",
+        "sample": "SCROLL",
+        "fontSize": "11px",
+        "fontWeight": 400,
+        "isLarge": false,
+        "fgColor": "rgba(245, 240, 232, 0.55)",
+        "bgColor": "rgb(0, 0, 0)",
+        "actualRatio": "5.64:1",
+        "requiredRatio": "4.5:1",
+        "pass": true
+      },
+      {
+        "name": "Manifesto Headline",
+        "fileRef": "src/v2/features/manifesto/Manifesto.tsx:18",
+        "sample": "Wearebuildersofquietautomation",
+        "fontSize": "44px",
+        "fontWeight": 700,
+        "isLarge": true,
+        "fgColor": "rgb(239, 255, 230)",
+        "bgColor": "rgb(0, 0, 0)",
+        "actualRatio": "20.12:1",
+        "requiredRatio": "3:1",
+        "pass": true
+      },
+      {
+        "name": "Bento Section Title",
+        "fileRef": "src/v2/features/bento/Bento.tsx:34",
+        "sample": "Quiet automation for busy buil",
+        "fontSize": "60px",
+        "fontWeight": 400,
+        "isLarge": true,
+        "fgColor": "rgb(245, 240, 232)",
+        "bgColor": "rgb(0, 0, 0)",
+        "actualRatio": "18.51:1",
+        "requiredRatio": "3:1",
+        "pass": true
+      },
+      {
+        "name": "Bento Section Subtitle (Periwinkle)",
+        "fileRef": "src/v2/features/bento/Bento.tsx:37",
+        "sample": "Orchestrated by Gemma 4. Remem",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "isLarge": false,
+        "fgColor": "rgb(124, 147, 245)",
+        "bgColor": "rgb(0, 0, 0)",
+        "actualRatio": "7.35:1",
+        "requiredRatio": "4.5:1",
+        "pass": true
+      },
+      {
+        "name": "Bento Tile 1 Caption (over video)",
+        "fileRef": "src/v2/features/bento/Bento.tsx:58",
+        "sample": "Quiet automation for busy buil",
+        "fontSize": "60px",
+        "fontWeight": 400,
+        "isLarge": true,
+        "fgColor": "rgb(245, 240, 232)",
+        "bgColor": "rgb(20, 20, 20)",
+        "actualRatio": "16.24:1",
+        "requiredRatio": "3:1",
+        "pass": true
+      },
+      {
+        "name": "Bento Card Title (Serif)",
+        "fileRef": "src/v2/features/bento/Bento.tsx:82",
+        "sample": "Gemma 4 Orchestration.",
+        "fontSize": "24px",
+        "fontWeight": 400,
+        "isLarge": true,
+        "fgColor": "rgb(245, 240, 232)",
+        "bgColor": "rgb(20, 20, 20)",
+        "actualRatio": "16.24:1",
+        "requiredRatio": "3:1",
+        "pass": true
+      },
+      {
+        "name": "Bento Card Item List Text",
+        "fileRef": "src/v2/features/bento/Bento.tsx:89",
+        "sample": "Function calling opens apps, p",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "isLarge": false,
+        "fgColor": "rgb(245, 240, 232)",
+        "bgColor": "rgb(20, 20, 20)",
+        "actualRatio": "16.24:1",
+        "requiredRatio": "4.5:1",
+        "pass": true
+      },
+      {
+        "name": "Bento Card \"Learn more ↗\" Link",
+        "fileRef": "src/v2/features/bento/Bento.tsx:105",
+        "sample": "Learn more ↗",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "isLarge": false,
+        "fgColor": "rgb(124, 147, 245)",
+        "bgColor": "rgb(20, 20, 20)",
+        "actualRatio": "6.45:1",
+        "requiredRatio": "4.5:1",
+        "pass": true
+      },
+      {
+        "name": "Gates Card Title",
+        "fileRef": "src/v2/features/gates/Gates.tsx:56",
+        "sample": "Auth / CAPTCHA / MFA",
+        "fontSize": "20px",
+        "fontWeight": 600,
+        "isLarge": true,
+        "fgColor": "rgb(239, 255, 230)",
+        "bgColor": "rgb(20, 20, 20)",
+        "actualRatio": "17.65:1",
+        "requiredRatio": "3:1",
+        "pass": true
+      },
+      {
+        "name": "Gates Card Description",
+        "fileRef": "src/v2/features/gates/Gates.tsx:64",
+        "sample": "Six policy gates decide when H",
+        "fontSize": "18px",
+        "fontWeight": 400,
+        "isLarge": false,
+        "fgColor": "rgba(245, 240, 232, 0.55)",
+        "bgColor": "rgb(20, 20, 20)",
+        "actualRatio": "5.58:1",
+        "requiredRatio": "4.5:1",
+        "pass": true
+      },
+      {
+        "name": "Compare Diff Add Line",
+        "fileRef": "src/v2/features/compare/Compare.tsx:82",
+        "sample": "+\nHUSH\nGemma 4 moves each outp",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "isLarge": false,
+        "fgColor": "rgb(46, 242, 122)",
+        "bgColor": "rgb(8, 21, 12)",
+        "actualRatio": "12.56:1",
+        "requiredRatio": "4.5:1",
+        "pass": true
+      },
+      {
+        "name": "Compare Diff Del Line",
+        "fileRef": "src/v2/features/compare/Compare.tsx:75",
+        "sample": "-\nMANUAL\nYou copy prompts betw",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "isLarge": false,
+        "fgColor": "rgb(255, 107, 107)",
+        "bgColor": "rgb(23, 9, 9)",
+        "actualRatio": "7.01:1",
+        "requiredRatio": "4.5:1",
+        "pass": true
+      },
+      {
+        "name": "FAQ Question Trigger",
+        "fileRef": "src/v2/features/faq/Faq.tsx:51",
+        "sample": "Why Gemma and not just Claude?",
+        "fontSize": "18px",
+        "fontWeight": 700,
+        "isLarge": true,
+        "fgColor": "rgb(245, 240, 232)",
+        "bgColor": "rgb(0, 0, 0)",
+        "actualRatio": "18.51:1",
+        "requiredRatio": "3:1",
+        "pass": true
+      },
+      {
+        "name": "FAQ Accordion Number",
+        "fileRef": "src/v2/features/faq/Faq.tsx:47",
+        "sample": "01",
+        "fontSize": "14px",
+        "fontWeight": 600,
+        "isLarge": false,
+        "fgColor": "rgba(245, 240, 232, 0.55)",
+        "bgColor": "rgb(0, 0, 0)",
+        "actualRatio": "5.64:1",
+        "requiredRatio": "4.5:1",
+        "pass": true
+      },
+      {
+        "name": "Footer Headline Text",
+        "fileRef": "src/v2/features/footer/Footer.tsx:28",
+        "sample": "Builds quietly. Speaks only wh",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "isLarge": false,
+        "fgColor": "rgba(245, 240, 232, 0.55)",
+        "bgColor": "rgb(0, 0, 0)",
+        "actualRatio": "5.64:1",
+        "requiredRatio": "4.5:1",
+        "pass": true
+      }
+    ],
+    "pass": true
+  },
+  "findings": [],
+  "finalVerdict": "PASS"
+}

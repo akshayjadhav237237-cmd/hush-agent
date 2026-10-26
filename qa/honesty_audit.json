@@ -1,0 +1,69 @@
+{
+  "timestamp": "2026-10-26T13:02:00Z",
+  "auditor": "QA Subagent Q2 (Honesty, Claims & Data Tracing QA Specialist)",
+  "branch": "landing-v2",
+  "auditMission": {
+    "claimsAndNumbersBackedByData": {
+      "status": "PASS",
+      "checkedCount": 38,
+      "unbackedClaims": 0,
+      "details": "All textual claims and numerical figures are backed by src/data/*.ts."
+    },
+    "noHardcodedDomainNumbers": {
+      "status": "PASS",
+      "statsFunction": "adapters.ts:stats() -> test count dynamically resolved via getTestCount() from testcount.ts (274), gates count from ATTENTION_GATES.length (6), engines count from coordinated engines array (4).",
+      "gatesList": "adapters.ts:gatesList() -> ATTENTION_GATES (6 items).",
+      "faqList": "adapters.ts:faqList() -> FAQ_ITEMS (10) + EXTRA_FAQ_ITEMS (1) = 11 items.",
+      "bentoCards": "adapters.ts:bentoCards() -> dynamically assembled cards."
+    },
+    "strictLeakWordsGrep": {
+      "status": "PASS",
+      "leakWordsChecked": [
+        "Prakriti",
+        "carbon",
+        "India",
+        "Gemini Vision",
+        "100%",
+        "coverage",
+        "YNAB",
+        "CEA",
+        "Diwali"
+      ],
+      "directoriesScanned": [
+        "src/v2",
+        "src/data",
+        "v2.html",
+        "docs"
+      ],
+      "leaksFound": 0
+    },
+    "safetyAndProvenance": {
+      "status": "PASS",
+      "graphStallConditioned": true,
+      "graphStallFlag": "GRAPH_STALL_VERIFIED (currently false)",
+      "graphStallRendered": false,
+      "replayPlayerSimulatedLabel": "SIMULATED DESKTOP (Demo Mode) explicitly shown when mode is demo",
+      "replayPlayerRealLabel": "REAL DESKTOP EXECUTION supported when mode is real",
+      "replaySectionTabHandling": "Tabs rendered only if replay_real.json is detected"
+    },
+    "optionalFileHandling": {
+      "status": "PASS",
+      "testcount": {
+        "pattern": "import.meta.glob('/src/data/testcount.ts', { eager: true })",
+        "fallback": 0,
+        "verified": true
+      },
+      "verification": {
+        "pattern": "import.meta.glob(['/src/data/verification.ts', '/src/data/verification.json'], { eager: true })",
+        "fallback": null,
+        "verified": true
+      },
+      "replayReal": {
+        "pattern": "fetch(realUrl).then(...).catch(...) in ReplaySection.tsx",
+        "fallback": "hasRealReplay remains false, single demo replay shown",
+        "verified": true
+      }
+    }
+  },
+  "defectsFound": []
+}
