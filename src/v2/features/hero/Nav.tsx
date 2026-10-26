@@ -21,7 +21,6 @@ export const Nav: React.FC = () => {
           visibilityMap[entry.target.id] = entry.isIntersecting ? entry.intersectionRatio : 0;
         });
 
-        // Clear active section if at top of page (hero / manifesto)
         if (window.scrollY < 300) {
           setActiveSection('');
           return;
@@ -70,7 +69,6 @@ export const Nav: React.FC = () => {
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
 
-      // Auto-focus close button when dialog opens
       const focusTimer = setTimeout(() => {
         closeButtonRef.current?.focus();
       }, 50);
@@ -81,7 +79,6 @@ export const Nav: React.FC = () => {
           triggerButtonRef.current?.focus();
         }
 
-        // Focus trap
         if (e.key === 'Tab' && dialogRef.current) {
           const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
             'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -118,23 +115,23 @@ export const Nav: React.FC = () => {
 
   return (
     <>
-      {/* Floating Black Pill Nav at top 18px with hairline border */}
+      {/* Black pill tab attached FLUSH to the top edge of the hero container, centered horizontally */}
       <nav
         aria-label="Main Navigation"
-        className="fixed top-[18px] left-1/2 -translate-x-1/2 z-50 flex items-center justify-between sm:justify-center px-4 py-2 sm:px-6 sm:py-2.5 rounded-full bg-[var(--v2-bg)]/90 backdrop-blur-md border border-[var(--v2-line)] shadow-lg shadow-black/40 max-w-[calc(100vw-24px)] sm:max-w-max"
+        className="absolute top-0 left-1/2 -translate-x-1/2 z-40 w-full max-w-4xl rounded-t-none rounded-b-[28px] border-x border-b border-white/[0.08] bg-[#0A0A0A]/90 backdrop-blur-md px-6 sm:px-10 py-[18px] flex items-center justify-between"
       >
-        {/* Mobile brand mark */}
+        {/* Brand / Logo or Mobile title */}
         <a
           href="#hero"
           aria-label="Hush Home"
-          className="sm:hidden font-display font-extrabold text-[var(--v2-text)] tracking-tight text-sm mr-4 flex items-center gap-1 select-none focus-visible:outline-2 focus-visible:outline-[var(--v2-accent)] rounded-sm"
+          className="font-display font-extrabold text-[var(--v2-text)] tracking-tight text-base sm:text-lg flex items-center gap-1.5 select-none focus-visible:outline-2 focus-visible:outline-[var(--v2-accent)] rounded-sm"
         >
           HUSH
-          <span className="w-1.5 h-1.5 rounded-full bg-[var(--v2-accent)]" aria-hidden="true" />
+          <span className="w-2 h-2 rounded-full bg-[var(--v2-accent)]" aria-hidden="true" />
         </a>
 
-        {/* Desktop Links with Active Section Highlight */}
-        <div className="hidden sm:flex items-center gap-1 sm:gap-2">
+        {/* Desktop Links: 4-5 links with ~56px gap (gap-10 sm:gap-14), regular font weight 400, 16px text-base, cream-grey text */}
+        <div className="hidden sm:flex items-center gap-10 sm:gap-14 font-normal text-base">
           {COPY_V2.nav.map((item) => {
             const isAnchor = item.href.startsWith('#');
             const targetId = isAnchor ? item.href.slice(1) : '';
@@ -147,21 +144,21 @@ export const Nav: React.FC = () => {
                 aria-current={isActive ? 'true' : undefined}
                 target={item.external ? '_blank' : undefined}
                 rel={item.external ? 'noopener noreferrer' : undefined}
-                className={`relative px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-colors ${
+                className={`relative transition-colors ${
                   isActive
-                    ? 'text-[var(--v2-headline)] bg-white/[0.08]'
-                    : 'text-[var(--v2-muted)] hover:text-[var(--v2-text)] hover:bg-white/[0.04]'
+                    ? 'text-white font-medium'
+                    : 'text-[#CFCFC8] hover:text-white'
                 }`}
               >
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1.5">
                   {item.label}
                   {item.external && (
-                    <ArrowUpRight className="w-3 h-3 opacity-60" aria-hidden="true" />
+                    <ArrowUpRight className="w-4 h-4 opacity-70" aria-hidden="true" />
                   )}
                 </span>
                 {isActive && (
                   <span
-                    className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--v2-accent)]"
+                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[var(--v2-accent)]"
                     aria-hidden="true"
                   />
                 )}
@@ -170,7 +167,7 @@ export const Nav: React.FC = () => {
           })}
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Button (<640px collapse to hamburger) */}
         <button
           type="button"
           ref={triggerButtonRef}
@@ -179,13 +176,13 @@ export const Nav: React.FC = () => {
           aria-controls="mobile-nav-dialog"
           aria-haspopup="dialog"
           aria-label="Open navigation menu"
-          className="sm:hidden p-1.5 text-[var(--v2-text)]/80 hover:text-white rounded-full focus-visible:outline-2 focus-visible:outline-[var(--v2-accent)] transition-colors"
+          className="sm:hidden p-2 text-[#CFCFC8] hover:text-white rounded-full focus-visible:outline-2 focus-visible:outline-[var(--v2-accent)] transition-colors"
         >
-          <Menu className="w-5 h-5" aria-hidden="true" />
+          <Menu className="w-6 h-6" aria-hidden="true" />
         </button>
       </nav>
 
-      {/* Accessible Mobile Menu Dialog */}
+      {/* Accessible Mobile Menu Drawer */}
       {mobileMenuOpen && (
         <div
           ref={dialogRef}
@@ -196,7 +193,7 @@ export const Nav: React.FC = () => {
           className="fixed inset-0 z-50 sm:hidden bg-black/95 backdrop-blur-xl flex flex-col justify-between p-6"
         >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-[var(--v2-line)] pb-4">
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
             <div className="flex items-center gap-1.5 font-display font-extrabold text-lg text-[var(--v2-text)]">
               HUSH
               <span className="w-2 h-2 rounded-full bg-[var(--v2-accent)]" aria-hidden="true" />
@@ -206,7 +203,7 @@ export const Nav: React.FC = () => {
               ref={closeButtonRef}
               onClick={handleCloseMenu}
               aria-label="Close navigation menu"
-              className="p-2 text-[var(--v2-text)] hover:text-white rounded-full bg-white/[0.06] border border-[var(--v2-line)] focus-visible:outline-2 focus-visible:outline-[var(--v2-accent)] transition-colors"
+              className="p-2 text-[var(--v2-text)] hover:text-white rounded-full bg-white/[0.06] border border-white/[0.08] focus-visible:outline-2 focus-visible:outline-[var(--v2-accent)] transition-colors"
             >
               <X className="w-5 h-5" aria-hidden="true" />
             </button>
@@ -227,10 +224,10 @@ export const Nav: React.FC = () => {
                   aria-current={isActive ? 'true' : undefined}
                   target={item.external ? '_blank' : undefined}
                   rel={item.external ? 'noopener noreferrer' : undefined}
-                  className={`text-xl font-medium flex items-center justify-between py-3 border-b border-[var(--v2-line)]/50 transition-colors ${
+                  className={`text-xl font-normal flex items-center justify-between py-3 border-b border-white/[0.06] transition-colors ${
                     isActive
-                      ? 'text-[var(--v2-headline)] font-semibold'
-                      : 'text-[var(--v2-text)] hover:text-[var(--v2-accent)]'
+                      ? 'text-white font-semibold'
+                      : 'text-[#CFCFC8] hover:text-white'
                   }`}
                 >
                   <span className="flex items-center gap-2">
@@ -253,7 +250,7 @@ export const Nav: React.FC = () => {
           </nav>
 
           {/* Tagline footer */}
-          <div className="text-xs font-mono text-[var(--v2-muted)] pt-4 border-t border-[var(--v2-line)]">
+          <div className="text-xs font-mono text-[var(--v2-muted)] pt-4 border-t border-white/[0.08]">
             {COPY_V2.hero.tagline}
           </div>
         </div>

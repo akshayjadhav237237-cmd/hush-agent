@@ -40,7 +40,7 @@ export const VideoBg: React.FC<VideoBgProps> = ({
 
   const shouldShowVideo = !reducedMotion && !saveData;
 
-  // IntersectionObserver to pause when offscreen
+  // Autoplay with play() call in useEffect and retry on user interaction if blocked
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !shouldShowVideo) return;
@@ -49,13 +49,70 @@ export const VideoBg: React.FC<VideoBgProps> = ({
     video.defaultMuted = true;
     video.muted = true;
 
+    let unmounted = false;
+    let cleanupListeners: (() => void) | null = null;
+
+    const attemptPlay = () => {
+      if (unmounted || isPausedByUser) return;
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            if (!unmounted) setIsPlaying(true);
+          })
+          .catch(() => {
+            // Autoplay rejected (e.g. browser policy) - retry on first user interaction
+            const onUserInteraction = () => {
+              if (cleanupListeners) {
+                cleanupListeners();
+                cleanupListeners = null;
+              }
+              if (!unmounted && !isPausedByUser && video.paused) {
+                video.play()
+                  .then(() => {
+                    if (!unmounted) setIsPlaying(true);
+                  })
+                  .catch(() => {});
+              }
+            };
+
+            const events = ['pointerdown', 'keydown', 'touchstart', 'click'] as const;
+            events.forEach((evt) => {
+              window.addEventListener(evt, onUserInteraction, { once: true, passive: true });
+            });
+
+            cleanupListeners = () => {
+              events.forEach((evt) => {
+                window.removeEventListener(evt, onUserInteraction);
+              });
+            };
+          });
+      }
+    };
+
+    attemptPlay();
+
+    return () => {
+      unmounted = true;
+      if (cleanupListeners) {
+        cleanupListeners();
+      }
+    };
+  }, [shouldShowVideo, isPausedByUser]);
+
+  // IntersectionObserver to pause when offscreen and resume when visible
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !shouldShowVideo) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting) {
           if (!isPausedByUser) {
-            video.play().catch(() => {});
-            setIsPlaying(true);
+            video.play()
+              .then(() => setIsPlaying(true))
+              .catch(() => {});
           }
         } else {
           video.pause();
@@ -84,8 +141,17 @@ export const VideoBg: React.FC<VideoBgProps> = ({
     }
   };
 
+  const isAbsolute = className.includes('absolute');
+  const containerClasses = [
+    !isAbsolute && 'relative',
+    'w-full h-full overflow-hidden',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
-    <div className={`relative w-full h-full overflow-hidden ${className}`}>
+    <div className={containerClasses}>
       {/* Poster image as fallback and LCP paint */}
       <img
         src={posterSrc}
@@ -103,7 +169,7 @@ export const VideoBg: React.FC<VideoBgProps> = ({
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           poster={posterSrc}
           className="absolute inset-0 w-full h-full object-cover object-center"
           aria-hidden="true"
@@ -112,8 +178,9 @@ export const VideoBg: React.FC<VideoBgProps> = ({
             if (isPausedByUser) setIsPlaying(false);
           }}
         >
+          {/* MP4 with baseline codec first for universal compatibility, WebM second */}
+          <source src={mp4Src} type='video/mp4; codecs="avc1.42E01E"' />
           {webmSrc && <source src={webmSrc} type="video/webm" />}
-          <source src={mp4Src} type="video/mp4" />
         </video>
       )}
 

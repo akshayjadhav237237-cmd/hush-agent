@@ -10,7 +10,6 @@ export const COPY_V2 = {
   nav: [
     { label: 'How it works', href: '#how' },
     { label: 'Gates', href: '#gates' },
-    { label: 'Replay', href: '#replay' },
     { label: 'FAQ', href: '#faq' },
     { label: 'GitHub', href: GITHUB_URL, external: true },
   ] as NavItem[],
@@ -19,8 +18,8 @@ export const COPY_V2 = {
     tagline: 'Builds quietly. Speaks only when it must.',
     paragraph:
       'Describe what you want made. Hush runs the hand-offs between Claude, Gemini and Antigravity, orchestrated by Gemma 4.',
-    ctaPill: 'Watch a replay',
-    ctaPillHref: '#replay',
+    ctaPill: 'See how it works',
+    ctaPillHref: '#how',
     textLink: 'View on GitHub',
     textLinkHref: GITHUB_URL,
     cue: 'SCROLL',
@@ -123,13 +122,6 @@ export const COPY_V2 = {
       },
     ],
   },
-  replay: {
-    eyebrow: '[ REPLAY ]',
-    title: {
-      plain: 'Watch a ',
-      italic: 'recorded run.',
-    },
-  },
   faq: {
     eyebrow: '[ FAQ ]',
     title: {
@@ -143,8 +135,7 @@ export const COPY_V2 = {
     quickLinks: [
       { label: 'How it works', href: '#how' },
       { label: 'Gates', href: '#gates' },
-      { label: 'Replay', href: '#replay' },
-      { label: 'FAQ', href: '#faq' },
+        { label: 'FAQ', href: '#faq' },
     ],
     projectLinks: [
       { label: 'GitHub repository', href: GITHUB_URL, external: true },

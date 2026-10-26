@@ -9,7 +9,7 @@ interface AnimatedNumberProps {
 }
 
 const AnimatedNumber: React.FC<AnimatedNumberProps> = ({ target, suffix }) => {
-  const [displayValue, setDisplayValue] = useState<number>(0);
+  const [displayValue, setDisplayValue] = useState<number>(target);
   const [hasAnimated, setHasAnimated] = useState<boolean>(false);
   const ref = useRef<HTMLSpanElement>(null);
   const frameRef = useRef<number | null>(null);

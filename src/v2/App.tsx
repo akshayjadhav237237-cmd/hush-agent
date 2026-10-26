@@ -6,7 +6,6 @@ import { Bento } from '@/v2/features/bento/Bento';
 import { How } from '@/v2/features/how/How';
 import { Gates } from '@/v2/features/gates/Gates';
 import { Compare } from '@/v2/features/compare/Compare';
-import { ReplaySection } from '@/v2/features/replay/ReplaySection';
 import { Stats } from '@/v2/features/stats/Stats';
 import { Faq } from '@/v2/features/faq/Faq';
 import { Footer } from '@/v2/features/footer/Footer';
@@ -45,11 +44,6 @@ export const App: React.FC = () => {
         {/* 6. Compare */}
         <Section id="compare">
           <Compare />
-        </Section>
-
-        {/* 7. Replay */}
-        <Section id="replay">
-          <ReplaySection />
         </Section>
 
         {/* 8. Stats */}

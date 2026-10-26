@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Container } from '@/v2/ui/Container';
-import { VideoBg } from '@/v2/ui/VideoBg';
 import { BENTO_MEDIA } from '@/v2/data/media';
 import { COPY_V2 } from '@/v2/data/copy.v2';
 import { bentoCards } from '@/v2/data/adapters';
@@ -10,6 +9,42 @@ import { useReducedMotion } from '@/v2/ui/useReducedMotion';
 export const Bento: React.FC = () => {
   const cards = bentoCards();
   const reducedMotion = useReducedMotion();
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (reducedMotion) return;
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Explicitly guarantee muted state for autoplay compliance
+    video.defaultMuted = true;
+    video.muted = true;
+
+    const events: (keyof WindowEventMap)[] = ['pointerdown', 'touchstart', 'keydown', 'scroll'];
+
+    const handleInteraction = () => {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {});
+      }
+      events.forEach((ev) => window.removeEventListener(ev, handleInteraction));
+    };
+
+    const initialPlay = video.play();
+    if (initialPlay !== undefined) {
+      initialPlay.catch(() => {
+        // If autoplay is blocked by browser policy, retry after first user interaction
+        events.forEach((ev) => {
+          window.addEventListener(ev, handleInteraction, { once: true, passive: true });
+        });
+      });
+    }
+
+    return () => {
+      events.forEach((ev) => window.removeEventListener(ev, handleInteraction));
+    };
+  }, [reducedMotion]);
 
   const hoverLiftClass = reducedMotion
     ? ''
@@ -41,20 +76,41 @@ export const Bento: React.FC = () => {
 
         {/* 4-Column Bento Grid: 1 col mobile, 2 col tablet, 4 col desktop */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
-          {/* Column 1: Tall tile with VIDEO background and serif caption bottom-left */}
+          {/* Column 1: Tall tile with edge-to-edge VIDEO and serif caption bottom-left */}
           <div
-            className={`relative min-h-[380px] sm:min-h-[440px] rounded-[var(--v2-radius-card,28px)] overflow-hidden border border-[var(--v2-line)] bg-[var(--v2-card)] shadow-lg flex flex-col justify-end p-6 sm:p-8 ${hoverLiftClass}`}
+            className={`relative min-h-[380px] sm:min-h-[440px] rounded-[var(--v2-radius-card,28px)] overflow-hidden border border-[var(--v2-line)] bg-[var(--v2-card)] shadow-lg flex flex-col justify-end p-0 ${hoverLiftClass}`}
           >
-            <VideoBg
-              mp4Src={BENTO_MEDIA.src}
-              webmSrc={BENTO_MEDIA.webm}
-              posterSrc={BENTO_MEDIA.poster}
-              alt="Hush workflow orchestration demo"
-              className="absolute inset-0"
-              overlayGradient={true}
+            {reducedMotion ? (
+              <img
+                src={BENTO_MEDIA.poster}
+                alt={COPY_V2.bento.tile1.caption}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              <video
+                ref={videoRef}
+                autoPlay
+                muted
+                loop
+                playsInline
+                controls={false}
+                poster={BENTO_MEDIA.poster}
+                className="absolute inset-0 w-full h-full object-cover"
+                aria-hidden="true"
+              >
+                {BENTO_MEDIA.webm && <source src={BENTO_MEDIA.webm} type="video/webm" />}
+                <source src={BENTO_MEDIA.src} type="video/mp4" />
+              </video>
+            )}
+
+            {/* Dark bottom gradient for contrast */}
+            <div
+              className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none"
+              aria-hidden="true"
             />
 
-            <div className="relative z-10">
+            {/* Caption bottom-left */}
+            <div className="relative z-10 p-6 sm:p-8">
               <p className="font-serif-title text-2xl sm:text-3xl text-[var(--v2-headline)] font-normal leading-tight">
                 {COPY_V2.bento.tile1.caption}
               </p>
