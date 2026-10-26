@@ -1,41 +1,41 @@
 {
   "desktop-clipboard-transfer": {
     "feature_id": "desktop-clipboard-transfer",
-    "status": "PASS",
+    "status": "NOT_VERIFIED",
     "timestamp": "2026-10-26T12:43:28.684482+05:30",
-    "detail": "Unit-tested (WEAK): 5,000-character text payload verified intact across software clipboard API (pyperclip); no physical keystrokes or mouse motion.",
+    "detail": "Unit-tested / simulated only; does not have physical real-desktop evidence artifacts on disk.",
     "evidence_hash": "sha256:1dd4193750bb177bc5cd98a1afa7af83b7bed3a873181de908e1913a9b88df64",
     "screenshot_hash": null
   },
   "safety-graph-stall": {
     "feature_id": "safety-graph-stall",
-    "status": "PASS",
+    "status": "NOT_VERIFIED",
     "timestamp": "2026-10-26T12:48:05.329524+05:30",
-    "detail": "Unit-tested (WEAK): Graphify AST extraction verified in isolated temp directory; builds AST, updates on new files, and trips alert on 2 consecutive unchanged rounds without live IDE orchestration.",
+    "detail": "Unit-tested / simulated only; does not have physical real-desktop evidence artifacts on disk.",
     "evidence_hash": "sha256:9e8f4b5f74062718625b5b7d726dc72b522fdb77d1165f393b941b43c3b15089",
     "screenshot_hash": null
   },
   "safety-checkpoint-resume": {
     "feature_id": "safety-checkpoint-resume",
-    "status": "PASS",
+    "status": "NOT_VERIFIED",
     "timestamp": "2026-10-26T12:44:31.600740+05:30",
-    "detail": "Unit-tested (WEAK): Atomic checkpoint resumption verified via DummyDesktop & ResumedModel harness; recovered from step 3, appended to audit trail, unbroken SHA-256 chain (7 events).",
+    "detail": "Attempted real hardware test; timed out waiting for human operator Ctrl+Alt+K hotkey press.",
     "evidence_hash": "sha256:f067ada6a7b163d1996bad4184276796fe37cc1f65bdf84c5040826e8ba80121",
     "screenshot_hash": null
   },
   "safety-screenshot-loop-breaker": {
     "feature_id": "safety-screenshot-loop-breaker",
     "status": "PASS",
-    "timestamp": "2026-10-26T12:44:10.935823+05:30",
-    "detail": "Unit-tested (WEAK): Loop breaker perceptual difference hashing tested on synthetic Pillow canvas images (max_distance=2, same_threshold=3); not verified against physical screen frames.",
-    "evidence_hash": "sha256:a8c945a20eba87ea16b1ba3770dd7334b9a012a9ae63af66138c6386c2d72ff0",
-    "screenshot_hash": null
+    "timestamp": "2026-10-26T17:50:48+05:30",
+    "detail": "Physical verification on real Windows desktop: LoopBreaker verified on real display frames. 3 static desktop screenshots triggered static stall alert (2 consecutive identical actions); dynamic scratch window with 3 distinct color frames produced large Hamming distances (>15 bits) with 0 false alerts. Artifact verification/loopbreaker_real.json (sha256: 69d7c16cacc2255a9cdcd6a0c379716578e7004873ee4f9d5dad8eb1af8b30a1).",
+    "evidence_hash": "sha256:69d7c16cacc2255a9cdcd6a0c379716578e7004873ee4f9d5dad8eb1af8b30a1",
+    "screenshot_hash": "sha256:3b0b6b37424b9fd330f7c9cb4d8ea63d510149d1f5fa2817df8bfa0cb9dbc5de"
   },
   "safety-global-kill-hotkey": {
     "feature_id": "safety-global-kill-hotkey",
     "status": "PASS",
     "timestamp": "2026-10-26T15:06:00+05:30",
-    "detail": "Physical verification on real Windows desktop: Emergency kill hotkey (Ctrl+Alt+K) triggered by actor human at 20 Hz polling, exits immediately with exit code 3. Verified in agent/runs/physical_kill_hotkey/audit.jsonl (line sha256: 35506dec02386378194bac466777c5caf5a5cf2e014be790d17aa6d53cc4e056).",
+    "detail": "Physical verification on real Windows desktop: Emergency kill hotkey (Ctrl+Alt+K) triggered by actor human at 20 Hz polling, exits immediately with exit code 3. Verified in artifact 'agent/runs/physical_kill_hotkey/audit.jsonl' (file sha256: abf1f103bed8b89069f59bf30f7d2155e1b0ec0a1a11012d92d5d1c4c0f5d74f, kill line sha256: 35506dec02386378194bac466777c5caf5a5cf2e014be790d17aa6d53cc4e056).",
     "evidence_hash": "sha256:35506dec02386378194bac466777c5caf5a5cf2e014be790d17aa6d53cc4e056",
     "screenshot_hash": null
   },
@@ -43,23 +43,23 @@
     "feature_id": "safety-mouse-corner-abort",
     "status": "PASS",
     "timestamp": "2026-10-26T15:06:00+05:30",
-    "detail": "Physical verification on real Windows desktop: Hardware mouse-corner failsafe triggered by actor human moving physical cursor to (0, 0). Intercepts FailSafeException and routes to exit code 2. Verified in agent/runs/physical_mouse_corner/audit.jsonl (line sha256: 1c22837bc48a3bc48894e3736d7eb66a23e0bcd5b0c11df6c7b8a30e79dfe7b4).",
+    "detail": "Physical verification on real Windows desktop: Hardware mouse-corner failsafe triggered by actor human moving physical cursor to (0, 0). Intercepts FailSafeException and routes to exit code 2. Verified in artifact 'agent/runs/physical_mouse_corner/audit.jsonl' (file sha256: ebf5d8015c617b2ed28e39f1909a9cc1b0b959ffc70d1eeb562629ad2aa2b1e0, failsafe line sha256: 1c22837bc48a3bc48894e3736d7eb66a23e0bcd5b0c11df6c7b8a30e79dfe7b4).",
     "evidence_hash": "sha256:1c22837bc48a3bc48894e3736d7eb66a23e0bcd5b0c11df6c7b8a30e79dfe7b4",
     "screenshot_hash": null
   },
   "safety-human-notify-gate": {
     "feature_id": "safety-human-notify-gate",
-    "status": "PASS",
+    "status": "NOT_VERIFIED",
     "timestamp": "2026-10-26T15:06:00+05:30",
-    "detail": "Physical verification on real desktop: Push notification dispatched to ntfy topic 'hush-safety-physical' and confirmed by actor human. Nonce 'HUSH-B9C24A7D' verified and matched.",
+    "detail": "Recorded hash is a static string; not verified against an independent disk artifact containing the random nonce.",
     "evidence_hash": "sha256:8ecac3e61eb4b0433af719c3179e353a459768376bbdf83e5840ac8439376eec",
     "screenshot_hash": null
   },
   "desktop-notepad-paste-verify": {
     "feature_id": "desktop-notepad-paste-verify",
-    "status": "PASS",
+    "status": "INJECTED",
     "timestamp": "2026-10-26T13:59:04.265294+05:30",
-    "detail": "Notepad opened, text pasted and verified via buffer on real Windows desktop.",
+    "detail": "Injected input: synthetic paste via buffer without physical keystroke verification; artifact was circular.",
     "evidence_hash": "sha256:4956445a80fd143e66b203d70be217b5b68212a4759452e42ebb57abf768da9c",
     "screenshot_hash": null
   },
@@ -67,7 +67,7 @@
     "feature_id": "desktop-app-smoke",
     "status": "PASS",
     "timestamp": "2026-10-26T15:15:00+05:30",
-    "detail": "Physical verification on real Windows desktop: Real screenshots and window titles verified for Claude ('Sign in - Claude', login_needed: true, sha256: 25a8b391...), Gemini ('Google Gemini', login_needed: true, sha256: 3ebce420...), and Antigravity ('AI Event Planner Research...', login_needed: false, sha256: f06cacca...) captured in verification/shots/*.png.",
+    "detail": "Physical verification on real Windows desktop: Real screenshots and window titles verified. Antigravity: logged_in = true, window_opened_by_test = false (reads 'window found, not driven'). Claude: logged_in = false, window_opened_by_test = true (hit login wall). Gemini: logged_in = false at smoke time, window_opened_by_test = true.",
     "evidence_hash": "sha256:f06cacca4c9eb6d3289307c296870e256829b557f5f4f1c44eb99f0f21da98e4",
     "screenshot_hash": "sha256:25a8b3912c672bc9b469a910f9ee84fa11d9d580d1cd4cbbdb3dcaf5ba5a97c1"
   },
@@ -75,16 +75,24 @@
     "feature_id": "desktop-gemini-driver",
     "status": "PASS",
     "timestamp": "2026-10-26T15:20:00+05:30",
-    "detail": "Physical verification on real Windows desktop: Gemini web driver prompt and response roundtrip verified. Received matching nonce 'HUSH-OK-687d8d70'. Screenshot captured at verification/shots/gemini_roundtrip.png (sha256: 2f01282008f8034b8cb3bf32eadb722167ce3f2e5347115ebe922e7e495f33c7).",
+    "detail": "Physical verification on real Windows desktop: logged_in = true during roundtrip, roundtrip prompt/response verified with nonce HUSH-OK-687d8d70. Screenshot captured at verification/shots/gemini_roundtrip.png.",
     "evidence_hash": "sha256:2f01282008f8034b8cb3bf32eadb722167ce3f2e5347115ebe922e7e495f33c7",
     "screenshot_hash": "sha256:2f01282008f8034b8cb3bf32eadb722167ce3f2e5347115ebe922e7e495f33c7"
   },
   "desktop-claude-driver": {
     "feature_id": "desktop-claude-driver",
-    "status": "NEEDS_LOGIN",
+    "status": "NOT_VERIFIED",
     "timestamp": "2026-10-26T15:20:00+05:30",
-    "detail": "Live browser driver executed: Claude web interface encountered login wall ('Sign in - Claude' / 'Your thinking partner for big ambitions'). Screenshot captured at verification/shots/claude_roundtrip.png (sha256: f069bad26fcc5f388fe45f74c778306e4b3659dee9a371471b4ff7668cd34ceb). Driver implemented and functional, pending operator login.",
+    "detail": "Login page encountered ('Sign in - Claude'), logged_in = false, window_opened_by_test = true, cannot drive without credentials.",
     "evidence_hash": "sha256:f069bad26fcc5f388fe45f74c778306e4b3659dee9a371471b4ff7668cd34ceb",
     "screenshot_hash": "sha256:f069bad26fcc5f388fe45f74c778306e4b3659dee9a371471b4ff7668cd34ceb"
+  },
+  "safety-account-switch-notice": {
+    "feature_id": "safety-account-switch-notice",
+    "status": "PASS",
+    "timestamp": "2026-10-26T17:54:54.587695+05:30",
+    "detail": "Account switching safety notice verified: invalid confirmation ('yes') correctly refused with non-zero exit code, valid confirmation ('I UNDERSTAND') accepted through safety gate. Transcript saved to verification/account_notice_transcript.txt.",
+    "evidence_hash": "sha256:80583c0fb1f2b84dc92af800615f182bf7e8f8ecba74f6227cd9431a4337843e",
+    "screenshot_hash": null
   }
 }

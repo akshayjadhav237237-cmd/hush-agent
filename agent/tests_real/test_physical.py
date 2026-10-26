@@ -300,7 +300,8 @@ def test_physical_phone_notify() -> dict[str, Any]:
     nonce = f"HUSH-{secrets.token_hex(4).upper()}"
     topic = os.getenv("NTFY_TOPIC")
     if not topic or not topic.strip():
-        topic = f"hush-safety-{secrets.token_hex(4)}"
+        print("Set NTFY_TOPIC to run this test")
+        sys.exit(1)
 
     notifier = Notifier(topic=topic)
     probe_msg = f"Hush physical safety verification nonce: {nonce}"

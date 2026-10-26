@@ -1,0 +1,25 @@
+=== ACCOUNT SWITCHING SAFETY NOTICE TEST RUN ===
+
+--- Invocation 1: Invalid Confirmation ('yes') ---
+PROVIDER: gemma / gemma-4-26b-a4b-it
+Switching between accounts to work around usage limits may violate the terms of the services involved and could get those accounts restricted. Use only your own accounts. Hush never stores or types passwords.
+Type 'I UNDERSTAND' to enable account switching: 
+Account switching terms declined.
+
+Exit Code: 1
+
+--- Invocation 2: Valid Confirmation ('I UNDERSTAND') ---
+PROVIDER: gemma / gemma-4-26b-a4b-it
+Switching between accounts to work around usage limits may violate the terms of the services involved and could get those accounts restricted. Use only your own accounts. Hush never stores or types passwords.
+Type 'I UNDERSTAND' to enable account switching: 
+Traceback (most recent call last):
+  File "C:\Users\aksha\Documents\antigravity\jolly-hawking\agent\orchestrator.py", line 6, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "C:\Users\aksha\Documents\antigravity\jolly-hawking\agent\core\cli.py", line 264, in main
+    model = ModelClient(model_name, tools, audit=audit)
+  File "C:\Users\aksha\Documents\antigravity\jolly-hawking\agent\core\model_client.py", line 90, in __init__
+    raise ValueError("GEMINI_API_KEY environment variable is not set. Please set it to use ModelClient.")
+ValueError: GEMINI_API_KEY environment variable is not set. Please set it to use ModelClient.
+
+Exit Code: 1
