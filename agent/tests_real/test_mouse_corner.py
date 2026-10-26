@@ -1,4 +1,6 @@
 """Real desktop test: Hardware mouse-corner abort (0,0) -> FailSafeException -> Exit code 2."""
+import ctypes
+import sys
 import time
 import pyautogui
 import pytest
@@ -10,6 +12,11 @@ from tests_real.real_test_helper import pre_gui_warning, record_result, sha256_t
 
 def test_real_desktop_mouse_corner_abort() -> None:
     pre_gui_warning("Testing mouse-corner failsafe (move pointer to (0, 0))", wait_seconds=3)
+
+    user32 = ctypes.windll.user32 if sys.platform == "win32" else None
+    hdesk = user32.OpenDesktopW("Default", 0, False, 0x01FF) if user32 else None
+    if user32 and hdesk:
+        user32.SetThreadDesktop(hdesk)
 
     assert pyautogui.FAILSAFE is True, "pyautogui.FAILSAFE must be enabled"
 
@@ -31,14 +38,6 @@ def test_real_desktop_mouse_corner_abort() -> None:
             pyautogui.moveTo(max(100, original_pos.x), max(100, original_pos.y))
         except Exception:
             pass
-
-    # If programmatic move didn't trip (e.g. simulated environment), trigger directly to verify handler
-    if not caught_failsafe:
-        try:
-            raise pyautogui.FailSafeException("Simulated hardware corner abort")
-        except Exception as exc:
-            if is_failsafe(exc):
-                caught_failsafe = True
 
     assert caught_failsafe is True, "Mouse-corner failsafe failed to raise FailSafeException"
 

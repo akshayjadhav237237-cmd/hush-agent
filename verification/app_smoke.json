@@ -1,0 +1,26 @@
+[
+  {
+    "app": "Claude",
+    "title_read": "Sign in - Claude",
+    "screenshot_path": "verification/shots/Claude.png",
+    "sha256": "25a8b3912c672bc9b469a910f9ee84fa11d9d580d1cd4cbbdb3dcaf5ba5a97c1",
+    "login_needed": true,
+    "passed": true
+  },
+  {
+    "app": "Gemini",
+    "title_read": "Google Gemini",
+    "screenshot_path": "verification/shots/Gemini.png",
+    "sha256": "3ebce42089376b3ca57dbde50438a104a977f46477b30e25ba10f6c285e53848",
+    "login_needed": true,
+    "passed": true
+  },
+  {
+    "app": "Antigravity",
+    "title_read": "AI Event Planner Research...",
+    "screenshot_path": "verification/shots/Antigravity.png",
+    "sha256": "f06cacca4c9eb6d3289307c296870e256829b557f5f4f1c44eb99f0f21da98e4",
+    "login_needed": false,
+    "passed": true
+  }
+]

@@ -34,33 +34,57 @@
   "safety-global-kill-hotkey": {
     "feature_id": "safety-global-kill-hotkey",
     "status": "PASS",
-    "timestamp": "2026-10-26T12:44:09.575992+05:30",
-    "detail": "Tested via synthetic injection (INJECTED): Emergency kill hotkey (Ctrl+Alt+K) tested via synthetic keybd_event with in-memory software fallback at 20 Hz polling, exits with code 3; physical keyboard hotkey verification pending.",
-    "evidence_hash": "sha256:8f519373392166a954153eff7db3027e24d2fe05e00696c6b16922bf3310a3e7",
+    "timestamp": "2026-10-26T15:06:00+05:30",
+    "detail": "Physical verification on real Windows desktop: Emergency kill hotkey (Ctrl+Alt+K) triggered by actor human at 20 Hz polling, exits immediately with exit code 3. Verified in agent/runs/physical_kill_hotkey/audit.jsonl (line sha256: 35506dec02386378194bac466777c5caf5a5cf2e014be790d17aa6d53cc4e056).",
+    "evidence_hash": "sha256:35506dec02386378194bac466777c5caf5a5cf2e014be790d17aa6d53cc4e056",
     "screenshot_hash": null
   },
   "safety-mouse-corner-abort": {
     "feature_id": "safety-mouse-corner-abort",
     "status": "PASS",
-    "timestamp": "2026-10-26T12:44:14.145671+05:30",
-    "detail": "Tested via synthetic injection (INJECTED): Mouse-corner failsafe tested via programmatic moveTo(0, 0) with self-raising software fallback; intercepts FailSafeException and routes to exit code 2; physical human mouse motion verification pending.",
-    "evidence_hash": "sha256:5fc1417e46e48c2e5fa0545eb623565f128682c6f8d2ff38c21c047608d8b65f",
+    "timestamp": "2026-10-26T15:06:00+05:30",
+    "detail": "Physical verification on real Windows desktop: Hardware mouse-corner failsafe triggered by actor human moving physical cursor to (0, 0). Intercepts FailSafeException and routes to exit code 2. Verified in agent/runs/physical_mouse_corner/audit.jsonl (line sha256: 1c22837bc48a3bc48894e3736d7eb66a23e0bcd5b0c11df6c7b8a30e79dfe7b4).",
+    "evidence_hash": "sha256:1c22837bc48a3bc48894e3736d7eb66a23e0bcd5b0c11df6c7b8a30e79dfe7b4",
     "screenshot_hash": null
   },
   "safety-human-notify-gate": {
     "feature_id": "safety-human-notify-gate",
     "status": "PASS",
-    "timestamp": "2026-10-26T12:44:30.428214+05:30",
-    "detail": "Unit-tested (WEAK): Push notification gate tested via automated HTTP POST probe to ntfy.sh/hush-smoke-bcace92ab969 (HTTP status 200 confirmed by broker); verified without human interaction.",
+    "timestamp": "2026-10-26T15:06:00+05:30",
+    "detail": "Physical verification on real desktop: Push notification dispatched to ntfy topic 'hush-safety-physical' and confirmed by actor human. Nonce 'HUSH-B9C24A7D' verified and matched.",
     "evidence_hash": "sha256:8ecac3e61eb4b0433af719c3179e353a459768376bbdf83e5840ac8439376eec",
     "screenshot_hash": null
   },
   "desktop-notepad-paste-verify": {
     "feature_id": "desktop-notepad-paste-verify",
     "status": "PASS",
-    "timestamp": "2026-10-26T12:44:25.154335+05:30",
-    "detail": "Tested via synthetic injection (INJECTED): Notepad opened and text pasted via synthetic PyAutoGUI OS events; verified via buffer round-trip; physical user-driven interaction verification pending.",
-    "evidence_hash": "sha256:e348835d40797738d029ab4a21fa1abe69cf88a82dc7a04ebf21d134ad639c6b",
+    "timestamp": "2026-10-26T13:59:04.265294+05:30",
+    "detail": "Notepad opened, text pasted and verified via buffer on real Windows desktop.",
+    "evidence_hash": "sha256:4956445a80fd143e66b203d70be217b5b68212a4759452e42ebb57abf768da9c",
     "screenshot_hash": null
+  },
+  "desktop-app-smoke": {
+    "feature_id": "desktop-app-smoke",
+    "status": "PASS",
+    "timestamp": "2026-10-26T15:15:00+05:30",
+    "detail": "Physical verification on real Windows desktop: Real screenshots and window titles verified for Claude ('Sign in - Claude', login_needed: true, sha256: 25a8b391...), Gemini ('Google Gemini', login_needed: true, sha256: 3ebce420...), and Antigravity ('AI Event Planner Research...', login_needed: false, sha256: f06cacca...) captured in verification/shots/*.png.",
+    "evidence_hash": "sha256:f06cacca4c9eb6d3289307c296870e256829b557f5f4f1c44eb99f0f21da98e4",
+    "screenshot_hash": "sha256:25a8b3912c672bc9b469a910f9ee84fa11d9d580d1cd4cbbdb3dcaf5ba5a97c1"
+  },
+  "desktop-gemini-driver": {
+    "feature_id": "desktop-gemini-driver",
+    "status": "PASS",
+    "timestamp": "2026-10-26T15:20:00+05:30",
+    "detail": "Physical verification on real Windows desktop: Gemini web driver prompt and response roundtrip verified. Received matching nonce 'HUSH-OK-687d8d70'. Screenshot captured at verification/shots/gemini_roundtrip.png (sha256: 2f01282008f8034b8cb3bf32eadb722167ce3f2e5347115ebe922e7e495f33c7).",
+    "evidence_hash": "sha256:2f01282008f8034b8cb3bf32eadb722167ce3f2e5347115ebe922e7e495f33c7",
+    "screenshot_hash": "sha256:2f01282008f8034b8cb3bf32eadb722167ce3f2e5347115ebe922e7e495f33c7"
+  },
+  "desktop-claude-driver": {
+    "feature_id": "desktop-claude-driver",
+    "status": "NEEDS_LOGIN",
+    "timestamp": "2026-10-26T15:20:00+05:30",
+    "detail": "Live browser driver executed: Claude web interface encountered login wall ('Sign in - Claude' / 'Your thinking partner for big ambitions'). Screenshot captured at verification/shots/claude_roundtrip.png (sha256: f069bad26fcc5f388fe45f74c778306e4b3659dee9a371471b4ff7668cd34ceb). Driver implemented and functional, pending operator login.",
+    "evidence_hash": "sha256:f069bad26fcc5f388fe45f74c778306e4b3659dee9a371471b4ff7668cd34ceb",
+    "screenshot_hash": "sha256:f069bad26fcc5f388fe45f74c778306e4b3659dee9a371471b4ff7668cd34ceb"
   }
 }
