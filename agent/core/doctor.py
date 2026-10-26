@@ -50,10 +50,14 @@ def _check_packages() -> dict[str, Any]:
         ("psutil", "psutil"),
     ]
     missing = []
+    import importlib.util
     for mod_name, pkg_name in required:
         try:
-            __import__(mod_name)
-        except ImportError:
+            top_mod = mod_name.split('.')[0]
+            spec = importlib.util.find_spec(top_mod)
+            if spec is None:
+                missing.append(pkg_name)
+        except Exception:
             missing.append(pkg_name)
 
     if not missing:
