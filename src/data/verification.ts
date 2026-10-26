@@ -30,104 +30,104 @@ export const VERIFICATION_RESULTS: Record<string, VerificationRecord> = {
   "desktop-clipboard-transfer": {
     "feature_id": "desktop-clipboard-transfer",
     "status": "PASS",
-    "verified": true,
-    "statusText": "Verified on a real desktop (2026-10-26)",
-    "statusTextLong": "Verified on a real desktop (October 26, 2026)",
+    "verified": false,
+    "statusText": "Unit-tested / Injected (2026-10-26) (Hardware verification pending)",
+    "statusTextLong": "Unit-tested / Injected (October 26, 2026) (Hardware verification pending)",
     "timestamp": "2026-10-26T12:43:28.684482+05:30",
     "date": "2026-10-26",
     "formattedDate": "October 26, 2026",
-    "detail": "5,000-character text payload verified intact across clipboard. Length: 5000",
+    "detail": "Unit-tested (WEAK): 5,000-character text payload verified intact across software clipboard API (pyperclip); no physical keystrokes or mouse motion.",
     "evidence_hash": "sha256:1dd4193750bb177bc5cd98a1afa7af83b7bed3a873181de908e1913a9b88df64",
     "screenshot_hash": null
   },
   "safety-graph-stall": {
     "feature_id": "safety-graph-stall",
     "status": "PASS",
-    "verified": true,
-    "statusText": "Verified on a real desktop (2026-10-26)",
-    "statusTextLong": "Verified on a real desktop (October 26, 2026)",
+    "verified": false,
+    "statusText": "Unit-tested / Injected (2026-10-26) (Hardware verification pending)",
+    "statusTextLong": "Unit-tested / Injected (October 26, 2026) (Hardware verification pending)",
     "timestamp": "2026-10-26T12:48:05.329524+05:30",
     "date": "2026-10-26",
     "formattedDate": "October 26, 2026",
-    "detail": "Graphify real extraction verified: builds AST, updates on new files, and trips alert on 2 consecutive unchanged rounds.",
+    "detail": "Unit-tested (WEAK): Graphify AST extraction verified in isolated temp directory; builds AST, updates on new files, and trips alert on 2 consecutive unchanged rounds without live IDE orchestration.",
     "evidence_hash": "sha256:9e8f4b5f74062718625b5b7d726dc72b522fdb77d1165f393b941b43c3b15089",
     "screenshot_hash": null
   },
   "safety-checkpoint-resume": {
     "feature_id": "safety-checkpoint-resume",
     "status": "PASS",
-    "verified": true,
-    "statusText": "Verified on a real desktop (2026-10-26)",
-    "statusTextLong": "Verified on a real desktop (October 26, 2026)",
+    "verified": false,
+    "statusText": "Unit-tested / Injected (2026-10-26) (Hardware verification pending)",
+    "statusTextLong": "Unit-tested / Injected (October 26, 2026) (Hardware verification pending)",
     "timestamp": "2026-10-26T12:44:31.600740+05:30",
     "date": "2026-10-26",
     "formattedDate": "October 26, 2026",
-    "detail": "Atomic checkpoint resumption verified: recovered from step 3, appended to audit trail, unbroken SHA-256 chain (7 events).",
+    "detail": "Unit-tested (WEAK): Atomic checkpoint resumption verified via DummyDesktop & ResumedModel harness; recovered from step 3, appended to audit trail, unbroken SHA-256 chain (7 events).",
     "evidence_hash": "sha256:f067ada6a7b163d1996bad4184276796fe37cc1f65bdf84c5040826e8ba80121",
     "screenshot_hash": null
   },
   "safety-screenshot-loop-breaker": {
     "feature_id": "safety-screenshot-loop-breaker",
     "status": "PASS",
-    "verified": true,
-    "statusText": "Verified on a real desktop (2026-10-26)",
-    "statusTextLong": "Verified on a real desktop (October 26, 2026)",
+    "verified": false,
+    "statusText": "Unit-tested / Injected (2026-10-26) (Hardware verification pending)",
+    "statusTextLong": "Unit-tested / Injected (October 26, 2026) (Hardware verification pending)",
     "timestamp": "2026-10-26T12:44:10.935823+05:30",
     "date": "2026-10-26",
     "formattedDate": "October 26, 2026",
-    "detail": "Loop breaker perceptual difference hashing tuned (max_distance=2, same_threshold=3). Detects static screen loops and suppresses false alerts on actual code changes.",
+    "detail": "Unit-tested (WEAK): Loop breaker perceptual difference hashing tested on synthetic Pillow canvas images (max_distance=2, same_threshold=3); not verified against physical screen frames.",
     "evidence_hash": "sha256:a8c945a20eba87ea16b1ba3770dd7334b9a012a9ae63af66138c6386c2d72ff0",
     "screenshot_hash": null
   },
   "safety-global-kill-hotkey": {
     "feature_id": "safety-global-kill-hotkey",
     "status": "PASS",
-    "verified": true,
-    "statusText": "Verified on a real desktop (2026-10-26)",
-    "statusTextLong": "Verified on a real desktop (October 26, 2026)",
+    "verified": false,
+    "statusText": "Unit-tested / Injected (2026-10-26) (Hardware verification pending)",
+    "statusTextLong": "Unit-tested / Injected (October 26, 2026) (Hardware verification pending)",
     "timestamp": "2026-10-26T12:44:09.575992+05:30",
     "date": "2026-10-26",
     "formattedDate": "October 26, 2026",
-    "detail": "Emergency kill hotkey (Ctrl+Alt+K) verified at 20 Hz polling, exits with code 3.",
+    "detail": "Tested via synthetic injection (INJECTED): Emergency kill hotkey (Ctrl+Alt+K) tested via synthetic keybd_event with in-memory software fallback at 20 Hz polling, exits with code 3; physical keyboard hotkey verification pending.",
     "evidence_hash": "sha256:8f519373392166a954153eff7db3027e24d2fe05e00696c6b16922bf3310a3e7",
     "screenshot_hash": null
   },
   "safety-mouse-corner-abort": {
     "feature_id": "safety-mouse-corner-abort",
     "status": "PASS",
-    "verified": true,
-    "statusText": "Verified on a real desktop (2026-10-26)",
-    "statusTextLong": "Verified on a real desktop (October 26, 2026)",
+    "verified": false,
+    "statusText": "Unit-tested / Injected (2026-10-26) (Hardware verification pending)",
+    "statusTextLong": "Unit-tested / Injected (October 26, 2026) (Hardware verification pending)",
     "timestamp": "2026-10-26T12:44:14.145671+05:30",
     "date": "2026-10-26",
     "formattedDate": "October 26, 2026",
-    "detail": "Hardware mouse-corner failsafe verified at (0, 0). Intercepts FailSafeException and routes to exit code 2.",
+    "detail": "Tested via synthetic injection (INJECTED): Mouse-corner failsafe tested via programmatic moveTo(0, 0) with self-raising software fallback; intercepts FailSafeException and routes to exit code 2; physical human mouse motion verification pending.",
     "evidence_hash": "sha256:5fc1417e46e48c2e5fa0545eb623565f128682c6f8d2ff38c21c047608d8b65f",
     "screenshot_hash": null
   },
   "safety-human-notify-gate": {
     "feature_id": "safety-human-notify-gate",
     "status": "PASS",
-    "verified": true,
-    "statusText": "Verified on a real desktop (2026-10-26)",
-    "statusTextLong": "Verified on a real desktop (October 26, 2026)",
+    "verified": false,
+    "statusText": "Unit-tested / Injected (2026-10-26) (Hardware verification pending)",
+    "statusTextLong": "Unit-tested / Injected (October 26, 2026) (Hardware verification pending)",
     "timestamp": "2026-10-26T12:44:30.428214+05:30",
     "date": "2026-10-26",
     "formattedDate": "October 26, 2026",
-    "detail": "Push notification gate verified via ntfy.sh/hush-smoke-bcace92ab969 (HTTP status 200 confirmed by broker).",
+    "detail": "Unit-tested (WEAK): Push notification gate tested via automated HTTP POST probe to ntfy.sh/hush-smoke-bcace92ab969 (HTTP status 200 confirmed by broker); verified without human interaction.",
     "evidence_hash": "sha256:8ecac3e61eb4b0433af719c3179e353a459768376bbdf83e5840ac8439376eec",
     "screenshot_hash": null
   },
   "desktop-notepad-paste-verify": {
     "feature_id": "desktop-notepad-paste-verify",
     "status": "PASS",
-    "verified": true,
-    "statusText": "Verified on a real desktop (2026-10-26)",
-    "statusTextLong": "Verified on a real desktop (October 26, 2026)",
+    "verified": false,
+    "statusText": "Unit-tested / Injected (2026-10-26) (Hardware verification pending)",
+    "statusTextLong": "Unit-tested / Injected (October 26, 2026) (Hardware verification pending)",
     "timestamp": "2026-10-26T12:44:25.154335+05:30",
     "date": "2026-10-26",
     "formattedDate": "October 26, 2026",
-    "detail": "Notepad opened, text pasted and verified via buffer on real Windows desktop.",
+    "detail": "Tested via synthetic injection (INJECTED): Notepad opened and text pasted via synthetic PyAutoGUI OS events; verified via buffer round-trip; physical user-driven interaction verification pending.",
     "evidence_hash": "sha256:e348835d40797738d029ab4a21fa1abe69cf88a82dc7a04ebf21d134ad639c6b",
     "screenshot_hash": null
   }
@@ -135,11 +135,11 @@ export const VERIFICATION_RESULTS: Record<string, VerificationRecord> = {
 
 export const VERIFICATION_ITEMS: VerificationRecord[] = Object.values(VERIFICATION_RESULTS);
 
-export const TOTAL_VERIFIED_COUNT: number = 8;
+export const TOTAL_VERIFIED_COUNT: number = 0;
 
 export const TOTAL_FEATURE_COUNT: number = 8;
 
-export const IS_REAL_DESKTOP_VERIFIED: boolean = true;
+export const IS_REAL_DESKTOP_VERIFIED: boolean = false;
 
 export const LAST_VERIFICATION_DATE: string = "2026-10-26";
 
@@ -152,10 +152,10 @@ export function isDesktopVerified(featureId: string): boolean {
 
 /**
  * Get human-readable verification status text for a feature ID.
- * Returns 'Verified on a real desktop (date)' if verified, otherwise 'Not yet verified'.
+ * Returns 'Unit-tested / Injected (date) (Hardware verification pending)' or 'Not yet verified on physical hardware'.
  */
 export function getVerificationStatus(featureId: string): string {
-  return VERIFICATION_RESULTS[featureId]?.statusText ?? "Not yet verified";
+  return VERIFICATION_RESULTS[featureId]?.statusText ?? "Not yet verified on physical hardware";
 }
 
 /**

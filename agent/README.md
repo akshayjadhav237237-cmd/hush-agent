@@ -112,8 +112,8 @@ The tool schema defines **22 tools** by default, or **23 tools** when `--account
 
 ## Safety Features and Verification Status
 
-- **Hardware Corner Failsafe**: Moving mouse to top-left corner raises `pyautogui.FailSafeException`. Intercepted cleanly by orchestrator, logged as `failsafe_abort`, and exits with code 2 without showing exception text to model. *(Implemented and unit-tested; not yet verified on a real desktop)*
-- **Emergency Kill Switch**: Asynchronous thread polling `Ctrl+Alt+K` at 20 Hz via Windows `GetAsyncKeyState`. Intercepts loop before and during tool calls and exits with code 3. *(Implemented and unit-tested; not yet verified on a real desktop)*
+- **Hardware Corner Failsafe**: Moving mouse to top-left corner raises `pyautogui.FailSafeException`. Intercepted cleanly by orchestrator, logged as `failsafe_abort`, and exits with code 2 without showing exception text to model. *(Implemented, tested via synthetic injection; physical hardware verification pending)*
+- **Emergency Kill Switch**: Asynchronous thread polling `Ctrl+Alt+K` at 20 Hz via Windows `GetAsyncKeyState`. Intercepts loop before and during tool calls and exits with code 3. *(Implemented, tested via synthetic injection; physical hardware verification pending)*
 - **Filesystem Path Confinement**: `run_cmd` resolves all path arguments against `project_dir` using `os.path.realpath` and `os.path.commonpath`. Blocks `..` traversal, drive escapes, and UNC network paths (`\\`). *(Implemented and unit-tested; not yet verified on a real desktop)*
 - **Command Operator Deny-List**: Rejects command separators (`&&`, `||`, `;`, `&`), redirection (`>`, `<`), string interpolation (`$()`, backticks, `%`), and dangerous administrative tools (`powershell -enc`, `curl`, `wget`). *(Implemented and unit-tested; not yet verified on a real desktop)*
 - **Loop Breaker**: Difference hash (`dhash`) compares consecutive screen captures. Trips alert if screen remains identical across 3 consecutive interactive actions (`act`) or 15 wait intervals (`wait`). *(Implemented and unit-tested; not yet verified on a real desktop)*
