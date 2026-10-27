@@ -4,11 +4,16 @@ import { Eyebrow } from '@/v2/ui/Eyebrow';
 import { SerifItalic } from '@/v2/ui/SerifItalic';
 import { COPY_V2 } from '@/v2/data/copy.v2';
 import { faqList } from '@/v2/data/adapters';
+import { FAQ_SELECTED_IDS } from '@/v2/faqSelection';
+import type { FaqItem } from '@/data/types';
 import * as Accordion from '@radix-ui/react-accordion';
 import { Plus, X } from 'lucide-react';
 
 export const Faq: React.FC = () => {
-  const items = faqList();
+  const allItems = faqList();
+  const items: FaqItem[] = FAQ_SELECTED_IDS
+    .map((id) => allItems.find((item) => item.q === id))
+    .filter((item): item is FaqItem => item !== undefined);
 
   return (
     <div className="w-full py-16 sm:py-24">

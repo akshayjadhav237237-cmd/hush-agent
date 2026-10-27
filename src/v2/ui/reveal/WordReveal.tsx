@@ -32,12 +32,14 @@ const WordSpan: React.FC<WordSpanProps> = ({
   isMounted,
   isLast,
 }) => {
-  const opacity = useTransform(progress, range, [0.14, 1.0]);
+  const opacity = useTransform(progress, range, [0, 1]);
+  const y = useTransform(progress, range, [10, 0]);
 
   return (
     <motion.span
       style={{
         opacity: reducedMotion || !isMounted ? 1 : opacity,
+        y: reducedMotion || !isMounted ? 0 : y,
         fontFamily: isItalic ? 'var(--v2-font-italic), "Instrument Serif", Georgia, serif' : undefined,
       }}
       className={`inline-block ${!isLast ? 'mr-[0.28em]' : ''} ${

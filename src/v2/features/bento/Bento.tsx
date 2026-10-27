@@ -84,7 +84,7 @@ export const Bento: React.FC = () => {
   return (
     <div className="w-full py-16 sm:py-24">
       <Container>
-        {/* Section Header: exact ECSoC centered typography & tone */}
+        {/* Section Header: centered typography & tone */}
         <div className="text-center mb-12 sm:mb-16 md:mb-20 flex flex-col items-center gap-1.5 sm:gap-2.5">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium text-[#E1E0CC] tracking-tight font-body">
             {COPY_V2.bento.title.plain}
@@ -94,7 +94,7 @@ export const Bento: React.FC = () => {
           </p>
         </div>
 
-        {/* 4-Column Bento Grid: exact ECSoC layout, gaps, height & items-stretch */}
+        {/* 4-Column Bento Grid: layout, gaps, height & items-stretch */}
         <div
           ref={gridRef}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:h-[480px] gap-3 sm:gap-2 md:gap-1 items-stretch"

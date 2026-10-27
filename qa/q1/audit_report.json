@@ -1,6 +1,6 @@
 {
   "suite": "QA Subagent Q1 (Visual, Responsive & Motion QA Specialist)",
-  "timestamp": "2026-10-26T07:49:02.133Z",
+  "timestamp": "2026-10-27T16:34:32.866Z",
   "buildStatus": {
     "pass": true,
     "details": "tsc && vite build passed with code 0"
@@ -56,7 +56,7 @@
         "text": "How it works",
         "outlineWidth": "2px",
         "outlineStyle": "solid",
-        "outlineColor": "rgba(234, 241, 226, 0.573)",
+        "outlineColor": "rgb(207, 207, 200)",
         "boxShadow": "none",
         "visibleFocus": true
       },
@@ -65,16 +65,7 @@
         "text": "Gates",
         "outlineWidth": "2px",
         "outlineStyle": "solid",
-        "outlineColor": "rgba(245, 241, 232, 0.565)",
-        "boxShadow": "none",
-        "visibleFocus": true
-      },
-      {
-        "tagName": "a",
-        "text": "Replay",
-        "outlineWidth": "2px",
-        "outlineStyle": "solid",
-        "outlineColor": "rgba(245, 240, 232, 0.55)",
+        "outlineColor": "rgb(207, 207, 200)",
         "boxShadow": "none",
         "visibleFocus": true
       },
@@ -83,7 +74,7 @@
         "text": "FAQ",
         "outlineWidth": "2px",
         "outlineStyle": "solid",
-        "outlineColor": "rgba(245, 240, 232, 0.55)",
+        "outlineColor": "rgb(207, 207, 200)",
         "boxShadow": "none",
         "visibleFocus": true
       },
@@ -92,16 +83,25 @@
         "text": "GitHub",
         "outlineWidth": "2px",
         "outlineStyle": "solid",
-        "outlineColor": "rgba(245, 240, 232, 0.55)",
+        "outlineColor": "rgb(207, 207, 200)",
         "boxShadow": "none",
         "visibleFocus": true
       },
       {
-        "tagName": "button",
-        "text": "Play background video",
+        "tagName": "a",
+        "text": "See how it works",
+        "outlineWidth": "3px",
+        "outlineStyle": "solid",
+        "outlineColor": "rgb(17, 17, 17)",
+        "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px",
+        "visibleFocus": true
+      },
+      {
+        "tagName": "a",
+        "text": "Learn more",
         "outlineWidth": "2px",
         "outlineStyle": "solid",
-        "outlineColor": "rgb(238, 240, 228)",
+        "outlineColor": "rgb(222, 219, 200)",
         "boxShadow": "none",
         "visibleFocus": true
       }
@@ -137,83 +137,31 @@
     "pass": true
   },
   "contrastCheck": {
-    "totalEvaluated": 20,
+    "totalEvaluated": 15,
     "evaluations": [
       {
         "name": "Hero Wordmark (HUSH.)",
         "fileRef": "src/v2/features/hero/Hero.tsx:34",
-        "sample": "HUSH",
-        "fontSize": "140px",
-        "fontWeight": 800,
+        "sample": "HUSH\n*",
+        "fontSize": "310px",
+        "fontWeight": 400,
         "isLarge": true,
-        "fgColor": "rgb(245, 240, 232)",
+        "fgColor": "rgb(228, 226, 208)",
         "bgColor": "rgb(0, 0, 0)",
-        "actualRatio": "18.51:1",
+        "actualRatio": "16.09:1",
         "requiredRatio": "3:1",
-        "pass": true
-      },
-      {
-        "name": "Hero Tagline (Mono Upper)",
-        "fileRef": "src/v2/features/hero/Hero.tsx:42",
-        "sample": "BUILDS QUIETLY. SPEAKS ONLY WH",
-        "fontSize": "16px",
-        "fontWeight": 400,
-        "isLarge": false,
-        "fgColor": "rgba(245, 240, 232, 0.55)",
-        "bgColor": "rgb(0, 0, 0)",
-        "actualRatio": "5.64:1",
-        "requiredRatio": "4.5:1",
-        "pass": true
-      },
-      {
-        "name": "Hero Paragraph (Lead Copy)",
-        "fileRef": "src/v2/features/hero/Hero.tsx:49",
-        "sample": "Describe what you want made. H",
-        "fontSize": "18px",
-        "fontWeight": 400,
-        "isLarge": false,
-        "fgColor": "rgb(245, 240, 232)",
-        "bgColor": "rgb(0, 0, 0)",
-        "actualRatio": "18.51:1",
-        "requiredRatio": "4.5:1",
-        "pass": true
-      },
-      {
-        "name": "Hero CTA Pill Button (\"Watch a replay\")",
-        "fileRef": "src/v2/ui/PillButton.tsx:30",
-        "sample": "Watch a replay",
-        "fontSize": "16px",
-        "fontWeight": 400,
-        "isLarge": false,
-        "fgColor": "rgb(0, 0, 0)",
-        "bgColor": "rgb(245, 240, 232)",
-        "actualRatio": "18.51:1",
-        "requiredRatio": "4.5:1",
         "pass": true
       },
       {
         "name": "Hero GitHub Link (\"View on GitHub ↗\")",
         "fileRef": "src/v2/features/hero/Hero.tsx:58",
-        "sample": "View on GitHub",
+        "sample": "GitHub",
         "fontSize": "14px",
-        "fontWeight": 500,
-        "isLarge": false,
-        "fgColor": "rgba(245, 240, 232, 0.55)",
-        "bgColor": "rgb(0, 0, 0)",
-        "actualRatio": "5.64:1",
-        "requiredRatio": "4.5:1",
-        "pass": true
-      },
-      {
-        "name": "Hero Scroll Cue (\"SCROLL\")",
-        "fileRef": "src/v2/features/hero/Hero.tsx:71",
-        "sample": "SCROLL",
-        "fontSize": "11px",
         "fontWeight": 400,
         "isLarge": false,
-        "fgColor": "rgba(245, 240, 232, 0.55)",
+        "fgColor": "rgb(207, 207, 200)",
         "bgColor": "rgb(0, 0, 0)",
-        "actualRatio": "5.64:1",
+        "actualRatio": "13.41:1",
         "requiredRatio": "4.5:1",
         "pass": true
       },
@@ -224,19 +172,6 @@
         "fontSize": "44px",
         "fontWeight": 700,
         "isLarge": true,
-        "fgColor": "rgb(239, 255, 230)",
-        "bgColor": "rgb(0, 0, 0)",
-        "actualRatio": "20.12:1",
-        "requiredRatio": "3:1",
-        "pass": true
-      },
-      {
-        "name": "Bento Section Title",
-        "fileRef": "src/v2/features/bento/Bento.tsx:34",
-        "sample": "Quiet automation for busy buil",
-        "fontSize": "60px",
-        "fontWeight": 400,
-        "isLarge": true,
         "fgColor": "rgb(245, 240, 232)",
         "bgColor": "rgb(0, 0, 0)",
         "actualRatio": "18.51:1",
@@ -244,41 +179,41 @@
         "pass": true
       },
       {
-        "name": "Bento Section Subtitle (Periwinkle)",
-        "fileRef": "src/v2/features/bento/Bento.tsx:37",
-        "sample": "Orchestrated by Gemma 4. Remem",
-        "fontSize": "18px",
-        "fontWeight": 400,
-        "isLarge": false,
-        "fgColor": "rgb(124, 147, 245)",
-        "bgColor": "rgb(0, 0, 0)",
-        "actualRatio": "7.35:1",
-        "requiredRatio": "4.5:1",
-        "pass": true
-      },
-      {
-        "name": "Bento Tile 1 Caption (over video)",
-        "fileRef": "src/v2/features/bento/Bento.tsx:58",
+        "name": "Bento Section Title",
+        "fileRef": "src/v2/features/bento/Bento.tsx:34",
         "sample": "Quiet automation for busy buil",
-        "fontSize": "60px",
-        "fontWeight": 400,
+        "fontSize": "48px",
+        "fontWeight": 500,
         "isLarge": true,
-        "fgColor": "rgb(245, 240, 232)",
-        "bgColor": "rgb(20, 20, 20)",
-        "actualRatio": "16.24:1",
+        "fgColor": "rgb(225, 224, 204)",
+        "bgColor": "rgb(0, 0, 0)",
+        "actualRatio": "15.74:1",
         "requiredRatio": "3:1",
         "pass": true
       },
       {
+        "name": "Bento Section Subtitle (Periwinkle)",
+        "fileRef": "src/v2/features/bento/Bento.tsx:37",
+        "sample": "Orchestrated by Gemma 4. Remem",
+        "fontSize": "16px",
+        "fontWeight": 300,
+        "isLarge": false,
+        "fgColor": "oklch(0.707 0.022 261.325)",
+        "bgColor": "rgb(0, 0, 0)",
+        "actualRatio": "1.00:1",
+        "requiredRatio": "4.5:1",
+        "pass": false
+      },
+      {
         "name": "Bento Card Title (Serif)",
         "fileRef": "src/v2/features/bento/Bento.tsx:82",
-        "sample": "Gemma 4 Orchestration.",
-        "fontSize": "24px",
-        "fontWeight": 400,
+        "sample": "Plan. Build. Verify.",
+        "fontSize": "20px",
+        "fontWeight": 500,
         "isLarge": true,
-        "fgColor": "rgb(245, 240, 232)",
+        "fgColor": "rgb(225, 224, 204)",
         "bgColor": "rgb(20, 20, 20)",
-        "actualRatio": "16.24:1",
+        "actualRatio": "13.80:1",
         "requiredRatio": "3:1",
         "pass": true
       },
@@ -286,7 +221,7 @@
         "name": "Bento Card Item List Text",
         "fileRef": "src/v2/features/bento/Bento.tsx:89",
         "sample": "Function calling opens apps, p",
-        "fontSize": "14px",
+        "fontSize": "16px",
         "fontWeight": 400,
         "isLarge": false,
         "fgColor": "rgb(245, 240, 232)",
@@ -298,13 +233,13 @@
       {
         "name": "Bento Card \"Learn more ↗\" Link",
         "fileRef": "src/v2/features/bento/Bento.tsx:105",
-        "sample": "Learn more ↗",
-        "fontSize": "12px",
-        "fontWeight": 400,
+        "sample": "Learn more",
+        "fontSize": "14px",
+        "fontWeight": 500,
         "isLarge": false,
-        "fgColor": "rgb(124, 147, 245)",
+        "fgColor": "rgb(222, 219, 200)",
         "bgColor": "rgb(20, 20, 20)",
-        "actualRatio": "6.45:1",
+        "actualRatio": "13.22:1",
         "requiredRatio": "4.5:1",
         "pass": true
       },
@@ -315,9 +250,9 @@
         "fontSize": "20px",
         "fontWeight": 600,
         "isLarge": true,
-        "fgColor": "rgb(239, 255, 230)",
+        "fgColor": "rgb(245, 240, 232)",
         "bgColor": "rgb(20, 20, 20)",
-        "actualRatio": "17.65:1",
+        "actualRatio": "16.24:1",
         "requiredRatio": "3:1",
         "pass": true
       },
@@ -341,9 +276,9 @@
         "fontSize": "14px",
         "fontWeight": 400,
         "isLarge": false,
-        "fgColor": "rgb(46, 242, 122)",
-        "bgColor": "rgb(8, 21, 12)",
-        "actualRatio": "12.56:1",
+        "fgColor": "rgb(222, 219, 200)",
+        "bgColor": "rgb(20, 20, 16)",
+        "actualRatio": "13.25:1",
         "requiredRatio": "4.5:1",
         "pass": true
       },
@@ -400,8 +335,8 @@
         "pass": true
       }
     ],
-    "pass": true
+    "pass": false
   },
   "findings": [],
-  "finalVerdict": "PASS"
+  "finalVerdict": "FAIL"
 }

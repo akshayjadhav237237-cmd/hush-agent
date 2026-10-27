@@ -43,7 +43,7 @@ export const Compare: React.FC = () => {
 
           {/* Diff Groups */}
           <div className="divide-y divide-[var(--v2-line)]">
-            {COPY_V2.compare.groups.map((group) => (
+            {COPY_V2.compare.groups.slice(0, 3).map((group) => (
               <div key={group.label} className="p-4 sm:p-6 lg:p-7">
                 {/* Group Label */}
                 <div className="text-xs tracking-wider text-[var(--v2-muted)] uppercase mb-3 flex items-center gap-2 font-mono font-medium">
