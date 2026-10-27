@@ -1,13 +1,11 @@
 @import "tailwindcss";
 
-@import "@fontsource-variable/inter-tight/index.css";
-@import "@fontsource-variable/space-grotesk/index.css";
-@import "@fontsource/cormorant-garamond/500.css";
-@import "@fontsource/cormorant-garamond/600.css";
+@import "@fontsource/inter-tight/300.css";
+@import "@fontsource/inter-tight/400.css";
+@import "@fontsource/inter-tight/500.css";
+@import "@fontsource/inter-tight/600.css";
 @import "@fontsource/instrument-serif/400-italic.css";
-@import "@fontsource-variable/geist-mono/index.css";
-@import "@fontsource/almarai/300.css";
-@import "@fontsource/almarai/400.css";
+@import "@fontsource-variable/jetbrains-mono/index.css";
 
 .v2 {
   color-scheme: dark;
@@ -30,13 +28,17 @@
   --v2-radius-manifesto: 40px;
   --v2-radius-pill: 999px;
 
-  --v2-font-display: "Inter Tight Variable", "Inter Tight", system-ui, -apple-system, sans-serif;
-  --v2-font-body: "Almarai", "Inter Tight Variable", "Inter Tight", system-ui, -apple-system, sans-serif;
-  --v2-font-serif: "Cormorant Garamond", Georgia, serif;
-  --v2-font-italic: "Instrument Serif", Georgia, serif;
-  --v2-font-mono: "Geist Mono Variable", "Geist Mono", monospace;
-  --font-almarai: "Almarai";
-  --font-hero: var(--font-almarai), -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+  --font-display: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+  --font-accent: "Instrument Serif", Georgia, serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+
+  --v2-font-display: var(--font-display);
+  --v2-font-body: var(--font-body);
+  --v2-font-serif: var(--font-accent);
+  --v2-font-italic: var(--font-accent);
+  --v2-font-mono: var(--font-mono);
+  --font-hero: var(--font-display);
 
   background-color: var(--v2-bg);
   color: var(--v2-text);
