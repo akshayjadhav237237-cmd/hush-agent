@@ -1,5 +1,7 @@
 {
   "mode": "mocked",
+  "label": "Simulated desktop",
+  "environment": "Simulated desktop",
   "run_id": "20261026-071521",
   "events": [
     {

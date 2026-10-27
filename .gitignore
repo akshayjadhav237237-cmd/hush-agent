@@ -8,3 +8,6 @@ __pycache__/
 agent/runs/
 agent/workspace/
 .pytest_cache/
+qa/**/*.png
+
+.vercel

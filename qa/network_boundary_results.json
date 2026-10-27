@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-10-26T07:31:02.507Z",
+  "totalRequests": 15,
+  "externalRequestsCount": 0,
+  "externalRequests": [],
+  "fetchRequestsCount": 2,
+  "fetchRequests": [
+    {
+      "url": "http://localhost:4179/replay.json",
+      "method": "GET",
+      "resourceType": "fetch"
+    },
+    {
+      "url": "http://localhost:4179/replay_real.json",
+      "method": "GET",
+      "resourceType": "fetch"
+    }
+  ],
+  "unexpectedFetchesCount": 0,
+  "unexpectedFetches": [],
+  "passed": true
+}

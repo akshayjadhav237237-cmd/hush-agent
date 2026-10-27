@@ -1,0 +1,59 @@
+{
+  "screenshotsV2": [
+    "C:\\Users\\aksha\\Documents\\antigravity\\hush-landing-v2\\qa\\v2\\v2-360.png",
+    "C:\\Users\\aksha\\Documents\\antigravity\\hush-landing-v2\\qa\\v2\\v2-768.png",
+    "C:\\Users\\aksha\\Documents\\antigravity\\hush-landing-v2\\qa\\v2\\v2-1280.png",
+    "C:\\Users\\aksha\\Documents\\antigravity\\hush-landing-v2\\qa\\v2\\v2-1920.png"
+  ],
+  "v1Regression": [
+    {
+      "width": 360,
+      "matchesBaseline": false,
+      "baselineSize": 3346734,
+      "verifySize": 3343415
+    },
+    {
+      "width": 768,
+      "matchesBaseline": true,
+      "baselineSize": 4027478,
+      "verifySize": 4028304
+    },
+    {
+      "width": 1280,
+      "matchesBaseline": false,
+      "baselineSize": 3843673,
+      "verifySize": 3846226
+    },
+    {
+      "width": 1920,
+      "matchesBaseline": true,
+      "baselineSize": 4097119,
+      "verifySize": 4097376
+    }
+  ],
+  "horizontalScroll360": {
+    "scrollWidth": 360,
+    "innerWidth": 360,
+    "noOverflow": true
+  },
+  "reducedMotionTest": {
+    "prefersReducedMotionActive": true,
+    "videosCountInReducedMotion": 0,
+    "passed": true
+  },
+  "keyboardNavTest": {
+    "triggerFound": true,
+    "expandedViaEnter": true
+  },
+  "mediaSizes": {
+    "heroMB": 0.7025728225708008,
+    "bentoMB": 0.5081672668457031,
+    "heroPass": true,
+    "bentoPass": true
+  },
+  "honestyGrep": {},
+  "defects": [
+    "v1 regression potential mismatch at 360px",
+    "v1 regression potential mismatch at 1280px"
+  ]
+}

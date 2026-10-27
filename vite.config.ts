@@ -5,6 +5,14 @@ import path from 'node:path';
 
 export default defineConfig({
   base: './',
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(import.meta.dirname, 'index.html'),
+        v1: path.resolve(import.meta.dirname, 'v1.html'),
+      },
+    },
+  },
   plugins: [
     react(),
     tailwindcss(),
