@@ -5,7 +5,7 @@
 ### *Builds quietly. Speaks only when it must.*
 
 [![Agent Tests](https://github.com/akshayjadhav237237-cmd/hush-agent/actions/workflows/agent-tests.yml/badge.svg)](https://github.com/akshayjadhav237237-cmd/hush-agent/actions/workflows/agent-tests.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://python.org)
 [![TypeScript: 5+](https://img.shields.io/badge/TypeScript-5.0%2B-3178C6?logo=typescript&logoColor=white)](https://typescriptlang.org)
 [![Platform: Windows](https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-0078D6?logo=windows&logoColor=white)](https://microsoft.com)
@@ -435,6 +435,6 @@ npm run build
 
 ## 📄 License
 
-Hush is released under the [MIT License](LICENSE).
+Hush is released under the [Apache 2.0 License](LICENSE).
 
 Graphify is an independent open-source library created by [Graphify Labs](https://graphify.com), licensed under Apache 2.0.
