@@ -10,3 +10,4 @@ agent/workspace/
 .pytest_cache/
 qa/**/*.png
 
+.vercel
