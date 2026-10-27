@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Play, Pause } from 'lucide-react';
 import { useReducedMotion } from './useReducedMotion';
 
 export interface VideoBgProps {
@@ -18,12 +17,10 @@ export const VideoBg: React.FC<VideoBgProps> = ({
   posterSrc,
   alt = 'Background video',
   className = '',
-  overlayGradient = true,
+  overlayGradient = false,
   caption,
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isPausedByUser, setIsPausedByUser] = useState(false);
   const reducedMotion = useReducedMotion();
 
   // Check Save-Data header or client connection preference
@@ -53,13 +50,11 @@ export const VideoBg: React.FC<VideoBgProps> = ({
     let cleanupListeners: (() => void) | null = null;
 
     const attemptPlay = () => {
-      if (unmounted || isPausedByUser) return;
+      if (unmounted) return;
       const playPromise = video.play();
       if (playPromise !== undefined) {
         playPromise
-          .then(() => {
-            if (!unmounted) setIsPlaying(true);
-          })
+          .then(() => {})
           .catch(() => {
             // Autoplay rejected (e.g. browser policy) - retry on first user interaction
             const onUserInteraction = () => {
@@ -67,12 +62,8 @@ export const VideoBg: React.FC<VideoBgProps> = ({
                 cleanupListeners();
                 cleanupListeners = null;
               }
-              if (!unmounted && !isPausedByUser && video.paused) {
-                video.play()
-                  .then(() => {
-                    if (!unmounted) setIsPlaying(true);
-                  })
-                  .catch(() => {});
+              if (!unmounted && video.paused) {
+                video.play().catch(() => {});
               }
             };
 
@@ -98,7 +89,7 @@ export const VideoBg: React.FC<VideoBgProps> = ({
         cleanupListeners();
       }
     };
-  }, [shouldShowVideo, isPausedByUser]);
+  }, [shouldShowVideo]);
 
   // IntersectionObserver to pause when offscreen and resume when visible
   useEffect(() => {
@@ -109,14 +100,9 @@ export const VideoBg: React.FC<VideoBgProps> = ({
       (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting) {
-          if (!isPausedByUser) {
-            video.play()
-              .then(() => setIsPlaying(true))
-              .catch(() => {});
-          }
+          video.play().catch(() => {});
         } else {
           video.pause();
-          setIsPlaying(false);
         }
       },
       { threshold: 0.15 }
@@ -124,22 +110,7 @@ export const VideoBg: React.FC<VideoBgProps> = ({
 
     observer.observe(video);
     return () => observer.disconnect();
-  }, [shouldShowVideo, isPausedByUser]);
-
-  const togglePlayPause = () => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (isPlaying) {
-      video.pause();
-      setIsPlaying(false);
-      setIsPausedByUser(true);
-    } else {
-      video.play().catch(() => {});
-      setIsPlaying(true);
-      setIsPausedByUser(false);
-    }
-  };
+  }, [shouldShowVideo]);
 
   const isAbsolute = className.includes('absolute');
   const containerClasses = [
@@ -173,12 +144,8 @@ export const VideoBg: React.FC<VideoBgProps> = ({
           poster={posterSrc}
           className="absolute inset-0 w-full h-full object-cover object-center"
           aria-hidden="true"
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => {
-            if (isPausedByUser) setIsPlaying(false);
-          }}
         >
-          {/* MP4 with baseline codec first for universal compatibility, WebM second */}
+          {/* MP4 first for universal compatibility, WebM second */}
           <source src={mp4Src} type='video/mp4; codecs="avc1.42E01E"' />
           {webmSrc && <source src={webmSrc} type="video/webm" />}
         </video>
@@ -194,24 +161,6 @@ export const VideoBg: React.FC<VideoBgProps> = ({
 
       {/* Caption if provided */}
       {caption && <div className="absolute z-10">{caption}</div>}
-
-      {/* WCAG 2.2.2 Pause/Play Accessible Toggle Button */}
-      {shouldShowVideo && (
-        <button
-          type="button"
-          onClick={togglePlayPause}
-          aria-label={isPlaying ? 'Pause background video' : 'Play background video'}
-          aria-pressed={!isPlaying}
-          title={isPlaying ? 'Pause background video' : 'Play background video'}
-          className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/60 hover:bg-black/85 text-[var(--v2-text)] hover:text-white backdrop-blur-sm border border-[var(--v2-line)] flex items-center justify-center transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-[var(--v2-accent)] focus-visible:outline-offset-2"
-        >
-          {isPlaying ? (
-            <Pause className="w-4 h-4 sm:w-4.5 sm:h-4.5" aria-hidden="true" />
-          ) : (
-            <Play className="w-4 h-4 sm:w-4.5 sm:h-4.5 ml-0.5" aria-hidden="true" />
-          )}
-        </button>
-      )}
     </div>
   );
 };

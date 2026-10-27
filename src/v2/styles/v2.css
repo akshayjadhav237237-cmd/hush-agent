@@ -16,14 +16,14 @@
   --v2-card-2: #1B1B1B;
   --v2-line: rgba(255, 255, 255, 0.08);
   --v2-text: #F5F0E8;
-  --v2-headline: #EFFFE6;
+  --v2-headline: #F5F0E8;
   --v2-muted: rgba(245, 240, 232, 0.55);
-  --v2-accent: #2EF27A;
+  --v2-accent: #dedbc8;
   --v2-link: #7C93F5;
   --v2-diff-del-bg: #170909;
   --v2-diff-del: #FF6B6B;
-  --v2-diff-add-bg: #08150C;
-  --v2-diff-add: #2EF27A;
+  --v2-diff-add-bg: #141410;
+  --v2-diff-add: #dedbc8;
   --v2-warning: #FFB020;
 
   --v2-radius-card: 28px;
@@ -31,7 +31,7 @@
   --v2-radius-pill: 999px;
 
   --v2-font-display: "Inter Tight Variable", "Inter Tight", system-ui, -apple-system, sans-serif;
-  --v2-font-body: "Space Grotesk Variable", "Space Grotesk", system-ui, sans-serif;
+  --v2-font-body: "Almarai", "Inter Tight Variable", "Inter Tight", system-ui, -apple-system, sans-serif;
   --v2-font-serif: "Cormorant Garamond", Georgia, serif;
   --v2-font-italic: "Instrument Serif", Georgia, serif;
   --v2-font-mono: "Geist Mono Variable", "Geist Mono", monospace;
