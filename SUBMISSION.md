@@ -115,7 +115,8 @@ Python, Google GenAI SDK, Gemma 4, PyAutoGUI, PyGetWindow, Pyperclip, Pillow, Re
 ## Links
 
 - **Repository**: [https://github.com/akshayjadhav237237-cmd/hush-agent](https://github.com/akshayjadhav237237-cmd/hush-agent)
-- **Live Showcase**: [https://akshayjadhav237237-cmd.github.io/hush-agent/](https://akshayjadhav237237-cmd.github.io/hush-agent/)
+- **Live site**: [https://hush-agent-alpha.vercel.app/](https://hush-agent-alpha.vercel.app/)
+- **Mirror**: [https://akshayjadhav237237-cmd.github.io/hush-agent/](https://akshayjadhav237237-cmd.github.io/hush-agent/)
 - **Demo Video**: [FILL: VIDEO_SRC]
 - **Hackathon Submission**: [FILL: HACKATHON_NAME]
 - **Team**: [FILL: TEAM]
