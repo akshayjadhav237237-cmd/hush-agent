@@ -1,17 +1,17 @@
 {
   "claude": {
-    "nonce": "38cec4a0",
+    "nonce": "c48736fd",
     "matched_text": "Question what\u2019s next\n\nYour thinking partner for big ambitions\n\nContinue with Google\n\nContinue with Apple\n\nOR\n\nContinue with email\nContinue with SSO\nDownload desktop app\nExplore plans\nIndividual\nTeam and Enterprise\nFree\n\nTry Claude\n\n$0\nFree for everyone\n\n\nTry Claude\n\ue03b\nChat on web, desktop, and mobile",
     "screenshot_path": "verification/shots/claude_roundtrip.png",
-    "sha256": "f069bad26fcc5f388fe45f74c778306e4b3659dee9a371471b4ff7668cd34ceb",
+    "sha256": "81f64c450fa729427db5a4ec2ef18009b2de8a8228ef3e634c60c5bbaf92761a",
     "passed": false,
     "login_needed": true
   },
   "gemini": {
-    "nonce": "687d8d70",
-    "matched_text": "HUSH-OK-687d8d70",
+    "nonce": "212bf838",
+    "matched_text": "HUSH-OK-212bf838",
     "screenshot_path": "verification/shots/gemini_roundtrip.png",
-    "sha256": "2f01282008f8034b8cb3bf32eadb722167ce3f2e5347115ebe922e7e495f33c7",
+    "sha256": "a63111a408692fd7bd89de499e912edabfe83ac59b853b1024d74c4d3745e9a5",
     "passed": true
   }
 }

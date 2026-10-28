@@ -385,13 +385,11 @@ def test_smoke_antigravity() -> None:
             pass
     time.sleep(1.0)
 
-    # Capture real window screenshot
+    # Capture real window screenshot (no fallback paths)
     rect = win32gui.GetWindowRect(hwnd)
-    if rect[2] > rect[0] and rect[3] > rect[1]:
-        bbox = (max(0, rect[0]), max(0, rect[1]), max(0, rect[2]), max(0, rect[3]))
-        img = ImageGrab.grab(bbox=bbox)
-    else:
-        img = ImageGrab.grab()
+    assert rect[2] > rect[0] and rect[3] > rect[1], "Invalid window rectangle for Antigravity"
+    bbox = (max(0, rect[0]), max(0, rect[1]), max(0, rect[2]), max(0, rect[3]))
+    img = ImageGrab.grab(bbox=bbox)
 
     os.makedirs(SHOTS_DIR, exist_ok=True)
     shot_rel = "verification/shots/Antigravity.png"

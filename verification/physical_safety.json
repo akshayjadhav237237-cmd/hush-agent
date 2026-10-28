@@ -15,12 +15,10 @@
     "status": "PASS",
     "actor": "human",
     "exit_code": 2,
-    "audit_path": "c:\\Users\\aksha\\Documents\\antigravity\\jolly-hawking\\agent\\runs\\physical_mouse_corner\\audit.jsonl",
-    "sha256": "1c22837bc48a3bc48894e3736d7eb66a23e0bcd5b0c11df6c7b8a30e79dfe7b4",
-    "event_line": "{\"ts\": \"2026-10-26T09:29:59.206670+00:00\", \"t\": 0.932, \"run_id\": \"physical_mouse_corner\", \"mode\": \"real\", \"seq\": 2, \"event\": \"failsafe_abort\", \"fields\": {\"actor\": \"human\", \"x\": 0, \"y\": 0}, \"prev\": \"d9218d4e7b6ec8e66611f4b4b0d1275cb9a7ff5209bd2dfb1afa5601e973ff91\"}",
-    "chain_verified": true,
-    "chain_events_count": 2,
-    "passed": true
+    "audit_path": "C:\\Users\\aksha\\Documents\\antigravity\\jolly-hawking\\agent\\runs\\physical_mouse_20261029_041241\\audit.jsonl",
+    "sha256": "5d7faf18352d5e7f6d6ba156513d7eb17107cb5631b29b13ad2edbe1808c836a",
+    "event_line": "{\"ts\": \"2026-10-28T22:42:42.614974+00:00\", \"t\": 0.402, \"run_id\": \"physical_mouse_20261029_041241\", \"mode\": \"real\", \"seq\": 2, \"event\": \"failsafe_abort\", \"fields\": {\"actor\": \"human\", \"x\": 0, \"y\": 0}, \"prev\": \"85ac9423b28fcbd887b5bcff5603822e6948ef27fb5b3e52d6f93b99b4b721c4\"}",
+    "timestamp": "2026-10-29T04:12:42.661313+05:30"
   },
   "phone_notify": {
     "status": "PASS",
@@ -30,5 +28,6 @@
     "received_nonce": "HUSH-B9C24A7D",
     "matched": true,
     "passed": true
-  }
+  },
+  "last_updated": "2026-10-29T04:12:42.673192+05:30"
 }

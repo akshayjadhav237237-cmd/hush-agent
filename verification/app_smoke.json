@@ -3,7 +3,7 @@
     "app": "Claude",
     "title_read": "Sign in - Claude",
     "screenshot_path": "verification/shots/Claude.png",
-    "sha256": "25a8b3912c672bc9b469a910f9ee84fa11d9d580d1cd4cbbdb3dcaf5ba5a97c1",
+    "sha256": "f480040dae9ae97c0dc4296f66710a83798390b258ef2b6abc2f9e8f6e142987",
     "login_needed": true,
     "passed": true
   },
@@ -11,15 +11,15 @@
     "app": "Gemini",
     "title_read": "Google Gemini",
     "screenshot_path": "verification/shots/Gemini.png",
-    "sha256": "3ebce42089376b3ca57dbde50438a104a977f46477b30e25ba10f6c285e53848",
+    "sha256": "e22854266fabd6fb544b46e12afbc4e060884c5936853cae28b1de828b3b033f",
     "login_needed": true,
     "passed": true
   },
   {
     "app": "Antigravity",
-    "title_read": "AI Event Planner Research...",
+    "title_read": "Landing page - jolly-hawk...",
     "screenshot_path": "verification/shots/Antigravity.png",
-    "sha256": "f06cacca4c9eb6d3289307c296870e256829b557f5f4f1c44eb99f0f21da98e4",
+    "sha256": "23dece01ab5e2e861b5d55e3d35a741f225c5ba5a28264978d36ac5be110fe77",
     "login_needed": false,
     "passed": true
   }
