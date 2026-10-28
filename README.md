@@ -14,7 +14,7 @@
 **An autonomous Windows desktop agent orchestrator powered by Google Gemma 4.**  
 Hush coordinates Claude for system architecture, Gemini Deep Research for investigation, and Antigravity for code generation. Safe operations run completely in the background; Hush pauses to alert you only when human judgment is strictly required.
 
-[**Explore Live Showcase**](https://akshayjadhav237237-cmd.github.io/hush-agent/) • [**Interactive Simulator**](https://akshayjadhav237237-cmd.github.io/hush-agent/#simulator) • [**Agent Runner Guide**](agent/README.md) • [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md) • [**Architecture Diagram**](https://akshayjadhav237237-cmd.github.io/hush-agent/#architecture-diagram)
+[**Explore Live Showcase**](https://akshayjadhav237237-cmd.github.io/hush-agent/) • [**Vercel Production**](https://hush-agent-alpha.vercel.app) • [**Interactive Simulator**](https://akshayjadhav237237-cmd.github.io/hush-agent/#simulator) • [**Agent Runner Guide**](agent/README.md) • [**Troubleshooting Guide**](docs/TROUBLESHOOTING.md) • [**Architecture Diagram**](https://akshayjadhav237237-cmd.github.io/hush-agent/#architecture-diagram)
 
 ---
 

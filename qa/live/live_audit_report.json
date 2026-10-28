@@ -1,0 +1,363 @@
+{
+  "timestamp": "2026-10-28T20:56:27.284Z",
+  "vercel": {
+    "url": "https://hush-agent-alpha.vercel.app",
+    "label": "vercel",
+    "viewports": {
+      "390": {
+        "heroVideo": {
+          "exists": true,
+          "autoplay": true,
+          "playsInline": true,
+          "paused": false,
+          "filter": "none",
+          "backdropFilter": "none"
+        },
+        "bentoVideo": {
+          "exists": true,
+          "paused": false,
+          "hasPlayOverlay": false
+        },
+        "stats": {
+          "has285": true,
+          "has6Gates": true,
+          "has4Engines": true,
+          "snippet": "HUSH\nHUSH\n*\n\nDescribe what you want made. Hush runs the hand-offs between Claude, Gemini and Antigravity, orchestrated by Gemma 4.\n\nSee how it works\n[ HUSH ]\nWearebuildersofquietautomation,workingwhileyouareaway.Wehandthecopy-pastebetweenAItoolstoGemma4,soyouonlystepinwhenittrulymatters.\n\nOverabuild,HushplanswithClaude,researcheswithGeminiDeepResearch,buildsinAntigravityandmapstheresultwithGraphify,soeveryroundstartsfromtherealcode.Eachstepiswrittentoanauditlogyoucanverify.\n\nDesktop automation w"
+        },
+        "manifesto": {
+          "found": true,
+          "count": 82
+        },
+        "compare": {
+          "hasTrustRow": false
+        },
+        "faq": {
+          "questionCount": 10,
+          "questions": [
+            "01\nWhy Gemma and not just Claude?",
+            "01\nWhy Gemma and not just Claude?",
+            "02\nHow does safety and system command containment work?",
+            "02\nHow does safety and system command containment work?",
+            "03\nWhat is simulated vs real in this project?",
+            "03\nWhat is simulated vs real in this project?",
+            "04\nHow can judges reproduce this build?",
+            "04\nHow can judges reproduce this build?",
+            "05\nWhat are the known limitations (including UI click/coordinate accuracy)?",
+            "05\nWhat are the known limitations (including UI click/coordinate accuracy)?"
+          ]
+        },
+        "replay": {
+          "hasReplay": false
+        },
+        "links": {
+          "totalLinks": 15,
+          "brokenAnchors": []
+        },
+        "measurements": {
+          "frameMarginPx": null,
+          "navWidthPx": 119.84375,
+          "wordmarkHeightPx": 81.125
+        },
+        "consoleErrors": [],
+        "failedRequests": [],
+        "screenshot": "C:\\Users\\aksha\\Documents\\antigravity\\hush-landing-v2\\qa\\live\\vercel-390.png"
+      },
+      "768": {
+        "heroVideo": {
+          "exists": true,
+          "autoplay": true,
+          "playsInline": true,
+          "paused": false,
+          "filter": "none",
+          "backdropFilter": "none"
+        },
+        "bentoVideo": {
+          "exists": true,
+          "paused": false,
+          "hasPlayOverlay": false
+        },
+        "stats": {
+          "has285": true,
+          "has6Gates": true,
+          "has4Engines": true,
+          "snippet": "How it works\nGates\nFAQ\nGitHub\nHUSH\n*\n\nDescribe what you want made. Hush runs the hand-offs between Claude, Gemini and Antigravity, orchestrated by Gemma 4.\n\nSee how it works\n[ HUSH ]\nWearebuildersofquietautomation,workingwhileyouareaway.Wehandthecopy-pastebetweenAItoolstoGemma4,soyouonlystepinwhenittrulymatters.\n\nOverabuild,HushplanswithClaude,researcheswithGeminiDeepResearch,buildsinAntigravityandmapstheresultwithGraphify,soeveryroundstartsfromtherealcode.Eachstepiswrittentoanauditlogyoucanveri"
+        },
+        "manifesto": {
+          "found": true,
+          "count": 82
+        },
+        "compare": {
+          "hasTrustRow": false
+        },
+        "faq": {
+          "questionCount": 10,
+          "questions": [
+            "01\nWhy Gemma and not just Claude?",
+            "01\nWhy Gemma and not just Claude?",
+            "02\nHow does safety and system command containment work?",
+            "02\nHow does safety and system command containment work?",
+            "03\nWhat is simulated vs real in this project?",
+            "03\nWhat is simulated vs real in this project?",
+            "04\nHow can judges reproduce this build?",
+            "04\nHow can judges reproduce this build?",
+            "05\nWhat are the known limitations (including UI click/coordinate accuracy)?",
+            "05\nWhat are the known limitations (including UI click/coordinate accuracy)?"
+          ]
+        },
+        "replay": {
+          "hasReplay": false
+        },
+        "links": {
+          "totalLinks": 15,
+          "brokenAnchors": []
+        },
+        "measurements": {
+          "frameMarginPx": null,
+          "navWidthPx": 354,
+          "wordmarkHeightPx": 147.4375
+        },
+        "consoleErrors": [],
+        "failedRequests": [],
+        "screenshot": "C:\\Users\\aksha\\Documents\\antigravity\\hush-landing-v2\\qa\\live\\vercel-768.png"
+      },
+      "1440": {
+        "heroVideo": {
+          "exists": true,
+          "autoplay": true,
+          "playsInline": true,
+          "paused": false,
+          "filter": "none",
+          "backdropFilter": "none"
+        },
+        "bentoVideo": {
+          "exists": true,
+          "paused": false,
+          "hasPlayOverlay": false
+        },
+        "stats": {
+          "has285": true,
+          "has6Gates": true,
+          "has4Engines": true,
+          "snippet": "How it works\nGates\nFAQ\nGitHub\nHUSH\n*\n\nDescribe what you want made. Hush runs the hand-offs between Claude, Gemini and Antigravity, orchestrated by Gemma 4.\n\nSee how it works\n[ HUSH ]\nWearebuildersofquietautomation,workingwhileyouareaway.Wehandthecopy-pastebetweenAItoolstoGemma4,soyouonlystepinwhenittrulymatters.\n\nOverabuild,HushplanswithClaude,researcheswithGeminiDeepResearch,buildsinAntigravityandmapstheresultwithGraphify,soeveryroundstartsfromtherealcode.Eachstepiswrittentoanauditlogyoucanveri"
+        },
+        "manifesto": {
+          "found": true,
+          "count": 82
+        },
+        "compare": {
+          "hasTrustRow": false
+        },
+        "faq": {
+          "questionCount": 10,
+          "questions": [
+            "01\nWhy Gemma and not just Claude?",
+            "01\nWhy Gemma and not just Claude?",
+            "02\nHow does safety and system command containment work?",
+            "02\nHow does safety and system command containment work?",
+            "03\nWhat is simulated vs real in this project?",
+            "03\nWhat is simulated vs real in this project?",
+            "04\nHow can judges reproduce this build?",
+            "04\nHow can judges reproduce this build?",
+            "05\nWhat are the known limitations (including UI click/coordinate accuracy)?",
+            "05\nWhat are the known limitations (including UI click/coordinate accuracy)?"
+          ]
+        },
+        "replay": {
+          "hasReplay": false
+        },
+        "links": {
+          "totalLinks": 15,
+          "brokenAnchors": []
+        },
+        "measurements": {
+          "frameMarginPx": null,
+          "navWidthPx": 372.5,
+          "wordmarkHeightPx": 248
+        },
+        "consoleErrors": [],
+        "failedRequests": [],
+        "screenshot": "C:\\Users\\aksha\\Documents\\antigravity\\hush-landing-v2\\qa\\live\\vercel-1440.png"
+      }
+    }
+  },
+  "github": {
+    "url": "https://akshayjadhav237237-cmd.github.io/hush-agent/",
+    "label": "gh",
+    "viewports": {
+      "390": {
+        "heroVideo": {
+          "exists": true,
+          "autoplay": true,
+          "playsInline": true,
+          "paused": false,
+          "filter": "none",
+          "backdropFilter": "none"
+        },
+        "bentoVideo": {
+          "exists": true,
+          "paused": false,
+          "hasPlayOverlay": false
+        },
+        "stats": {
+          "has285": true,
+          "has6Gates": true,
+          "has4Engines": true,
+          "snippet": "HUSH\nHUSH\n*\n\nDescribe what you want made. Hush runs the hand-offs between Claude, Gemini and Antigravity, orchestrated by Gemma 4.\n\nSee how it works\n[ HUSH ]\nWearebuildersofquietautomation,workingwhileyouareaway.Wehandthecopy-pastebetweenAItoolstoGemma4,soyouonlystepinwhenittrulymatters.\n\nOverabuild,HushplanswithClaude,researcheswithGeminiDeepResearch,buildsinAntigravityandmapstheresultwithGraphify,soeveryroundstartsfromtherealcode.Eachstepiswrittentoanauditlogyoucanverify.\n\nDesktop automation w"
+        },
+        "manifesto": {
+          "found": true,
+          "count": 82
+        },
+        "compare": {
+          "hasTrustRow": false
+        },
+        "faq": {
+          "questionCount": 10,
+          "questions": [
+            "01\nWhy Gemma and not just Claude?",
+            "01\nWhy Gemma and not just Claude?",
+            "02\nHow does safety and system command containment work?",
+            "02\nHow does safety and system command containment work?",
+            "03\nWhat is simulated vs real in this project?",
+            "03\nWhat is simulated vs real in this project?",
+            "04\nHow can judges reproduce this build?",
+            "04\nHow can judges reproduce this build?",
+            "05\nWhat are the known limitations (including UI click/coordinate accuracy)?",
+            "05\nWhat are the known limitations (including UI click/coordinate accuracy)?"
+          ]
+        },
+        "replay": {
+          "hasReplay": false
+        },
+        "links": {
+          "totalLinks": 15,
+          "brokenAnchors": []
+        },
+        "measurements": {
+          "frameMarginPx": null,
+          "navWidthPx": 119.84375,
+          "wordmarkHeightPx": 81.125
+        },
+        "consoleErrors": [],
+        "failedRequests": [],
+        "screenshot": "C:\\Users\\aksha\\Documents\\antigravity\\hush-landing-v2\\qa\\live\\gh-390.png"
+      },
+      "768": {
+        "heroVideo": {
+          "exists": true,
+          "autoplay": true,
+          "playsInline": true,
+          "paused": false,
+          "filter": "none",
+          "backdropFilter": "none"
+        },
+        "bentoVideo": {
+          "exists": true,
+          "paused": false,
+          "hasPlayOverlay": false
+        },
+        "stats": {
+          "has285": true,
+          "has6Gates": true,
+          "has4Engines": true,
+          "snippet": "How it works\nGates\nFAQ\nGitHub\nHUSH\n*\n\nDescribe what you want made. Hush runs the hand-offs between Claude, Gemini and Antigravity, orchestrated by Gemma 4.\n\nSee how it works\n[ HUSH ]\nWearebuildersofquietautomation,workingwhileyouareaway.Wehandthecopy-pastebetweenAItoolstoGemma4,soyouonlystepinwhenittrulymatters.\n\nOverabuild,HushplanswithClaude,researcheswithGeminiDeepResearch,buildsinAntigravityandmapstheresultwithGraphify,soeveryroundstartsfromtherealcode.Eachstepiswrittentoanauditlogyoucanveri"
+        },
+        "manifesto": {
+          "found": true,
+          "count": 82
+        },
+        "compare": {
+          "hasTrustRow": false
+        },
+        "faq": {
+          "questionCount": 10,
+          "questions": [
+            "01\nWhy Gemma and not just Claude?",
+            "01\nWhy Gemma and not just Claude?",
+            "02\nHow does safety and system command containment work?",
+            "02\nHow does safety and system command containment work?",
+            "03\nWhat is simulated vs real in this project?",
+            "03\nWhat is simulated vs real in this project?",
+            "04\nHow can judges reproduce this build?",
+            "04\nHow can judges reproduce this build?",
+            "05\nWhat are the known limitations (including UI click/coordinate accuracy)?",
+            "05\nWhat are the known limitations (including UI click/coordinate accuracy)?"
+          ]
+        },
+        "replay": {
+          "hasReplay": false
+        },
+        "links": {
+          "totalLinks": 15,
+          "brokenAnchors": []
+        },
+        "measurements": {
+          "frameMarginPx": null,
+          "navWidthPx": 354,
+          "wordmarkHeightPx": 147.4375
+        },
+        "consoleErrors": [],
+        "failedRequests": [],
+        "screenshot": "C:\\Users\\aksha\\Documents\\antigravity\\hush-landing-v2\\qa\\live\\gh-768.png"
+      },
+      "1440": {
+        "heroVideo": {
+          "exists": true,
+          "autoplay": true,
+          "playsInline": true,
+          "paused": false,
+          "filter": "none",
+          "backdropFilter": "none"
+        },
+        "bentoVideo": {
+          "exists": true,
+          "paused": false,
+          "hasPlayOverlay": false
+        },
+        "stats": {
+          "has285": true,
+          "has6Gates": true,
+          "has4Engines": true,
+          "snippet": "How it works\nGates\nFAQ\nGitHub\nHUSH\n*\n\nDescribe what you want made. Hush runs the hand-offs between Claude, Gemini and Antigravity, orchestrated by Gemma 4.\n\nSee how it works\n[ HUSH ]\nWearebuildersofquietautomation,workingwhileyouareaway.Wehandthecopy-pastebetweenAItoolstoGemma4,soyouonlystepinwhenittrulymatters.\n\nOverabuild,HushplanswithClaude,researcheswithGeminiDeepResearch,buildsinAntigravityandmapstheresultwithGraphify,soeveryroundstartsfromtherealcode.Eachstepiswrittentoanauditlogyoucanveri"
+        },
+        "manifesto": {
+          "found": true,
+          "count": 82
+        },
+        "compare": {
+          "hasTrustRow": false
+        },
+        "faq": {
+          "questionCount": 10,
+          "questions": [
+            "01\nWhy Gemma and not just Claude?",
+            "01\nWhy Gemma and not just Claude?",
+            "02\nHow does safety and system command containment work?",
+            "02\nHow does safety and system command containment work?",
+            "03\nWhat is simulated vs real in this project?",
+            "03\nWhat is simulated vs real in this project?",
+            "04\nHow can judges reproduce this build?",
+            "04\nHow can judges reproduce this build?",
+            "05\nWhat are the known limitations (including UI click/coordinate accuracy)?",
+            "05\nWhat are the known limitations (including UI click/coordinate accuracy)?"
+          ]
+        },
+        "replay": {
+          "hasReplay": false
+        },
+        "links": {
+          "totalLinks": 15,
+          "brokenAnchors": []
+        },
+        "measurements": {
+          "frameMarginPx": null,
+          "navWidthPx": 372.5,
+          "wordmarkHeightPx": 248
+        },
+        "consoleErrors": [],
+        "failedRequests": [],
+        "screenshot": "C:\\Users\\aksha\\Documents\\antigravity\\hush-landing-v2\\qa\\live\\gh-1440.png"
+      }
+    }
+  }
+}
