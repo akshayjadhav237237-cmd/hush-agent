@@ -8,12 +8,12 @@ export const Hero: React.FC = () => {
 
   useEffect(() => {
     let isMounted = true;
-    fetch('/hero.mp4', { method: 'HEAD' })
+    fetch('./v2/media/hero.mp4', { method: 'HEAD' })
       .then((res) => {
         if (res.ok && isMounted) {
           setHasMedia('video');
         } else {
-          return fetch('/hero.jpg', { method: 'HEAD' }).then((imgRes) => {
+          return fetch('./v2/media/hero-poster.webp', { method: 'HEAD' }).then((imgRes) => {
             if (imgRes.ok && isMounted) {
               setHasMedia('image');
             }
@@ -47,12 +47,12 @@ export const Hero: React.FC = () => {
           muted
           playsInline
           className="absolute inset-0 w-full h-full object-cover -z-10 pointer-events-none"
-          src="/hero.mp4"
+          src="./v2/media/hero.mp4"
         />
       )}
       {hasMedia === 'image' && (
         <img
-          src="/hero.jpg"
+          src="./v2/media/hero-poster.webp"
           alt=""
           className="absolute inset-0 w-full h-full object-cover -z-10 pointer-events-none"
         />

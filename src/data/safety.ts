@@ -8,7 +8,7 @@ export const SAFETY_ITEMS: SafetyItem[] = [
     description: "Strict allowlist restricting terminal execution to ten permitted binaries: git, npm, node, python, pip, dir, type, echo, mkdir, and cd. Blocks dangerous substrings, drive escapes, and shell redirection.",
     implemented: true,
     statusLabel: "Implemented, unit-tested",
-    desktopVerified: true,
+    desktopVerified: false,
   },
   {
     id: "safety-workspace-only",
@@ -16,7 +16,7 @@ export const SAFETY_ITEMS: SafetyItem[] = [
     description: "Filesystem containment enforcing all command execution and graph extraction to stay strictly within WORKDIR and PROJECT_DIR, preventing path traversal outside the project root.",
     implemented: true,
     statusLabel: "Implemented, unit-tested",
-    desktopVerified: true,
+    desktopVerified: false,
   },
   {
     id: "safety-step-cap",
@@ -24,7 +24,7 @@ export const SAFETY_ITEMS: SafetyItem[] = [
     description: "Hard execution limit per run (MAX_STEPS = 80) preventing runaway execution loops and unbounded compute spend.",
     implemented: true,
     statusLabel: "Implemented, unit-tested",
-    desktopVerified: true,
+    desktopVerified: false,
   },
   {
     id: "safety-mouse-corner-abort",
@@ -56,7 +56,7 @@ export const SAFETY_ITEMS: SafetyItem[] = [
     description: "Tamper-evident JSONL audit record tracking every tool call, argument, and screen state with SHA-256 hash chaining and automated credential redaction.",
     implemented: true,
     statusLabel: "Implemented, unit-tested",
-    desktopVerified: true,
+    desktopVerified: false,
   },
   {
     id: "safety-checkpoint-resume",
@@ -72,7 +72,7 @@ export const SAFETY_ITEMS: SafetyItem[] = [
     description: "Deterministic offline execution (--demo, --demo-limit, --demo-answer) generating synthetic screens and full build traces without live API keys or UI automation.",
     implemented: true,
     statusLabel: "Implemented, unit-tested",
-    desktopVerified: true,
+    desktopVerified: false,
   },
   {
     id: "safety-global-kill-hotkey",
@@ -96,7 +96,7 @@ export const SAFETY_ITEMS: SafetyItem[] = [
     description: "Automated cooldown countdown when provider rate limits are encountered, safely pausing execution while continuously polling the kill switch.",
     implemented: true,
     statusLabel: "Implemented, unit-tested",
-    desktopVerified: true,
+    desktopVerified: false,
   },
   {
     id: "safety-account-switch",

@@ -132,7 +132,7 @@ export const GemmaSpecsTab: React.FC = () => {
                   href={fact.source}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs text-accent hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded transition-colors break-all"
+                  className="inline-flex items-center gap-1.5 text-xs text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded transition-colors break-all"
                   aria-label={`Official documentation for ${fact.label} on Google AI`}
                 >
                   <ExternalLink className="w-3.5 h-3.5 shrink-0" strokeWidth={1.5} aria-hidden="true" />

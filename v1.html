@@ -16,7 +16,19 @@
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23000000'/%3E%3Cpath d='M16 6v20M6 16h20M8.93 8.93l14.14 14.14M8.93 23.07L23.07 8.93' stroke='%2322FF6E' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E"
     />
 
-    <!-- Fonts bundled locally via Vite -->
+    <link rel="canonical" href="https://akshayjadhav237237-cmd.github.io/hush-agent/v1.html" />
+    <script>
+      (function () {
+        try {
+          if (window.location.hostname && !window.location.hostname.includes('github.io')) {
+            var c = document.querySelector('link[rel="canonical"]');
+            if (c) c.setAttribute('href', window.location.origin + window.location.pathname);
+            var og = document.querySelector('meta[property="og:url"]');
+            if (og) og.setAttribute('content', window.location.origin + window.location.pathname);
+          }
+        } catch (_) {}
+      })();
+    </script>
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -26,7 +38,7 @@
       content="Autonomous Windows desktop orchestrator built with Google Gemma 4."
     />
     <meta property="og:url" content="https://akshayjadhav237237-cmd.github.io/hush-agent/v1.html" />
-    <meta property="og:image" content="/og.png" />
+    <meta property="og:image" content="./og.png" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -35,9 +47,15 @@
       name="twitter:description"
       content="Autonomous Windows desktop orchestrator built with Google Gemma 4."
     />
-    <meta name="twitter:image" content="/og.png" />
+    <meta name="twitter:image" content="./og.png" />
   </head>
   <body>
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#141414] focus:text-[#2EF27A] focus:border focus:border-[#2EF27A] focus:rounded-md focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#2EF27A]"
+    >
+      Skip to content
+    </a>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

@@ -117,7 +117,9 @@ export const Gates: React.FC = () => {
         {summary && (
           <div className="mt-8 pt-6 border-t border-[var(--v2-line)] text-xs font-mono text-[var(--v2-muted)] flex items-center gap-2.5">
             <span
-              className="w-2 h-2 rounded-full bg-[var(--v2-accent)] shrink-0"
+              className={`w-2 h-2 rounded-full shrink-0 ${
+                summary.startsWith('0 ') ? 'bg-[var(--v2-warning)]' : 'bg-[var(--v2-accent)]'
+              }`}
               aria-hidden="true"
             />
             <span>{summary}</span>

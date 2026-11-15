@@ -22,9 +22,15 @@ import { COPY } from '@/data/copy';
 export const App: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-bg text-text relative">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#141414] focus:text-[#2EF27A] focus:border focus:border-[#2EF27A] focus:rounded-md focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#2EF27A]"
+      >
+        Skip to content
+      </a>
       <SectionProgress />
       <Header />
-      <main className="flex-1">
+      <main id="main-content" className="flex-1 outline-none" tabIndex={-1}>
         <Hero />
         <JudgeStrip />
 

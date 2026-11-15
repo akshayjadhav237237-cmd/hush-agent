@@ -70,7 +70,7 @@ export const GateCard: React.FC<GateCardProps> = ({ step, isResolved = false, on
             type="button"
             onClick={() => setSelectedOption('stripe')}
             aria-pressed={selectedOption === 'stripe'}
-            className={`p-3 rounded-[10px] border text-left transition-colors flex flex-col gap-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
+            className={`p-3 rounded-[10px] border text-left transition-colors flex flex-col gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
               selectedOption === 'stripe'
                 ? 'border-warning bg-surface-2 text-text font-medium'
                 : 'border-border bg-surface text-text-muted hover:text-text'
@@ -91,7 +91,7 @@ export const GateCard: React.FC<GateCardProps> = ({ step, isResolved = false, on
             type="button"
             onClick={() => setSelectedOption('square')}
             aria-pressed={selectedOption === 'square'}
-            className={`p-3 rounded-[10px] border text-left transition-colors flex flex-col gap-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
+            className={`p-3 rounded-[10px] border text-left transition-colors flex flex-col gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
               selectedOption === 'square'
                 ? 'border-warning bg-surface-2 text-text font-medium'
                 : 'border-border bg-surface text-text-muted hover:text-text'
@@ -119,7 +119,7 @@ export const GateCard: React.FC<GateCardProps> = ({ step, isResolved = false, on
         <button
           type="button"
           onClick={onResolve}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-[10px] border border-warning bg-transparent hover:bg-surface-2 text-warning text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-[10px] border border-warning bg-transparent hover:bg-surface-2 text-warning text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           <span>Resolve and continue ({selectedOption === 'stripe' ? 'Stripe' : 'Square'})</span>
           <ArrowRight className="w-3.5 h-3.5 text-warning" strokeWidth={1.5} aria-hidden="true" />

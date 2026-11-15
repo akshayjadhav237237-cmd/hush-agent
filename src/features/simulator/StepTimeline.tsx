@@ -47,7 +47,7 @@ export const StepTimeline: React.FC<StepTimelineProps> = ({
                 onClick={() => onJump(idx)}
                 aria-current={isActive ? 'step' : undefined}
                 aria-label={`Step ${idx + 1}: ${step.title}. Actor: ${actorMeta.label}`}
-                className={`w-full text-left p-2.5 rounded-[10px] border transition-colors flex items-center justify-between gap-3 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
+                className={`w-full text-left p-2.5 rounded-[10px] border transition-colors flex items-center justify-between gap-3 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                   isGateActive
                     ? 'border-warning bg-surface-2 text-text font-medium'
                     : isActive
