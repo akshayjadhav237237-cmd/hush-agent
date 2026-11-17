@@ -242,6 +242,17 @@ class _ToolNamesCaller:
 TOOL_NAMES: Any = _ToolNamesCaller()
 
 
+def _uppercase_types(val: Any) -> Any:
+    if isinstance(val, dict):
+        return {
+            k: (v.upper() if k == "type" and isinstance(v, str) else _uppercase_types(v))
+            for k, v in val.items()
+        }
+    if isinstance(val, list):
+        return [_uppercase_types(i) for i in val]
+    return val
+
+
 def build_tools(switch_enabled: bool = False, browser_enabled: bool = False) -> Any:
     """Build GenAI Tool instance containing function declarations."""
     from google.genai import types
@@ -254,11 +265,11 @@ def build_tools(switch_enabled: bool = False, browser_enabled: bool = False) -> 
         types.FunctionDeclaration(
             name=name,
             description=meta[name]["description"],
-            parameters={
+            parameters=_uppercase_types({
                 "type": "object",
                 "properties": meta[name]["properties"],
                 "required": meta[name]["required"],
-            },
+            }),
         )
         for name in names
     ]
