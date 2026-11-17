@@ -144,6 +144,6 @@ export const COPY_V2 = {
     ],
     attribution:
       'Graphify is a separate open-source project by Graphify Labs, used under its Apache 2.0 license.',
-    license: 'Hush is MIT licensed. Gemma 4 is released by Google under the Apache 2.0 license.',
+    license: 'Hush is Apache 2.0 licensed. Gemma 4 is released by Google under the Apache 2.0 license.',
   },
 } as const;

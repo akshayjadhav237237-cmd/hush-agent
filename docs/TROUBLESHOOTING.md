@@ -228,6 +228,20 @@ Reload Page, Verify Active Session, & Resume Silently
 ## 🛑 Emergency Stops & Clean Termination
 
 If the agent needs to be stopped immediately at any point:
-- **Global Hotkey (Exit Code 3)**: Press **`Ctrl + Alt + K`**. A 20 Hz background hook detects this chord across any active application and terminates the orchestrator immediately.
-- **Mouse Corner Slam (Exit Code 2)**: Slam the physical mouse pointer to the extreme top-left corner `(0, 0)` of your primary display.
-- **Console Interrupt (Exit Code 1)**: Press **`Ctrl + C`** in the terminal to save an atomic checkpoint (`checkpoint.json`) and gracefully exit. You can resume later with `python orchestrator.py --resume latest`.
+- **Global Hotkey (`Ctrl + Alt + K`)**: Press **`Ctrl + Alt + K`**. A 20 Hz background hook detects this chord globally across any active application and terminates the orchestrator immediately with exit code 3 (`EXIT_KILL`).
+- **Mouse Corner Slam (`(0, 0)`)**: Slam the physical mouse pointer to the extreme top-left corner `(0, 0)` of your primary display. This trips PyAutoGUI's hardware failsafe (`pyautogui.FailSafeException`) and halts execution with exit code 2 (`EXIT_FAILSAFE`).
+- **Console Interrupt (`Ctrl + C`)**: Press **`Ctrl + C`** in the terminal to halt process execution immediately. Note that run state checkpoints (`checkpoint.json`) are written atomically after each completed step in the normal execution loop (checkpoints are not triggered by `Ctrl + C`). You can resume from the last completed step using `python orchestrator.py --resume latest`.
+
+### Process Exit Codes Reference
+
+All orchestrator termination paths map directly to standard exit codes defined in `agent/core/constants.py`:
+
+| Exit Code | Constant | Description |
+|:---:|:---|:---|
+| `0` | `EXIT_OK` | Normal successful completion. |
+| `1` | `EXIT_ERROR` | Execution error, missing configuration, or fatal error. |
+| `2` | `EXIT_FAILSAFE` | Top-left mouse corner slam `(0, 0)` failsafe abort. |
+| `3` | `EXIT_KILL` | Emergency kill switch hotkey (`Ctrl+Alt+K`). |
+| `4` | `EXIT_MAX_STEPS` | Max step budget exceeded (`MAX_STEPS_DEFAULT = 80`). |
+| `5` | `EXIT_MODEL_FAILURE` | Model generation failure. |
+
