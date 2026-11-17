@@ -228,6 +228,26 @@ Reload Page, Verify Active Session, & Resume Silently
 ## 🛑 Emergency Stops & Clean Termination
 
 If the agent needs to be stopped immediately at any point:
-- **Global Hotkey (Exit Code 3)**: Press **`Ctrl + Alt + K`**. A 20 Hz background hook detects this chord across any active application and terminates the orchestrator immediately.
-- **Mouse Corner Slam (Exit Code 2)**: Slam the physical mouse pointer to the extreme top-left corner `(0, 0)` of your primary display.
-- **Console Interrupt (Exit Code 1)**: Press **`Ctrl + C`** in the terminal to save an atomic checkpoint (`checkpoint.json`) and gracefully exit. You can resume later with `python orchestrator.py --resume latest`.
+- **Global Hotkey (`EXIT_KILL`, Code 3)**: Press **`Ctrl + Alt + K`**. A 20 Hz background hook detects this chord across any active application and terminates the orchestrator immediately.
+- **Mouse Corner Slam (`EXIT_FAILSAFE`, Code 2)**: Slam the physical mouse pointer to the extreme top-left corner `(0, 0)` of your primary display to trigger PyAutoGUI's hardware failsafe abort.
+- **Console Interrupt (`Ctrl + C`)**: Press **`Ctrl + C`** in the terminal to halt execution via `KeyboardInterrupt`. Note that checkpoints are automatically written to disk after each completed step during the normal execution loop (not triggered by `Ctrl + C`), allowing you to resume later from the last saved state with `python orchestrator.py --resume latest`.
+
+### Process Exit Codes
+
+Hush uses standardized process exit codes defined in [`agent/core/constants.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/constants.py):
+
+| Code | Constant | Meaning |
+| :---: | :--- | :--- |
+| `0` | `EXIT_OK` | Normal successful completion. |
+| `1` | `EXIT_ERROR` | Execution error, missing configuration, or fatal error. |
+| `2` | `EXIT_FAILSAFE` | Top-left mouse corner slam `(0, 0)` failsafe abort. |
+| `3` | `EXIT_KILL` | Emergency kill switch hotkey (`Ctrl+Alt+K`). |
+| `4` | `EXIT_MAX_STEPS` | Max step budget exceeded (`MAX_STEPS_DEFAULT = 80`). |
+| `5` | `EXIT_MODEL_FAILURE` | Model generation failure. |
+
+- Code 0 (`EXIT_OK`): Normal successful completion.
+- Code 1 (`EXIT_ERROR`): Execution error, missing configuration, or fatal error.
+- Code 2 (`EXIT_FAILSAFE`): Top-left mouse corner slam `(0, 0)` failsafe abort.
+- Code 3 (`EXIT_KILL`): Emergency kill switch hotkey (`Ctrl+Alt+K`).
+- Code 4 (`EXIT_MAX_STEPS`): Max step budget exceeded (`MAX_STEPS_DEFAULT = 80`).
+- Code 5 (`EXIT_MODEL_FAILURE`): Model generation failure.
