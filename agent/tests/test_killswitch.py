@@ -133,3 +133,62 @@ def test_stop_when_never_started() -> None:
     ks = KillSwitch()
     ks.stop()
     assert ks.is_set() is False
+
+
+def test_polling_thread_survives_get_key_state_exceptions() -> None:
+    """A-007: Polling thread catches ctypes/OS errors and does not die silently."""
+    call_count = 0
+
+    def mock_flaky_key_state(vk: int) -> int:
+        nonlocal call_count
+        call_count += 1
+        if call_count <= 3:
+            raise OSError("Win32 ctypes exception reading key state")
+        # On subsequent calls, simulate Ctrl+Alt+K pressed
+        return 0x8000
+
+    ks = KillSwitch(get_key_state=mock_flaky_key_state, sleep=lambda _: None)
+    assert ks.start() is True
+    # Let it poll through errors and trip
+    time_limit = 50
+    steps = 0
+    while not ks.is_set() and steps < time_limit:
+        steps += 1
+    ks.stop()
+    assert ks.is_set() is True
+    assert ks.error_count >= 3
+    assert isinstance(ks.last_error, OSError)
+
+
+def test_killswitch_callbacks_invoked_on_trigger() -> None:
+    """I-002: Registered callbacks are invoked immediately upon kill switch trigger."""
+    called_a = False
+    called_b = False
+
+    def cb_a() -> None:
+        nonlocal called_a
+        called_a = True
+
+    def cb_b() -> None:
+        nonlocal called_b
+        called_b = True
+
+    ks = KillSwitch(on_trigger=cb_a, sleep=lambda _: None)
+    ks.add_callback(cb_b)
+
+    assert not called_a
+    assert not called_b
+    ks.trigger()
+    assert ks.is_set() is True
+    assert called_a is True
+    assert called_b is True
+
+
+def test_killswitch_documentation_and_error_handling() -> None:
+    """I-001: Module docstring documents UIPI, UAC, lock screen limitations."""
+    import core.killswitch as ks_mod
+
+    doc = ks_mod.__doc__ or ""
+    assert "UIPI" in doc or "User Interface Privilege Isolation" in doc
+    assert "UAC" in doc or "User Account Control" in doc
+    assert "Lock Screen" in doc or "lock screen" in doc.lower()

@@ -1,6 +1,7 @@
 """Loop breaker and static screen detection."""
 from __future__ import annotations
 
+from collections import deque
 import io
 from typing import Optional
 
@@ -51,7 +52,7 @@ def dhash(png_bytes: bytes) -> int:
 
 
 class LoopBreaker:
-    """Detects repeated static screen loops across actions or waits."""
+    """Detects repeated static screen loops or alternating cycles across actions or waits."""
 
     def __init__(
         self,
@@ -65,29 +66,53 @@ class LoopBreaker:
         self.last_hash: Optional[int] = None
         self.same_count: int = 0
         self.wait_count: int = 0
+        self.cycle_count: int = 0
+        self.history: deque[int] = deque(maxlen=6)
 
     def reset(self) -> None:
         """Reset internal counters and last seen image hash."""
         self.same_count = 0
         self.wait_count = 0
+        self.cycle_count = 0
         self.last_hash = None
+        self.history.clear()
 
     def observe(self, image_hash: int, last_action_kind: str) -> Optional[str]:
-        """Observe screen hash and return reason string if static threshold met."""
+        """Observe screen hash and return reason string if static threshold or cycle met."""
         if self.last_hash is None:
             self.last_hash = image_hash
+            self.history.append(image_hash)
             return None
 
         distance = hamming(self.last_hash, image_hash)
         is_similar = distance <= self.max_distance
 
+        # Check for alternating 2-step cycle (H1 <-> H2) using history buffer (I-004)
+        is_alternating = False
+        if len(self.history) >= 2:
+            prev_2_hash = self.history[-2]
+            if hamming(prev_2_hash, image_hash) <= self.max_distance and not is_similar:
+                is_alternating = True
+
+        self.history.append(image_hash)
+        self.last_hash = image_hash
+
+        if is_alternating:
+            if last_action_kind == "act":
+                self.cycle_count += 1
+                if self.cycle_count >= self.same_threshold:
+                    return f"Alternating screen cycle detected across {self.cycle_count} consecutive interactive actions."
+            self.same_count = 0
+            self.wait_count = 0
+            return None
+        else:
+            self.cycle_count = 0
+
         if not is_similar:
-            self.last_hash = image_hash
             self.same_count = 0
             self.wait_count = 0
             return None
 
-        self.last_hash = image_hash
         if last_action_kind == "act":
             self.same_count += 1
             if self.same_count >= self.same_threshold:

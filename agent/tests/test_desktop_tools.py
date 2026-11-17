@@ -131,19 +131,54 @@ def test_click_scales_coordinates_using_scale() -> None:
 
 
 def test_wait_caps_at_max_wait_seconds() -> None:
-    """Verify wait() caps sleep duration at 120 seconds."""
+    """Verify wait() caps sleep duration at 120 seconds and chunks sleeps (A-008)."""
     slept: list[float] = []
     dt = DesktopTools(sleep=slept.append)
 
     # Below cap
     res_under = dt.wait(15)
     assert res_under == "Waited 15s"
-    assert slept[-1] == 15
+    assert sum(slept) == 15
+    assert all(s <= 1.0 for s in slept)
 
     # Above cap
+    slept.clear()
     res_over = dt.wait(300)
     assert res_over == f"Waited {MAX_WAIT_SECONDS}s"
-    assert slept[-1] == MAX_WAIT_SECONDS
+    assert sum(slept) == MAX_WAIT_SECONDS
+    assert all(s <= 1.0 for s in slept)
+
+
+def test_wait_aborts_early_on_killswitch() -> None:
+    """Verify wait() stops sleeping when kill switch is triggered (A-008)."""
+    class MockKill:
+        def __init__(self) -> None:
+            self.calls = 0
+        def is_set(self) -> bool:
+            self.calls += 1
+            return self.calls >= 3
+
+    slept: list[float] = []
+    kill = MockKill()
+    dt = DesktopTools(sleep=slept.append, kill=kill)
+    res = dt.wait(60)
+    assert res == f"Waited {int(sum(slept))}s"
+    assert sum(slept) < 60
+    assert len(slept) == 2
+
+
+def test_desktop_tools_safety_policy_escalation() -> None:
+    """Verify DesktopTools enforces escalation for login/credentials when enabled (I-007)."""
+    mock_pyautogui = MagicMock()
+    mock_pyperclip = MagicMock()
+    dt_safe = DesktopTools(pyautogui=mock_pyautogui, pyperclip=mock_pyperclip, enforce_escalation=True)
+    res = dt_safe.paste_text("enter my secret password")
+    assert "BLOCKED:" in res
+    assert "notify_human" in res
+
+    dt_normal = DesktopTools(pyautogui=mock_pyautogui, pyperclip=mock_pyperclip, enforce_escalation=False)
+    res_norm = dt_normal.paste_text("safe text")
+    assert "BLOCKED" not in res_norm
 
 
 def test_failsafe_exception_propagates_uncaught() -> None:

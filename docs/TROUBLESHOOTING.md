@@ -230,4 +230,3 @@ Reload Page, Verify Active Session, & Resume Silently
 If the agent needs to be stopped immediately at any point:
 - **Global Hotkey (Exit Code 3)**: Press **`Ctrl + Alt + K`**. A 20 Hz background hook detects this chord across any active application and terminates the orchestrator immediately.
 - **Mouse Corner Slam (Exit Code 2)**: Slam the physical mouse pointer to the extreme top-left corner `(0, 0)` of your primary display.
-- **Console Interrupt (Exit Code 1)**: Press **`Ctrl + C`** in the terminal to save an atomic checkpoint (`checkpoint.json`) and gracefully exit. You can resume later with `python orchestrator.py --resume latest`.

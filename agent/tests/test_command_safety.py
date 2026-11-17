@@ -279,3 +279,133 @@ def test_invalid_command_syntax(project_dir: str) -> None:
         check_command('echo "unclosed quote', project_dir)
         == "BLOCKED: invalid command syntax"
     )
+
+
+def test_quote_normalized_sensitive_files(project_dir: str) -> None:
+    """Regression test for B-002: Quote fragmentation around sensitive filenames."""
+    assert check_command('type ."env"', project_dir) is not None
+    assert "sensitive file '.env'" in check_command('type ."env"', project_dir)
+    assert check_command('type cred"entials".json', project_dir) is not None
+    assert "sensitive file 'credentials'" in check_command(
+        'type cred"entials".json', project_dir
+    )
+    assert check_command('type sec"rets".yaml', project_dir) is not None
+    assert "sensitive file 'secrets'" in check_command(
+        'type sec"rets".yaml', project_dir
+    )
+    res_ssh = check_command('type .s"sh"\\id_"rsa"', project_dir)
+    assert res_ssh is not None and "sensitive file" in res_ssh
+
+
+def test_git_token_level_restrictions(project_dir: str) -> None:
+    """Regression test for B-001 & B-004: Token-level git -c and subcommand controls."""
+    # B-001: git -c and --config-env
+    assert (
+        check_command("git  -c core.fsmonitor=calc.exe status", project_dir)
+        == "BLOCKED: git -c or --config-env configuration override is disallowed"
+    )
+    assert (
+        check_command('git "-c" core.editor=calc.exe commit', project_dir)
+        == "BLOCKED: git -c or --config-env configuration override is disallowed"
+    )
+    assert (
+        check_command("git\t-c core.fsmonitor=calc.exe status", project_dir)
+        == "BLOCKED: git -c or --config-env configuration override is disallowed"
+    )
+    assert (
+        check_command("git --config-env=foo=bar status", project_dir)
+        == "BLOCKED: git -c or --config-env configuration override is disallowed"
+    )
+
+    # B-004: Whitespace and quoting in disallowed subcommands
+    assert (
+        check_command("git  push origin evil", project_dir)
+        == "BLOCKED: git subcommand 'push' is disallowed"
+    )
+    assert (
+        check_command('git "push" origin evil', project_dir)
+        == "BLOCKED: git subcommand 'push' is disallowed"
+    )
+    assert (
+        check_command("git  config --global user.name evil", project_dir)
+        == "BLOCKED: git subcommand 'config' is disallowed"
+    )
+    assert (
+        check_command('git "config" --global user.name evil', project_dir)
+        == "BLOCKED: git subcommand 'config' is disallowed"
+    )
+    assert (
+        check_command("git  remote add evil https://evil.com", project_dir)
+        == "BLOCKED: git subcommand 'remote' is disallowed"
+    )
+    assert (
+        check_command('git "remote" add evil https://evil.com', project_dir)
+        == "BLOCKED: git subcommand 'remote' is disallowed"
+    )
+
+
+def test_drive_relative_and_device_names(project_dir: str) -> None:
+    """Regression test for B-003 and B-010: Drive-relative paths and DOS device names."""
+    # B-003: Drive paths without slash
+    res1 = check_command(r"type C:windows\win.ini", project_dir)
+    assert res1 is not None and "escapes project directory" in res1
+    res2 = check_command("cd C:", project_dir)
+    assert res2 is not None and "escapes project directory" in res2
+    res3 = check_command("git  -C C: status", project_dir)
+    assert res3 is not None and "escapes project directory" in res3
+
+    # B-010: DOS device names
+    res_con = check_command("type CON", project_dir)
+    assert res_con is not None and "Windows reserved device name" in res_con
+    res_aux = check_command("type AUX", project_dir)
+    assert res_aux is not None and "Windows reserved device name" in res_aux
+
+
+def test_pip_token_level_restrictions(project_dir: str) -> None:
+    """Regression test for B-005: Token-level pip install/uninstall blocking."""
+    assert (
+        check_command("pip  install requests", project_dir)
+        == "BLOCKED: pip 'install' is disallowed"
+    )
+    assert (
+        check_command('pip "install" requests', project_dir)
+        == "BLOCKED: pip 'install' is disallowed"
+    )
+    assert (
+        check_command("pip -q install requests", project_dir)
+        == "BLOCKED: pip 'install' is disallowed"
+    )
+    assert (
+        check_command("pip --isolated install requests", project_dir)
+        == "BLOCKED: pip 'install' is disallowed"
+    )
+    assert (
+        check_command("pip uninstall requests", project_dir)
+        == "BLOCKED: pip 'uninstall' is disallowed"
+    )
+    assert check_command("pip list", project_dir) is None
+
+
+def test_node_inline_eval_restrictions(project_dir: str) -> None:
+    """Regression test for B-006: Node inline evaluation flags."""
+    assert (
+        check_command('node -p "1+1"', project_dir)
+        == "BLOCKED: inline node evaluation is disallowed"
+    )
+    assert (
+        check_command('node --print "1+1"', project_dir)
+        == "BLOCKED: inline node evaluation is disallowed"
+    )
+    assert (
+        check_command('node "-e" "console.log(1)"', project_dir)
+        == "BLOCKED: inline node evaluation is disallowed"
+    )
+    assert (
+        check_command('node "--eval" "console.log(1)"', project_dir)
+        == "BLOCKED: inline node evaluation is disallowed"
+    )
+    assert (
+        check_command('node -pe "process.exit()"', project_dir)
+        == "BLOCKED: inline node evaluation is disallowed"
+    )
+

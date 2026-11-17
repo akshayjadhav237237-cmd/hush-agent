@@ -5,7 +5,7 @@ import time
 from typing import Any, Callable, Optional
 
 DEFAULT_MAX_MINUTES: int = 360
-DEFAULT_CHUNK_SECONDS: int = 30
+DEFAULT_CHUNK_SECONDS: int = 1
 
 
 def wait_for_reset(

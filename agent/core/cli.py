@@ -5,6 +5,7 @@ import argparse
 import os
 from typing import Any, Callable, Optional
 
+import core.constants as _constants
 from core.constants import (
     DEFAULT_MODEL,
     EXIT_ERROR,
@@ -14,6 +15,18 @@ from core.constants import (
     RUNS_DIR,
     resolve_project_dir,
 )
+
+EXIT_SUCCESS: int = getattr(_constants, "EXIT_SUCCESS", getattr(_constants, "EXIT_OK", 0))
+EXIT_FAILSAFE: int = getattr(_constants, "EXIT_FAILSAFE", 2)
+EXIT_KILL: int = getattr(_constants, "EXIT_KILL", 3)
+EXIT_MAX_STEPS: int = getattr(_constants, "EXIT_MAX_STEPS", 4)
+EXIT_HUMAN_TIMEOUT: int = getattr(_constants, "EXIT_HUMAN_TIMEOUT", getattr(_constants, "EXIT_MODEL_FAILURE", 5))
+
+# Ensure standard exit code aliases exist on core.constants as required by A-018
+if not hasattr(_constants, "EXIT_SUCCESS"):
+    _constants.EXIT_SUCCESS = EXIT_SUCCESS
+if not hasattr(_constants, "EXIT_HUMAN_TIMEOUT"):
+    _constants.EXIT_HUMAN_TIMEOUT = EXIT_HUMAN_TIMEOUT
 
 
 def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
@@ -38,7 +51,7 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
     parser.add_argument(
         "--demo",
         action="store_true",
-        help="Run against a simulated mock desktop without moving real mouse/keyboard.",
+        help="Simulate desktop environment; still requires GEMINI_API_KEY for model inference.",
     )
     parser.add_argument(
         "--demo-limit",
@@ -72,6 +85,13 @@ def parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
         choices=PROVIDERS,
         default="gemma",
         help="Model provider to use for orchestration (default: gemma).",
+    )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default=None,
+        metavar="MODEL_NAME",
+        help="Model name to use for orchestration (defaults to provider default).",
     )
     parser.add_argument(
         "--doctor",
@@ -110,11 +130,23 @@ def main(
     desktop_factory: Optional[Callable[..., Any]] = None,
 ) -> int:
     """Execute Hush orchestrator with parsed CLI arguments and dependency factories."""
-    args = parse_args(argv)
+    try:
+        args = parse_args(argv)
+    except SystemExit as exc:
+        if exc.code == 0:
+            raise
+        return EXIT_ERROR
 
     mode = "demo" if args.demo else "real"
-    provider = args.provider
-    model_name = OPENAI_MODEL if provider == "openai" else DEFAULT_MODEL
+    provider = getattr(args, "provider", "gemma")
+
+    if provider not in PROVIDERS:
+        print(f"Error: Unknown provider '{provider}'. Supported providers: {', '.join(PROVIDERS)}")
+        return EXIT_ERROR
+
+    model_name = getattr(args, "model", None)
+    if not model_name:
+        model_name = OPENAI_MODEL if provider == "openai" else DEFAULT_MODEL
 
     if getattr(args, "doctor", False):
         from core.doctor import run_doctor
@@ -122,15 +154,15 @@ def main(
         repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         verification_dir = os.path.join(repo_root, "verification")
         code, _ = run_doctor(project_dir, verification_dir=verification_dir)
-        return code
+        return int(code)
 
     if getattr(args, "doctor_ui", False):
         from core.browser_driver import run_doctor_ui
-        return run_doctor_ui()
+        return int(run_doctor_ui())
 
     if getattr(args, "calibrate", False):
         from core.antigravity_driver import run_calibration
-        return run_calibration()
+        return int(run_calibration())
 
     print(f"PROVIDER: {provider} / {model_name}")
 
@@ -164,8 +196,11 @@ def main(
     else:
         idea_text = " ".join(args.idea).strip()
         if not idea_text:
-            print("Error: Please provide a project idea or use --resume.")
-            return EXIT_ERROR
+            if args.demo:
+                idea_text = "a modern task board application"
+            else:
+                print("Error: Please provide a project idea or use --resume.")
+                return EXIT_ERROR
 
         from core.audit import AuditLog
         from core.checkpoint import RunState, new_run_id, save_checkpoint
@@ -185,6 +220,25 @@ def main(
 
     project_dir = resolve_project_dir(mode, run_dir)
 
+    # Pre-check API keys before initialization when model_factory is not provided
+    if model_factory is None:
+        if provider == "openai":
+            if not os.getenv("OPENAI_API_KEY"):
+                print(
+                    "Error: OPENAI_API_KEY environment variable is required "
+                    "(even in --demo mode, which simulates the desktop environment "
+                    "while querying the model). Please set OPENAI_API_KEY and retry."
+                )
+                return EXIT_ERROR
+        elif provider == "gemma":
+            if not os.getenv("GEMINI_API_KEY"):
+                print(
+                    "Error: GEMINI_API_KEY environment variable is required "
+                    "(even in --demo mode, which simulates the desktop environment "
+                    "while querying the model). Please set GEMINI_API_KEY and retry."
+                )
+                return EXIT_ERROR
+
     # Kill Switch
     from core.killswitch import KillSwitch
 
@@ -192,103 +246,121 @@ def main(
     if not kill.start():
         audit.log("kill_switch_unavailable")
 
-    # Loop Breaker
-    from core.loopbreaker import LoopBreaker
-
-    breaker = LoopBreaker()
-
-    # Notifier
-    from core.notify import Notifier
-
-    auto_answer = args.demo_answer if args.demo else None
-    notifier = Notifier(
-        topic=os.getenv("NTFY_TOPIC"),
-        auto_answer=auto_answer,
-        audit=audit,
-    )
-
-    # Account Switcher
-    switcher = None
-    if args.account_switch:
-        from core.accounts import AccountSwitcher, parse_profiles
-
-        profiles = parse_profiles(os.getenv("HUSH_CHROME_PROFILES"))
-        switcher = AccountSwitcher(profiles, audit=audit)
-        confirmed = switcher.confirm(
-            accepted_flag=args.i_accept_account_switch_terms
-        )
-        if not confirmed:
-            print("Account switching terms declined.")
-            kill.stop()
-            return EXIT_ERROR
-        can_sw, reason = switcher.can_switch()
-        if not can_sw:
-            print(f"Account switching unavailable: {reason}")
-            kill.stop()
-            return EXIT_ERROR
-
-    # Desktop
-    if desktop_factory:
-        desktop = desktop_factory(project_dir=project_dir)
-    elif args.demo:
-        print(f"DEMO MODE: simulated desktop, real {provider} calls")
-        from core.demo.world import DemoWorld
-
-        desktop = DemoWorld(
-            project_dir=project_dir,
-            limit_scenario=args.demo_limit,
-            human_answer=args.demo_answer,
-        )
-    else:
-        from core.desktop_tools import DesktopTools
-
-        desktop = DesktopTools()
-
-    # Tools Schema & Model
-    from core.tool_schema import build_tools
-
-    tools = build_tools(switch_enabled=(switcher is not None))
-
-    if model_factory:
-        try:
-            model = model_factory(provider=provider, model=model_name, tools=tools, audit=audit)
-        except TypeError:
-            model = model_factory(tools=tools, audit=audit)
-    elif provider == "openai":
-        from core.openai_client import OpenAIModelClient
-
-        model = OpenAIModelClient(model_name, tools, audit=audit)
-    else:
-        from core.model_client import ModelClient
-
-        model = ModelClient(model_name, tools, audit=audit)
-
-    # Context & Registry
-    from core.tool_registry import build_registry
-    from core.types import RunContext
-
-    ctx = RunContext(
-        run_id=run_id,
-        run_dir=run_dir,
-        project_dir=project_dir,
-        mode=mode,
-        audit=audit,
-        kill=kill,
-        breaker=breaker,
-        notifier=notifier,
-        switcher=switcher,
-        state=state,
-        max_steps=args.max_steps,
-        log_text=args.log_text,
-        plan_only=getattr(args, "plan_only", False),
-    )
-    registry = build_registry(ctx, desktop)
-
-    # Run loop
-    from core.loop import run_loop
-
+    ctx = None
     try:
-        return run_loop(
+        # Loop Breaker
+        from core.loopbreaker import LoopBreaker
+
+        breaker = LoopBreaker()
+
+        # Notifier
+        from core.notify import Notifier
+
+        auto_answer = args.demo_answer if args.demo else None
+        notifier = Notifier(
+            topic=os.getenv("NTFY_TOPIC"),
+            auto_answer=auto_answer,
+            audit=audit,
+        )
+
+        # Account Switcher
+        switcher = None
+        if args.account_switch:
+            from core.accounts import AccountSwitcher, parse_profiles
+
+            profiles = parse_profiles(os.getenv("HUSH_CHROME_PROFILES"))
+            switcher = AccountSwitcher(profiles, audit=audit)
+            confirmed = switcher.confirm(
+                accepted_flag=args.i_accept_account_switch_terms
+            )
+            if not confirmed:
+                print("Account switching terms declined.")
+                return EXIT_ERROR
+            can_sw, reason = switcher.can_switch()
+            if not can_sw:
+                print(f"Account switching unavailable: {reason}")
+                return EXIT_ERROR
+
+        # Desktop
+        if desktop_factory:
+            desktop = desktop_factory(project_dir=project_dir)
+        elif args.demo:
+            print(f"DEMO MODE: simulated desktop, real {provider} calls")
+            from core.demo.world import DemoWorld
+
+            desktop = DemoWorld(
+                project_dir=project_dir,
+                limit_scenario=args.demo_limit,
+                human_answer=args.demo_answer,
+            )
+        else:
+            from core.desktop_tools import DesktopTools
+
+            desktop = DesktopTools()
+
+        # Tools Schema & Model
+        from core.tool_schema import build_tools
+
+        tools = build_tools(switch_enabled=(switcher is not None))
+
+        if model_factory:
+            try:
+                model = model_factory(provider=provider, model=model_name, tools=tools, audit=audit)
+            except TypeError:
+                model = model_factory(tools=tools, audit=audit)
+        elif provider == "openai":
+            from core.openai_client import OpenAIModelClient
+
+            try:
+                model = OpenAIModelClient(model_name, tools, audit=audit)
+            except ValueError as exc:
+                print(
+                    "Error: OPENAI_API_KEY environment variable is required "
+                    "(even in --demo mode, which simulates the desktop environment "
+                    "while querying the model). Please set OPENAI_API_KEY and retry."
+                )
+                return EXIT_ERROR
+        elif provider == "gemma":
+            from core.model_client import ModelClient
+
+            try:
+                model = ModelClient(model_name, tools, audit=audit)
+            except ValueError as exc:
+                print(
+                    "Error: GEMINI_API_KEY environment variable is required "
+                    "(even in --demo mode, which simulates the desktop environment "
+                    "while querying the model). Please set GEMINI_API_KEY and retry."
+                )
+                return EXIT_ERROR
+        else:
+            print(f"Error: Unknown provider '{provider}'. Supported providers: {', '.join(PROVIDERS)}")
+            return EXIT_ERROR
+
+        # Context & Registry
+        from core.tool_registry import build_registry
+        from core.types import RunContext
+
+        ctx = RunContext(
+            run_id=run_id,
+            run_dir=run_dir,
+            project_dir=project_dir,
+            mode=mode,
+            audit=audit,
+            kill=kill,
+            breaker=breaker,
+            notifier=notifier,
+            switcher=switcher,
+            state=state,
+            max_steps=args.max_steps,
+            log_text=args.log_text,
+            plan_only=getattr(args, "plan_only", False),
+        )
+        registry = build_registry(ctx, desktop)
+
+        # Run loop
+        from core.loop import run_loop
+
+        exit_code = run_loop(
             ctx,
             desktop,
             registry,
@@ -296,5 +368,11 @@ def main(
             first_message,
             start_step=state.step,
         )
+        return int(exit_code)
     finally:
         kill.stop()
+        if ctx is not None and getattr(ctx, "browser", None):
+            try:
+                ctx.browser.close()
+            except Exception:
+                pass

@@ -12,6 +12,13 @@ from typing import Any, Callable
 INITIAL_PREV_HASH: str = "0" * 64
 DEFAULT_REDACT_LIMIT: int = 200
 
+
+def compute_genesis_hash(session_seed: Optional[str] = None) -> str:
+    """Return deterministic genesis digest: session-seeded digest if provided, else '0' * 64 (I-013)."""
+    if not session_seed:
+        return INITIAL_PREV_HASH
+    return hashlib.sha256(session_seed.encode("utf-8")).hexdigest()
+
 SECRET_PATTERNS: list[str] = [
     r"AIza[0-9A-Za-z-_]{35}",
     r"sk-[a-zA-Z0-9]{20,}",
@@ -144,8 +151,9 @@ class AuditLog:
         mode: str,
         log_text: bool = False,
         clock: Callable[[], float] = time.time,
+        genesis_seed: Optional[str] = None,
     ) -> None:
-        """Initialize or resume an audit log chain."""
+        """Initialize or resume an audit log chain with deterministic genesis digest (I-013)."""
         self.run_dir = run_dir
         self.run_id = run_id
         self.mode = mode
@@ -153,7 +161,8 @@ class AuditLog:
         self.clock = clock
         self.start_time = clock()
         self.seq = 0
-        self.prev_hash = INITIAL_PREV_HASH
+        self.genesis_hash = compute_genesis_hash(genesis_seed)
+        self.prev_hash = self.genesis_hash
         self.path = os.path.join(run_dir, "audit.jsonl")
 
         os.makedirs(self.run_dir, exist_ok=True)
@@ -203,13 +212,17 @@ class AuditLog:
         return entry
 
 
-def verify_chain(path: str) -> tuple[bool, int, str | None]:
-    """Verify sequence ordering, valid JSON, and cryptographic hash chain."""
+def verify_chain(
+    path: str,
+    genesis_seed: Optional[str] = None,
+    initial_prev: Optional[str] = None,
+) -> tuple[bool, int, str | None]:
+    """Verify sequence ordering, valid JSON, and cryptographic hash chain (I-013)."""
     if not os.path.exists(path):
         return False, 0, f"File not found: {path}"
 
     expected_seq = 1
-    expected_prev = INITIAL_PREV_HASH
+    expected_prev = initial_prev or compute_genesis_hash(genesis_seed)
     count = 0
 
     with open(path, "r", encoding="utf-8") as f:

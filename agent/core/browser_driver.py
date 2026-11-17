@@ -51,11 +51,13 @@ class BrowserDriver:
         port: int = DEFAULT_PORT,
         ask_human: Optional[Callable[[str], str]] = None,
         audit: Optional[Any] = None,
+        kill: Optional[Any] = None,
     ) -> None:
         self.profile_dir = profile_dir
         self.port = port
         self.ask_human = ask_human
         self.audit = audit
+        self.kill = kill
         self._proc: Optional[subprocess.Popen[Any]] = None
         self._playwright: Optional[Any] = None
         self._browser: Optional[Any] = None
@@ -85,10 +87,14 @@ class BrowserDriver:
         self._proc = subprocess.Popen(cmd)
         time.sleep(1.5)
 
-        from playwright.sync_api import sync_playwright
-        self._playwright = sync_playwright().start()
-        self._browser = self._playwright.chromium.connect_over_cdp(f"http://127.0.0.1:{self.port}")
-        return self._browser
+        try:
+            from playwright.sync_api import sync_playwright
+            self._playwright = sync_playwright().start()
+            self._browser = self._playwright.chromium.connect_over_cdp(f"http://127.0.0.1:{self.port}")
+            return self._browser
+        except Exception:
+            self.close()
+            raise
 
     def close(self) -> None:
         """Close browser CDP connection and terminate dedicated process."""
@@ -210,12 +216,17 @@ class BrowserDriver:
         app: str,
         timeout_seconds: Optional[int] = None,
         stable_seconds: int = 8,
+        kill: Optional[Any] = None,
     ) -> bool:
-        """Wait until generation completes (stop button gone and text stable for N seconds)."""
+        """Wait until generation completes (stop button gone and text stable for N seconds).
+
+        Regularly polls kill switch / cancellation event to prevent blocking (A-011).
+        """
         app_key = app.lower()
         app_cfg = self.selectors.get(app_key, {})
         default_timeout = 2400 if "deep" in app_key else 600
         timeout = timeout_seconds or default_timeout
+        active_kill = kill if kill is not None else self.kill
 
         page = self.navigate_app(app)
         start_time = time.time()
@@ -223,6 +234,11 @@ class BrowserDriver:
         stable_count = 0
 
         while time.time() - start_time < timeout:
+            if active_kill is not None and getattr(active_kill, "is_set", lambda: False)():
+                if self.audit:
+                    self.audit.log("browser_wait_aborted_kill", app=app)
+                return False
+
             # 1. Check if stop control is active
             stop_visible = False
             for sel in app_cfg.get("stop_control", []):
@@ -232,6 +248,11 @@ class BrowserDriver:
                         break
                 except Exception:
                     pass
+
+            if active_kill is not None and getattr(active_kill, "is_set", lambda: False)():
+                if self.audit:
+                    self.audit.log("browser_wait_aborted_kill", app=app)
+                return False
 
             # 2. Extract current reply text
             current_text = ""
@@ -256,7 +277,15 @@ class BrowserDriver:
             else:
                 stable_count = 0
 
-            time.sleep(1.0)
+            # Responsive chunked sleep checking kill state
+            sleep_remaining = 1.0
+            while sleep_remaining > 0:
+                if active_kill is not None and getattr(active_kill, "is_set", lambda: False)():
+                    if self.audit:
+                        self.audit.log("browser_wait_aborted_kill", app=app)
+                    return False
+                time.sleep(min(0.2, sleep_remaining))
+                sleep_remaining -= 0.2
 
         # Timeout reached -> request operator attention
         if self.ask_human:

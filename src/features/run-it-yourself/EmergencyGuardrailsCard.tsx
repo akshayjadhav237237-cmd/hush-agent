@@ -22,7 +22,7 @@ export const EmergencyGuardrailsCard: React.FC = () => {
 
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium bg-surface border border-border text-text-muted self-start sm:self-auto">
           <ShieldAlert className="w-3.5 h-3.5 text-accent" strokeWidth={1.5} aria-hidden="true" />
-          <span>Active in Real Desktop Runs</span>
+          <span>Configured for Desktop Runs (Hardware Verification Pending)</span>
         </div>
       </div>
 

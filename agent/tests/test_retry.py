@@ -298,3 +298,42 @@ def test_400_invalid_request_error_is_not_retryable() -> None:
     assert calls == 1
     assert "tool_calls" in str(exc_info.value)
 
+
+def test_auth_and_forbidden_errors_are_non_retryable() -> None:
+    """Verify 401, 403, 404, invalid_api_key, and permission_denied are non-retryable (A-004)."""
+    class HttpError(Exception):
+        def __init__(self, msg: str, code: int) -> None:
+            super().__init__(msg)
+            self.status_code = code
+
+    for code in (401, 403, 404):
+        err = HttpError(f"HTTP {code} error", code)
+        assert is_retryable_error(err) is False
+
+    assert is_retryable_error(Exception("401 Unauthorized: invalid_api_key provided")) is False
+    assert is_retryable_error(Exception("403 Forbidden: access denied")) is False
+    assert is_retryable_error(Exception("permission_denied: not allowed")) is False
+    assert is_retryable_error(Exception("authentication error: token expired")) is False
+
+
+def test_retryable_substring_with_non_retryable_status_is_blocked() -> None:
+    """Verify error with retryable substring (e.g. timeout) but non-retryable status is blocked (D-008)."""
+    class Http400WithTimeout(Exception):
+        def __init__(self) -> None:
+            super().__init__("400 invalid_request: timeout exceeded during client validation")
+            self.status_code = 400
+
+    class Http401WithTimeout(Exception):
+        def __init__(self) -> None:
+            super().__init__("401 unauthorized: connection timeout during token verification")
+            self.status_code = 401
+
+    assert is_retryable_error(Http400WithTimeout()) is False
+    assert is_retryable_error(Http401WithTimeout()) is False
+    assert is_retryable_error(Exception("400 Bad Request: timeout parsing body")) is False
+    assert is_retryable_error(Exception("invalid_request_error: timeout parameter is invalid")) is False
+
+    # Conversely, a genuine retryable timeout without non-retryable guard returns True
+    assert is_retryable_error(Exception("Gateway timeout while waiting")) is True
+
+

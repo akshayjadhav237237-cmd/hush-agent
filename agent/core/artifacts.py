@@ -30,8 +30,10 @@ def save_artifact(run_dir: str, name: str, text: str) -> str:
     os.makedirs(artifacts_dir, exist_ok=True)
 
     path = os.path.join(artifacts_dir, f"{name}.txt")
-    with open(path, "w", encoding="utf-8") as f:
+    tmp_path = os.path.join(artifacts_dir, f"{name}.tmp")
+    with open(tmp_path, "w", encoding="utf-8") as f:
         f.write(text)
+    os.replace(tmp_path, path)
 
     sha = hashlib.sha256(text.encode("utf-8")).hexdigest()[:12]
     return f"Saved {name} ({len(text)} chars, sha {sha})"

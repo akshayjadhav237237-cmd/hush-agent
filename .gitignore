@@ -1,13 +1,32 @@
 node_modules
 dist
-.env*
 *.log
 workspace/
 __pycache__/
 .DS_Store
-agent/runs/
-agent/workspace/
 .pytest_cache/
 qa/**/*.png
 
 .vercel
+
+# Environment & Secrets
+.env
+.env.*
+.env.local
+
+# Virtual environments
+.venv/
+venv/
+
+# Agent runs and workspaces
+agent/runs/
+agent/workspace/
+
+# Verification & Audit screenshots
+verification/shots/
+docs/audit/shots/
+
+# IDE & OS metadata
+.vscode/
+.idea/
+Thumbs.db

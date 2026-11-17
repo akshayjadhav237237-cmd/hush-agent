@@ -196,3 +196,27 @@ def test_build_resume_message_stage_progression_and_state() -> None:
         idea, ["build_prompt_1"], state={"step": 4}
     )
     assert "Current build round: 4" in msg_dict
+
+
+def test_save_artifact_uses_atomic_replace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verify save_artifact writes to a .tmp file and uses os.replace for atomic commit (A-009)."""
+    replaced: list[tuple[str, str]] = []
+    real_replace = os.replace
+
+    def tracked_replace(src: str, dst: str) -> None:
+        replaced.append((src, dst))
+        real_replace(src, dst)
+
+    monkeypatch.setattr(os, "replace", tracked_replace)
+
+    run_dir = str(tmp_path)
+    res = save_artifact(run_dir, "research_prompt", "content to save")
+    assert res.startswith("Saved research_prompt")
+
+    assert len(replaced) == 1
+    src, dst = replaced[0]
+    assert src.endswith("research_prompt.tmp")
+    assert dst.endswith("research_prompt.txt")
+    assert os.path.exists(dst)
+    assert not os.path.exists(src)
+

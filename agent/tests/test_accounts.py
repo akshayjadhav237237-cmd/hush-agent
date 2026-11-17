@@ -286,3 +286,19 @@ def test_switch_fails_when_chrome_not_found(monkeypatch: pytest.MonkeyPatch) -> 
 
     res = switcher.switch("claude")
     assert res == "Chrome executable not found. Configure CHROME_PATH."
+
+
+def test_switch_clears_clipboard_on_profile_switch(fake_chrome: str) -> None:
+    """Verify clipboard is cleared upon switching accounts to prevent credential carryover (I-010)."""
+    popen = FakePopen()
+    cleared = []
+    switcher = AccountSwitcher(
+        profiles=["P1", "P2"],
+        chrome_path=fake_chrome,
+        popen=popen,
+        clear_clipboard=lambda: cleared.append(True),
+    )
+    switcher.confirmed = True
+    switcher.switch("claude")
+    assert cleared == [True]
+
