@@ -2,7 +2,7 @@
   "desktop-clipboard-transfer": {
     "feature_id": "desktop-clipboard-transfer",
     "status": "PASS",
-    "timestamp": "2026-11-17T13:27:05.486126+05:30",
+    "timestamp": "2026-11-17T23:56:53.033082+05:30",
     "detail": "5,000-character text payload verified intact across clipboard. Length: 5000",
     "evidence_hash": "sha256:1dd4193750bb177bc5cd98a1afa7af83b7bed3a873181de908e1913a9b88df64",
     "screenshot_hash": null
@@ -10,25 +10,25 @@
   "safety-graph-stall": {
     "feature_id": "safety-graph-stall",
     "status": "PASS",
-    "timestamp": "2026-11-17T13:27:13.333823+05:30",
+    "timestamp": "2026-11-17T23:57:03.915857+05:30",
     "detail": "Graphify real extraction verified: builds AST, updates on new files, and trips alert on 2 consecutive unchanged rounds.",
-    "evidence_hash": "sha256:188ab595d9866a8a47d3721f17bd7ce90c7a019558ae2c32339dda9652247838",
+    "evidence_hash": "sha256:8e7969b7ce63647ecee1befed947d6ab1411a7e107f1ef443a70af22b23e6881",
     "screenshot_hash": null
   },
   "safety-checkpoint-resume": {
     "feature_id": "safety-checkpoint-resume",
     "status": "PASS",
-    "timestamp": "2026-11-17T13:27:30.550002+05:30",
+    "timestamp": "2026-11-17T23:59:16.381085+05:30",
     "detail": "Atomic checkpoint resumption verified: recovered from step 3, appended to audit trail, unbroken SHA-256 chain (7 events).",
-    "evidence_hash": "sha256:49bafaeef24e049f7cc637c154e8b1a5662b52364f7ead9b9208cef66e1df542",
+    "evidence_hash": "sha256:95ba57350683b3cb510c3cf2d14a4ef55d45655d6df5ca9ba552754e805a5689",
     "screenshot_hash": null
   },
   "safety-screenshot-loop-breaker": {
     "feature_id": "safety-screenshot-loop-breaker",
     "status": "PASS",
-    "timestamp": "2026-11-17T13:27:16.621994+05:30",
+    "timestamp": "2026-11-17T23:59:16.497517+05:30",
     "detail": "Loop breaker perceptual difference hashing tuned (max_distance=2, same_threshold=3). Detects static screen loops and suppresses false alerts on actual code changes.",
-    "evidence_hash": "sha256:a8c945a20eba87ea16b1ba3770dd7334b9a012a9ae63af66138c6386c2d72ff0",
+    "evidence_hash": "sha256:350f084387f6bf3641b80b727fafbb61a1ab57047bbceb0658966a2e99eaabe9",
     "screenshot_hash": null
   },
   "safety-global-kill-hotkey": {
@@ -42,7 +42,7 @@
   "safety-mouse-corner-abort": {
     "feature_id": "safety-mouse-corner-abort",
     "status": "PASS",
-    "timestamp": "2026-11-17T13:27:19.650745+05:30",
+    "timestamp": "2026-11-18T00:03:21.416232+05:30",
     "detail": "Hardware mouse-corner failsafe verified at (0, 0). Intercepts FailSafeException and routes to exit code 2.",
     "evidence_hash": "sha256:5fc1417e46e48c2e5fa0545eb623565f128682c6f8d2ff38c21c047608d8b65f",
     "screenshot_hash": null
@@ -58,9 +58,9 @@
   "desktop-notepad-paste-verify": {
     "feature_id": "desktop-notepad-paste-verify",
     "status": "PASS",
-    "timestamp": "2026-11-17T13:27:28.827898+05:30",
+    "timestamp": "2026-11-18T00:05:04.777967+05:30",
     "detail": "Notepad opened, text pasted and verified via buffer on real Windows desktop.",
-    "evidence_hash": "sha256:94139f8ebcdf1d1c3fea16ffd843954505980ea4dfcfeeaa16c5c153162d874f",
+    "evidence_hash": "sha256:2947f8789165b1aae4f3065152a95d5991f23539666548422e44e73d44e07909",
     "screenshot_hash": null
   }
 }
