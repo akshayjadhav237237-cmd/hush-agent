@@ -24,6 +24,7 @@ agent/workspace/
 
 # Verification & Audit screenshots
 verification/shots/
+verification/doctor_*.json
 docs/audit/shots/
 
 # IDE & OS metadata
