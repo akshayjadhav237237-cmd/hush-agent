@@ -89,7 +89,7 @@ export const SafetySummary: React.FC<SafetySummaryProps> = ({
         {/* Metric 5: Unit Tests */}
         <div className="flex-1 min-w-[120px] text-center py-2 px-3 col-span-2 sm:col-span-1">
           <div className="text-2xl sm:text-3xl font-mono font-bold text-accent">
-            {TEST_COUNT > 0 ? TEST_COUNT : TEST_COUNT}
+            {TEST_COUNT}
           </div>
           <div className="text-xs font-mono uppercase tracking-wider text-text-muted mt-1 font-semibold">
             UNIT TESTS

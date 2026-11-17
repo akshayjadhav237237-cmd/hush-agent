@@ -120,7 +120,7 @@ export const Terminal: React.FC<TerminalProps> = ({ step, stepIndex, totalSteps 
         aria-live="polite"
         aria-atomic="false"
         tabIndex={0}
-        className="p-3 sm:p-4 font-mono text-xs sm:text-[13px] leading-relaxed overflow-x-auto overflow-y-auto max-h-[380px] min-h-[260px] text-text space-y-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
+        className="p-3 sm:p-4 font-mono text-xs sm:text-[13px] leading-relaxed overflow-x-auto overflow-y-auto max-h-[380px] min-h-[260px] text-text space-y-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       >
         {step.terminal.slice(0, visibleCount).map((line, idx) => {
           const isCommand = line.startsWith('$');

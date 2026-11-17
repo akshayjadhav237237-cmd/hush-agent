@@ -37,7 +37,7 @@ export const Faq: React.FC = () => {
                 className="rounded-[14px] bg-surface border border-border overflow-hidden transition-colors"
               >
                 <Accordion.Header className="flex m-0">
-                  <Accordion.Trigger className="group flex flex-1 items-center justify-between gap-4 p-5 sm:p-6 text-left font-medium text-sm sm:text-base text-text transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent cursor-pointer">
+                  <Accordion.Trigger className="group flex flex-1 items-center justify-between gap-4 p-5 sm:p-6 text-left font-medium text-sm sm:text-base text-text transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent cursor-pointer">
                     <span className="flex items-center gap-3.5 min-w-0">
                       <span className="flex items-center justify-center w-7 h-7 rounded-[8px] bg-surface-2 text-xs font-mono text-text-muted border border-border shrink-0">
                         {(index + 1).toString().padStart(2, '0')}

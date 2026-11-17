@@ -1,71 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { VisualizerStatus } from './types';
 import { Network, Code2, ShieldAlert } from 'lucide-react';
 
 export const GraphVisualizer: React.FC = () => {
-  const [status, setStatus] = useState<VisualizerStatus>('checking');
-  const [blockedUrls, setBlockedUrls] = useState<readonly string[]>([]);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function checkGraphFile() {
-      try {
-        const response = await fetch('./graph/graph.html', { method: 'GET' });
-        if (!response.ok) {
-          if (isMounted) setStatus('missing');
-          return;
-        }
-
-        const html = await response.text();
-
-        // Check if the server returned an SPA index.html fallback
-        const isSpaFallback =
-          html.includes('id="root"') ||
-          html.includes('src="/src/main.tsx"') ||
-          html.includes('<!doctype html>') && !html.includes('graph');
-
-        if (isSpaFallback) {
-          if (isMounted) setStatus('missing');
-          return;
-        }
-
-        // Grep for external URLs in script, link, and img tags
-        const externalTagRegex =
-          /<(script|link|img)[^>]*(?:src|href)=["'](https?:\/\/[^"']+)["'][^>]*>/gi;
-        const matches: string[] = [];
-        let match: RegExpExecArray | null;
-
-        while ((match = externalTagRegex.exec(html)) !== null) {
-          if (match[2]) {
-            matches.push(match[2]);
-          }
-        }
-
-        if (matches.length > 0) {
-          if (isMounted) {
-            setBlockedUrls(matches);
-            setStatus('external_blocked');
-          }
-          return;
-        }
-
-        if (isMounted) {
-          setStatus('available');
-        }
-      } catch {
-        if (isMounted) {
-          setStatus('missing');
-        }
-      }
-    }
-
-    checkGraphFile();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  // Graph artifact is generated locally via `graphify export html`
+  // Defaults to placeholder status to prevent broken 404 network requests in static previews
+  const [status] = useState<VisualizerStatus>('missing');
+  const [blockedUrls] = useState<readonly string[]>([]);
 
   if (status === 'available') {
     return (

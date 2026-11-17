@@ -35,7 +35,7 @@ export const GemmaFacts: React.FC = () => {
           >
             <Tabs.Trigger
               value="specs"
-              className="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[10px] text-xs sm:text-sm font-medium transition-colors cursor-pointer text-text-muted hover:text-text data-[state=active]:bg-surface-2 data-[state=active]:text-text data-[state=active]:border data-[state=active]:border-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
+              className="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[10px] text-xs sm:text-sm font-medium transition-colors cursor-pointer text-text-muted hover:text-text data-[state=active]:bg-surface-2 data-[state=active]:text-text data-[state=active]:border data-[state=active]:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <Cpu className="w-4 h-4 shrink-0" strokeWidth={1.5} aria-hidden="true" />
               <span>Model Family</span>
@@ -43,7 +43,7 @@ export const GemmaFacts: React.FC = () => {
 
             <Tabs.Trigger
               value="usage"
-              className="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[10px] text-xs sm:text-sm font-medium transition-colors cursor-pointer text-text-muted hover:text-text data-[state=active]:bg-surface-2 data-[state=active]:text-text data-[state=active]:border data-[state=active]:border-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
+              className="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[10px] text-xs sm:text-sm font-medium transition-colors cursor-pointer text-text-muted hover:text-text data-[state=active]:bg-surface-2 data-[state=active]:text-text data-[state=active]:border data-[state=active]:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <Workflow className="w-4 h-4 shrink-0" strokeWidth={1.5} aria-hidden="true" />
               <span>Where We Use Gemma</span>
@@ -51,7 +51,7 @@ export const GemmaFacts: React.FC = () => {
 
             <Tabs.Trigger
               value="limits"
-              className="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[10px] text-xs sm:text-sm font-medium transition-colors cursor-pointer text-text-muted hover:text-text data-[state=active]:bg-surface-2 data-[state=active]:text-text data-[state=active]:border data-[state=active]:border-border focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
+              className="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[10px] text-xs sm:text-sm font-medium transition-colors cursor-pointer text-text-muted hover:text-text data-[state=active]:bg-surface-2 data-[state=active]:text-text data-[state=active]:border data-[state=active]:border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <Scale className="w-4 h-4 shrink-0" strokeWidth={1.5} aria-hidden="true" />
               <span>Capabilities and Limits</span>
@@ -60,21 +60,21 @@ export const GemmaFacts: React.FC = () => {
 
           <Tabs.Content
             value="specs"
-            className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-[14px]"
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-[14px]"
           >
             <GemmaSpecsTab />
           </Tabs.Content>
 
           <Tabs.Content
             value="usage"
-            className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-[14px]"
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-[14px]"
           >
             <GemmaUsageTab />
           </Tabs.Content>
 
           <Tabs.Content
             value="limits"
-            className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-[14px]"
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-[14px]"
           >
             <GemmaLimitsTab />
           </Tabs.Content>

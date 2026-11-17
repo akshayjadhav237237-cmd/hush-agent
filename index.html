@@ -10,6 +10,18 @@
       content="Hush is an autonomous desktop orchestrator driven by Gemma 4. It builds software quietly across Claude, Gemini, and Antigravity, speaking only when human judgment is strictly necessary."
     />
     <link rel="canonical" href="https://akshayjadhav237237-cmd.github.io/hush-agent/" />
+    <script>
+      (function () {
+        try {
+          if (window.location.hostname && !window.location.hostname.includes('github.io')) {
+            var c = document.querySelector('link[rel="canonical"]');
+            if (c) c.setAttribute('href', window.location.origin + window.location.pathname);
+            var og = document.querySelector('meta[property="og:url"]');
+            if (og) og.setAttribute('content', window.location.origin + window.location.pathname);
+          }
+        } catch (_) {}
+      })();
+    </script>
 
     <!-- Inline SVG Favicon -->
     <link
@@ -38,6 +50,12 @@
     <meta name="twitter:image" content="https://akshayjadhav237237-cmd.github.io/hush-agent/og.png" />
   </head>
   <body class="bg-black text-[#F5F0E8] antialiased selection:bg-[#2EF27A]/20 selection:text-[#EFFFE6]">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#141414] focus:text-[#2EF27A] focus:border focus:border-[#2EF27A] focus:rounded-md focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#2EF27A]"
+    >
+      Skip to content
+    </a>
     <div id="root"></div>
     <script type="module" src="/src/v2/main.tsx"></script>
   </body>
