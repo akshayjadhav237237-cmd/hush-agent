@@ -42,9 +42,9 @@ def test_real_desktop_kill_hotkey() -> None:
                 break
             time.sleep(0.1)
 
-    # If in automated CI/test runner, trigger via hardware handler
-    if not switch.is_set():
-        switch.trigger()
+    if not switch.is_set() and not sys.stdin.isatty():
+        switch.stop()
+        pytest.skip("Non-interactive terminal: physical keyboard press of Ctrl+Alt+K required for real hardware test.")
 
     triggered = switch.is_set()
     switch.stop()

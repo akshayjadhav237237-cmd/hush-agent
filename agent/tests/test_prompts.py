@@ -133,3 +133,19 @@ def test_starting_instructions_structure() -> None:
 
     expected_suffix = f"User idea: {idea}\nStart now. Take a screenshot first."
     assert msg.endswith(expected_suffix)
+
+
+def test_mandatory_escalation_rules_and_safety_guardrails() -> None:
+    """Verify prompt mandates escalation for login, credentials, and destructive actions (I-007)."""
+    from core.prompts import SYSTEM_PLAYBOOK, requires_human_escalation
+
+    assert "MANDATORY ESCALATION" in SYSTEM_PLAYBOOK
+    assert "Login, authentication, CAPTCHA, MFA, password, or credentials" in SYSTEM_PLAYBOOK
+    assert "destructive action" in SYSTEM_PLAYBOOK
+
+    assert requires_human_escalation("Please enter your password to continue") is True
+    assert requires_human_escalation("Solve this captcha image") is True
+    assert requires_human_escalation("Claude reply: NEEDS_HUMAN: approval needed") is True
+    assert requires_human_escalation("run command: rm -rf /") is True
+    assert requires_human_escalation("Normal status message: build complete") is False
+

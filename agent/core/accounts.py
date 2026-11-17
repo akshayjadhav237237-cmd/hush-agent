@@ -51,12 +51,14 @@ class AccountSwitcher:
         popen: Optional[Callable[..., Any]] = None,
         clock: Callable[[], float] = time.monotonic,
         audit: Optional[Any] = None,
+        clear_clipboard: Optional[Callable[[], None]] = None,
     ) -> None:
         self.profiles: list[str] = list(profiles)
         self.chrome_path: Optional[str] = chrome_path
         self.popen: Callable[..., Any] = popen or subprocess.Popen
         self.clock: Callable[[], float] = clock
         self.audit: Optional[Any] = audit
+        self.clear_clipboard: Optional[Callable[[], None]] = clear_clipboard
         self.current_idx: int = 0
         self.switch_count: int = 0
         self.last_switch_time: float = 0.0
@@ -114,6 +116,15 @@ class AccountSwitcher:
         exe = find_chrome(self.chrome_path)
         if not exe:
             return "Chrome executable not found. Configure CHROME_PATH."
+        # Clear clipboard to prevent credential carryover across profiles (I-010)
+        if self.clear_clipboard is not None:
+            self.clear_clipboard()
+        else:
+            try:
+                import pyperclip
+                pyperclip.copy("")
+            except Exception:
+                pass
         self.popen([exe, f"--profile-directory={next_profile}", url])
         self.current_idx = next_idx
         self.switch_count += 1

@@ -4,18 +4,18 @@
 **Date**: October 26, 2026  
 **Target Repository**: `hush-agent` (Windows Desktop Autonomous Agent Orchestrator)  
 **Target Branch**: `real-desktop`  
-**Overall Quality Verdict**: **PASS** (Zero critical defects; all safety and architecture claims verified in code and on real desktop hardware)
+**Overall Quality Verdict**: **PASS** (Zero critical defects; all safety and architecture claims verified in code and unit tests; 0 of 8 hardware checks have physical verification, TOTAL_VERIFIED_COUNT = 0, relabeled to Unit-tested / Injected (Physical hardware verification pending))
 
 ---
 
 ## 📋 Executive Summary
 
-An independent end-to-end quality assurance and security audit was conducted on the Hush autonomous desktop agent orchestrator codebase. The audit covered unit test validation, physical desktop automation smoke tests, a claim-versus-code architectural audit, an exhaustive secret scan across the tree and full git history, and network security inspection of Chrome debugging endpoints.
+An independent end-to-end quality assurance and security audit was conducted on the Hush autonomous desktop agent orchestrator codebase. The audit covered unit test validation, synthetic desktop automation injection smoke tests, a claim-versus-code architectural audit, an exhaustive secret scan across the tree and full git history, and network security inspection of Chrome debugging endpoints.
 
 | Audit Pillar | Scope | Results | Status |
 |:---|:---|:---:|:---:|
 | **Unit Test Suite** | Full suite (`agent/tests/`) | **285 passed**, 0 failed | **PASS** |
-| **Real Desktop Smoke Suite** | Hardware suite (`agent/tests_real/`) | **8 passed**, 0 failed | **PASS** |
+| **Desktop Verification Suite** | Synthetic injection suite (`agent/tests_real/`) | **8 passed (injected/unit)**, 0 failed; **0 physical** (`TOTAL_VERIFIED_COUNT = 0`) | **PASS (Hardware Pending)** |
 | **Claim-versus-Code Audit** | `README.md`, `docs/`, `verification/` vs code | 16/16 claims verified | **PASS** |
 | **Secret Scan (Tree & Git)** | Regex scan for API keys, tokens, `.env` | 0 leaked secrets | **PASS** |
 | **Chrome Debugging Port** | Port binding & process lifecycle | Bound strictly to `127.0.0.1`, terminates on exit | **PASS** |
@@ -71,9 +71,9 @@ python -m pytest tests/ -q
 
 ---
 
-## 2. Real Desktop Smoke Test Suite Execution
+## 2. Desktop Automation Injection & Smoke Test Suite Execution
 
-The physical desktop automation smoke tests were executed on the real host machine:
+The desktop automation smoke tests in `agent/tests_real/` were executed in the host environment via synthetic OS event injection and isolated unit test harnesses. 0 of 8 hardware checks have physical verification (`TOTAL_VERIFIED_COUNT = 0`). Physical hardware verification remains pending across all items:
 
 ```powershell
 agent\.venv\Scripts\python.exe -m pytest tests_real/ -s
@@ -81,7 +81,8 @@ agent\.venv\Scripts\python.exe -m pytest tests_real/ -s
 
 ### Exact Test Counts & Results
 - **Total Tests Collected**: `8`
-- **Passed**: `8`
+- **Passed**: `8 (Injected / Unit-tested)`
+- **Physical Hardware Verified**: `0 (TOTAL_VERIFIED_COUNT = 0)`
 - **Failed**: `0`
 - **Errors**: `0`
 - **Skipped**: `0`
@@ -89,55 +90,55 @@ agent\.venv\Scripts\python.exe -m pytest tests_real/ -s
 - **Total Wall Time**: `71.12 seconds`
 
 ### Detailed Test Log & Evidence Hashes
-Each test executed physical automation on the Windows desktop, validated behavior, and recorded a tamper-evident result in [`verification/real_desktop_results.json`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/verification/real_desktop_results.json):
+Each test was executed via synthetic injection or unit harness, validated behavior, and recorded a tamper-evident result in [`verification/real_desktop_results.json`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/verification/real_desktop_results.json):
 
 1. **`test_clipboard.py`** (`desktop-clipboard-transfer`):
    - **Action**: Generates and transfers a 5,000-character payload across the Windows clipboard using `DesktopTools.clipboard_write` and `DesktopTools.clipboard_full`.
-   - **Verification**: Exact length and SHA-256 text equality confirmed.
+   - **Verification**: Exact length and SHA-256 text equality confirmed intact across software clipboard API (`pyperclip`); no physical keystrokes or mouse motion.
    - **Evidence Hash**: `sha256:1dd4193750bb177bc5cd98a1afa7af83b7bed3a873181de908e1913a9b88df64`
-   - **Result**: `PASS`
+   - **Result**: `Unit-tested / Injected (Physical hardware verification pending)`
 
 2. **`test_graphify.py`** (`safety-graph-stall`):
-   - **Action**: Initializes a real scratch project, executes `GraphTools.graph_build` to generate local AST knowledge graph and `GRAPH_REPORT.md`, updates graph after code modifications, and simulates 2 consecutive unchanged rounds.
-   - **Verification**: Confirmed `graph_update` detects identical SHA-256 digests on consecutive cycles and dispatches `ask_human` alert.
+   - **Action**: Initializes a real scratch project, executes `GraphTools.graph_build` to generate local AST knowledge graph and `GRAPH_REPORT.md` in isolated temp directory, updates graph after code modifications, and simulates 2 consecutive unchanged rounds.
+   - **Verification**: Confirmed `graph_update` detects identical SHA-256 digests on consecutive cycles and dispatches `ask_human` alert without live IDE orchestration.
    - **Evidence Hash**: `sha256:9e8f4b5f74062718625b5b7d726dc72b522fdb77d1165f393b941b43c3b15089`
-   - **Result**: `PASS`
+   - **Result**: `Unit-tested / Injected (Physical hardware verification pending)`
 
 3. **`test_kill_hotkey.py`** (`safety-global-kill-hotkey`):
    - **Action**: Spins up background Win32 `GetAsyncKeyState` polling thread (20 Hz) and injects synthetic `Ctrl+Alt+K` key sequence via `ctypes.windll.user32.keybd_event`.
-   - **Verification**: Confirmed `kill.is_set()` evaluates `True` and orchestrator exits with code `3` (`EXIT_KILL`).
+   - **Verification**: Confirmed `kill.is_set()` evaluates `True` and orchestrator exits with code `3` (`EXIT_KILL`); physical keyboard hotkey verification pending.
    - **Evidence Hash**: `sha256:8f519373392166a954153eff7db3027e24d2fe05e00696c6b16922bf3310a3e7`
-   - **Result**: `PASS`
+   - **Result**: `Unit-tested / Injected (Physical hardware verification pending)`
 
 4. **`test_loopbreaker.py`** (`safety-screenshot-loop-breaker`):
-   - **Action**: Captures live Windows desktop frames and processes difference hashes (`dhash`) using perceptual distance metrics.
-   - **Verification**: Confirms identical frame sequences trip after 3 actions, while genuine UI changes suppress false alarms.
+   - **Action**: Captures synthetic Pillow canvas frames and processes difference hashes (`dhash`) using perceptual distance metrics.
+   - **Verification**: Confirms identical frame sequences trip after 3 actions (`max_distance = 4`), while distinct canvases suppress false alarms; not verified against physical screen frames.
    - **Evidence Hash**: `sha256:a8c945a20eba87ea16b1ba3770dd7334b9a012a9ae63af66138c6386c2d72ff0`
-   - **Result**: `PASS`
+   - **Result**: `Unit-tested / Injected (Physical hardware verification pending)`
 
 5. **`test_mouse_corner.py`** (`safety-mouse-corner-abort`):
-   - **Action**: Moves physical pointer to `(0, 0)` with `pyautogui.FAILSAFE = True`.
-   - **Verification**: Confirmed `pyautogui.FailSafeException` is caught by `is_failsafe()` and cleanly routes to exit code `2` (`EXIT_FAILSAFE`).
+   - **Action**: Moves pointer to `(0, 0)` via programmatic `moveTo(0, 0)` with `pyautogui.FAILSAFE = True`.
+   - **Verification**: Confirmed `pyautogui.FailSafeException` is caught by `is_failsafe()` and cleanly routes to exit code `2` (`EXIT_FAILSAFE`); physical human mouse motion verification pending.
    - **Evidence Hash**: `sha256:5fc1417e46e48c2e5fa0545eb623565f128682c6f8d2ff38c21c047608d8b65f`
-   - **Result**: `PASS`
+   - **Result**: `Unit-tested / Injected (Physical hardware verification pending)`
 
 6. **`test_notepad.py`** (`desktop-notepad-paste-verify`):
-   - **Action**: Spawns Windows 11 Notepad, activates window via title substring, pastes verification string, reads active window buffer, and terminates process.
-   - **Verification**: Verified end-to-end clipboard paste into a real Windows GUI window.
+   - **Action**: Spawns Windows 11 Notepad, activates window via title substring, pastes verification string via synthetic PyAutoGUI OS events, reads active window buffer, and terminates process.
+   - **Verification**: Verified buffer content intact via clipboard round-trip; physical user-driven interaction verification pending.
    - **Evidence Hash**: `sha256:e348835d40797738d029ab4a21fa1abe69cf88a82dc7a04ebf21d134ad639c6b`
-   - **Result**: `PASS`
+   - **Result**: `Unit-tested / Injected (Physical hardware verification pending)`
 
 7. **`test_ntfy.py`** (`safety-human-notify-gate`):
-   - **Action**: Dispatches real notification payload to `ntfy.sh` broker endpoint (`hush-smoke-bcace92ab969`).
-   - **Verification**: Confirmed HTTP `200 OK` response received from external broker.
+   - **Action**: Dispatches notification payload via automated HTTP POST probe to `ntfy.sh` broker endpoint (`hush-smoke-bcace92ab969`).
+   - **Verification**: Confirmed HTTP `200 OK` response received from external broker; verified without human interaction.
    - **Evidence Hash**: `sha256:8ecac3e61eb4b0433af719c3179e353a459768376bbdf83e5840ac8439376eec`
-   - **Result**: `PASS`
+   - **Result**: `Unit-tested / Injected (Physical hardware verification pending)`
 
 8. **`test_resume.py`** (`safety-checkpoint-resume`):
-   - **Action**: Creates mock run with 3 completed steps, writes atomic `checkpoint.json`, resumes via `--resume latest`, executes next step, and verifies audit chain.
+   - **Action**: Creates mock run with 3 completed steps, writes atomic `checkpoint.json`, resumes via `--resume latest` using `DummyDesktop` & `ResumedModel` harness, executes next step, and verifies audit chain.
    - **Verification**: Verified unbroken SHA-256 chain across 7 recorded audit events.
    - **Evidence Hash**: `sha256:f067ada6a7b163d1996bad4184276796fe37cc1f65bdf84c5040826e8ba80121`
-   - **Result**: `PASS`
+   - **Result**: `Unit-tested / Injected (Physical hardware verification pending)`
 
 > [!NOTE]
 > **Environment Dependency Notice**: Running `tests_real` requires GUI libraries (`pyautogui`, `pyperclip`, `psutil`, `pywinauto`) present in `agent/.venv`. When executed with standard system Python lacking GUI drivers, `tests_real` raises `ModuleNotFoundError` during test collection. All real desktop runs must use `agent\.venv\Scripts\python.exe`.
@@ -155,22 +156,28 @@ Every technical claim in [`README.md`](file:///c:/Users/aksha/Documents/antigrav
 | 3 | **Operator Chaining & Redirection Block** | `README.md:166` | [`core/command_safety.py:19-50`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/command_safety.py#L19-L50) | Rejects `&&`, `\|\|`, `\|`, `>`, `<`, `;`, `&`, `$(`, etc. | **VERIFIED** |
 | 4 | **Filesystem Confinement** | `README.md:167` | [`core/command_safety.py:134-190`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/command_safety.py#L134-L190) | `os.path.commonpath([resolved, project_real]) == project_real` | **VERIFIED** |
 | 5 | **Hard Step Ceiling (80 Steps)** | `README.md:168` | [`core/constants.py:8`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/constants.py#L8), [`core/loop.py:126`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/loop.py#L126) | `step_count > MAX_STEPS -> return EXIT_MAX_STEPS (4)` | **VERIFIED** |
-| 6 | **Global Kill Hotkey (`Ctrl+Alt+K` @ 20 Hz)** | `README.md:169` | [`core/killswitch.py:49-114`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/killswitch.py#L49-L114) | Tested on real desktop in `tests_real/test_kill_hotkey.py` | **VERIFIED** |
-| 7 | **Mouse-Corner Hardware Failsafe** | `README.md:170` | [`core/desktop_tools.py:27`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/desktop_tools.py#L27), [`core/loop.py:271`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/loop.py#L271) | `pyautogui.FAILSAFE = True`; verified in `test_mouse_corner.py` | **VERIFIED** |
-| 8 | **Perceptual Loop Breaker (`dhash`)** | `README.md:171` | [`core/loopbreaker.py:34-110`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/loopbreaker.py#L34-L110) | Verified in `tests_real/test_loopbreaker.py` | **VERIFIED** |
+| 6 | **Global Kill Hotkey (`Ctrl+Alt+K` @ 20 Hz)** | `README.md:169` | [`core/killswitch.py:49-114`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/killswitch.py#L49-L114) | Tested via synthetic injection in `tests_real/test_kill_hotkey.py`; physical verification pending | **PASS (Hardware Pending)** |
+| 7 | **Mouse-Corner Hardware Failsafe** | `README.md:170` | [`core/desktop_tools.py:27`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/desktop_tools.py#L27), [`core/loop.py:271`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/loop.py#L271) | `pyautogui.FAILSAFE = True`; verified via programmatic moveTo(0, 0) injection in `test_mouse_corner.py`; physical verification pending | **PASS (Hardware Pending)** |
+| 8 | **Perceptual Loop Breaker (`dhash`)** | `README.md:171` | [`core/loopbreaker.py:34-110`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/loopbreaker.py#L34-L110) | Tested on synthetic Pillow canvas in `tests_real/test_loopbreaker.py`; physical verification pending | **PASS (Hardware Pending)** |
 | 9 | **Cryptographic Audit Hash Chain** | `README.md:172` | [`core/audit.py:44-90`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/audit.py#L44-L90), [`L206-248`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/audit.py#L206-L248) | `verify_chain()` confirms unbroken SHA-256 chain | **VERIFIED** |
 | 10 | **Automated Secret Redaction** | `README.md:173` | [`core/audit.py:20-35`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/audit.py#L20-L35), [`core/notify.py:16-24`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/notify.py#L16-L24) | Scans for `AIza`, `sk-`, `ghp_`, `github_pat_`, `Bearer` | **VERIFIED** |
-| 11 | **Atomic Checkpoints & Resumption** | `README.md:174` | [`core/checkpoint.py:42-95`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/checkpoint.py#L42-L95) | Atomic write via `.tmp` rename; tested in `test_resume.py` | **VERIFIED** |
+| 11 | **Atomic Checkpoints & Resumption** | `README.md:174` | [`core/checkpoint.py:42-95`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/checkpoint.py#L42-L95) | Atomic write via `.tmp` rename; tested via DummyDesktop harness in `test_resume.py`; physical verification pending | **PASS (Hardware Pending)** |
 | 12 | **Deterministic Simulated Demo World** | `README.md:175` | [`core/demo/world.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/demo/world.py), [`core/demo/screens.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/demo/screens.py) | Mock desktop with synthetic 1280x720 screens | **VERIFIED** |
-| 13 | **Graph Stall Detection (Graphify AST)** | `README.md:176` | [`core/graph_tools.py:73-90`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/graph_tools.py#L73-L90) | Verified on real desktop in `tests_real/test_graphify.py` | **VERIFIED** |
+| 13 | **Graph Stall Detection (Graphify AST)** | `README.md:176` | [`core/graph_tools.py:73-90`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/graph_tools.py#L73-L90) | Tested in isolated temp directory in `tests_real/test_graphify.py`; live IDE verification pending | **PASS (Hardware Pending)** |
 | 14 | **Service Limit Cooldown & Notification** | `README.md:177` | [`core/limits.py:27-58`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/limits.py#L27-L58), [`core/notify.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/notify.py) | Tested in `test_limits.py` and `test_ntfy.py` | **VERIFIED** |
 | 15 | **Multi-Profile Chrome Account Switch** | `README.md:178` | [`core/accounts.py:25-95`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/accounts.py#L25-L95) | Max 2 switches, 120s cooldown, explicit consent | **VERIFIED** |
-| 16 | **22 + 23 Tool Registry Schema** | `README.md:285` | [`core/tool_schema.py:6-39`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/tool_schema.py#L6-L39), [`core/tool_registry.py:18-123`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/tool_registry.py#L18-L123) | 22 base tools, 23 with `switch_account` | **VERIFIED** |
+| 16 | **22 Base / 23 Switching Tool Registry Schema** | `README.md:285` | [`core/tool_schema.py:6-39`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/tool_schema.py#L6-L39), [`core/tool_registry.py:18-123`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/tool_registry.py#L18-L123) | 22 base tools, 23 with `switch_account` | **VERIFIED** |
 
 ### Documentation Discrepancies Noted
-1. **Outdated Status in `README.md` Table**:
-   - In `README.md` (lines 169-178), items 4, 5, 6, 9, 11, and 13 were initially marked `(unverified on real desktop)` or `Planned`.
-   - **Audit Correction**: Items 4 (Kill Hotkey), 5 (Mouse Corner), 6 (Loop Breaker), 9 (Atomic Checkpoints), and 11 (Graph Stall Detection) have now been verified on physical Windows hardware in `agent/tests_real/` and recorded in `verification/real_desktop_results.json` and `src/data/verification.ts`.
+1. **Physical Hardware Verification Status**:
+   - In `verification/real_desktop_results.json` and `src/data/verification.ts`, `TOTAL_VERIFIED_COUNT = 0` and `IS_REAL_DESKTOP_VERIFIED = false`.
+   - **Audit Correction**: 0 of 8 hardware checks have physical verification (`TOTAL_VERIFIED_COUNT = 0`). The 8 tests in `agent/tests_real/` run via synthetic OS event injection (INJECTED) or in-memory unit test harnesses (WEAK). Status across all checks is relabeled to "Unit-tested / Injected (Physical hardware verification pending)".
+2. **Simulated Demo Mode**:
+   - Advertised as offline demo mode, but requires `GEMINI_API_KEY` for model inference calls. Relabeled to "Simulated Desktop Demo (Requires GEMINI_API_KEY for model inference)".
+3. **Replay Asset Clarification (`public/replay_real.json`)**:
+   - `public/replay_real.json` is a placeholder stub with mocked single-event data (`mode: "mocked"`, `label: "Simulated desktop"`). Full multi-step physical execution replay capture remains pending.
+4. **Loop Breaker Threshold**:
+   - The default perceptual difference threshold in `agent/core/loopbreaker.py:9` is `DEFAULT_MAX_DISTANCE = 4`. Documentation citing `max_distance = 2` has been reconciled to `max_distance = 4`.
 
 ---
 
@@ -244,7 +251,7 @@ self._proc = subprocess.Popen(cmd)
 
 The Hush codebase exhibits high structural integrity, defensive software engineering practices, and adherence to safety invariants:
 - **Unit test suite**: 285 tests passed, 0 failures.
-- **Physical desktop smoke test suite**: 8 tests passed, 0 failures.
+- **Desktop smoke test suite**: 8 tests executed via synthetic injection/unit harness (0 of 8 physically verified, `TOTAL_VERIFIED_COUNT = 0`; Unit-tested / Injected (Physical hardware verification pending)).
 - **Security posture**: Zero credential exposures in tree or history; command execution strictly confined; remote debugging isolated to localhost.
 - **Architecture**: 16/16 core claims verified against running code.
 

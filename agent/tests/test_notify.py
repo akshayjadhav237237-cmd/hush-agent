@@ -170,3 +170,21 @@ def test_lazy_import_requests_when_post_is_none(monkeypatch: pytest.MonkeyPatch)
     assert notifier.push("hello") is True
     assert calls == ["https://ntfy.sh/lazy-test"]
 
+
+def test_warns_on_default_public_topic() -> None:
+    """Verify Notifier warns when configured with well-known public topic (I-012)."""
+    with pytest.warns(UserWarning, match="well-known public default topic"):
+        Notifier(topic="hush")
+
+
+def test_generate_random_topic() -> None:
+    """Verify generate_random_topic returns secure randomized topic name (I-012)."""
+    from core.notify import generate_random_topic
+
+    t1 = generate_random_topic()
+    t2 = generate_random_topic()
+    assert t1.startswith("hush-")
+    assert len(t1) >= 30
+    assert t1 != t2
+
+

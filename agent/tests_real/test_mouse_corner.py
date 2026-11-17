@@ -32,14 +32,6 @@ def test_real_desktop_mouse_corner_abort() -> None:
         except Exception:
             pass
 
-    # If programmatic move didn't trip (e.g. simulated environment), trigger directly to verify handler
-    if not caught_failsafe:
-        try:
-            raise pyautogui.FailSafeException("Simulated hardware corner abort")
-        except Exception as exc:
-            if is_failsafe(exc):
-                caught_failsafe = True
-
     assert caught_failsafe is True, "Mouse-corner failsafe failed to raise FailSafeException"
 
     record_result(

@@ -205,3 +205,22 @@ def test_killswitch_integration() -> None:
     assert result == "killed"
     assert len(sleep_calls) == 0
     assert notifications[1] == "Usage limit wait aborted by kill switch."
+
+
+def test_default_chunk_seconds_is_one_second() -> None:
+    """Verify default chunk_seconds is 1 second for responsive cancellation (A-008)."""
+    assert DEFAULT_CHUNK_SECONDS == 1
+    sleep_calls: list[float] = []
+    kill = DummyKillSwitch()
+
+    result = wait_for_reset(
+        minutes=1,
+        notify=lambda _: None,
+        kill=kill,
+        sleep=sleep_calls.append,
+    )
+    assert result == "resumed"
+    assert sum(sleep_calls) == 60
+    assert len(sleep_calls) == 60
+    assert all(c == 1 for c in sleep_calls)
+

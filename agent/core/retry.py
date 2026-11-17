@@ -16,27 +16,38 @@ RETRYABLE_PATTERNS: tuple[str, ...] = (
 )
 
 
+NON_RETRYABLE_STATUS_CODES: frozenset[int] = frozenset({400, 401, 403, 404})
+
 NON_RETRYABLE_PATTERNS: tuple[str, ...] = (
     "400",
+    "401",
+    "403",
+    "404",
     "invalid_request_error",
     "invalid_request",
     "bad_request",
+    "unauthorized",
+    "forbidden",
+    "authentication",
+    "invalid_api_key",
+    "permission_denied",
 )
 
 
 def is_non_retryable_error(exc: BaseException) -> bool:
-    """Return True if exception matches non-retryable pattern (e.g. 400 invalid_request_error)."""
+    """Return True if exception matches non-retryable pattern (e.g. 401, 403, invalid_api_key)."""
     status = getattr(exc, "status_code", None)
-    if status == 400:
+    if status in NON_RETRYABLE_STATUS_CODES:
         return True
     msg = str(exc).lower()
-    if any(p in msg for p in NON_RETRYABLE_PATTERNS):
+    if any(p.lower() in msg for p in NON_RETRYABLE_PATTERNS):
         return True
     cause = getattr(exc, "__cause__", None)
     if cause is not None:
-        if getattr(cause, "status_code", None) == 400:
+        if getattr(cause, "status_code", None) in NON_RETRYABLE_STATUS_CODES:
             return True
-        if any(p in str(cause).lower() for p in NON_RETRYABLE_PATTERNS):
+        cause_msg = str(cause).lower()
+        if any(p.lower() in cause_msg for p in NON_RETRYABLE_PATTERNS):
             return True
     return False
 

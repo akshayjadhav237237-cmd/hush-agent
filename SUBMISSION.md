@@ -42,7 +42,7 @@ Autonomous desktop orchestration requires clear boundaries to prevent runaway pr
 8. **Service Limit Wait (`core/limits.py`)**: When a provider rate limit or quota wall is encountered, the agent executes `report_limit`, pausing operations for the required cooldown duration. The countdown timer runs in an active loop that continues to poll the emergency kill switch at regular intervals.
 9. **Cryptographically Chained Audit Log (`core/audit.py`)**: Every action, tool call, parameter set, and state transition is appended to an append-only `audit.jsonl` log file. Each record contains a SHA-256 hash linking it to the previous record (`prev`), making tampering evident. Automated regex scrubbers redact API keys (`AIza...`, `sk-...`), GitHub tokens (`ghp_...`, `github_pat_...`), and HTTP Authorization headers before writing to disk.
 10. **Atomic Checkpoints and Resumption (`core/checkpoint.py`)**: After every loop iteration, the complete run state—including step history, conversation context, current phase, and active variables—is serialized atomically to a JSON checkpoint. Interrupted or paused runs can be cleanly resumed using `python orchestrator.py --resume [RUN_ID|latest]` without duplicating work.
-11. **Simulated Offline Demo Mode (`core/demo/`)**: A fully offline execution mode (`--demo`, `--demo-limit`, `--demo-answer`) allows testing and evaluating the orchestrator without live API keys, desktop manipulation, or window focusing. It renders synthetic 1280x720 PNG screens in-memory and executes mocked tool chains deterministically.
+11. **Simulated Desktop Demo (`core/demo/`)**: A simulated execution mode (`--demo`, `--demo-limit`, `--demo-answer`) allows testing and evaluating the orchestrator without physical desktop manipulation or window focusing (requires `GEMINI_API_KEY` for model inference). It renders synthetic 1280x720 PNG screens in-memory and executes mocked tool chains deterministically.
 12. **Multi-Profile Account Switching (`core/accounts.py`)**: When enabled via `--account-switch`, Hush can alternate between pre-configured Google Chrome profiles upon hitting Claude or Gemini usage limits. Switching is constrained to a maximum of 2 switches per run (`MAX_SWITCHES = 2`) with a mandatory 120-second cooldown (`COOLDOWN_SECONDS = 120.0`). Enabling this feature requires explicit acknowledgment of risk terms by typing `I UNDERSTAND` or passing `--i-accept-account-switch-terms`.
 13. **Graph No-Progress Alert (`core/graph_tools.py`)**: Calculates a SHA-256 hash of `graphify-out/GRAPH_REPORT.md` following each build cycle. If the report hash remains identical across two consecutive rounds, the agent invokes `notify_human` to prevent unproductive code generation loops.
 
@@ -63,7 +63,7 @@ Account switching is strictly browser-only and limited to web interfaces for Cla
 
 ## What is verified
 
-Hush maintains a strict boundary between automated code contracts and physical hardware validation. All core logic, safety constraints, state machines, and parsing logic are validated through an offline unit test suite consisting of **285 passing pytest tests**.
+Hush maintains a strict boundary between automated code contracts and physical hardware validation. All core logic, safety constraints, state machines, and parsing logic are validated through an offline unit test suite consisting of **285 passing pytest tests across 36 files**.
 
 | Safety Feature | Verification Status | Verification Detail |
 | :--- | :--- | :--- |
@@ -90,7 +90,7 @@ Hush maintains a strict boundary between automated code contracts and physical h
 
 ## Accomplishments that we're proud of
 
-- **Fast, comprehensive unit test suite:** We built 285 unit tests across 36 test suites in pytest. The full suite completes in under 25 seconds. It exercises the state machine, tool registry (22 base tools, 23 with profile switching), loop breaker, rate limiter, and safety confinement without requiring live network APIs or physical desktop hardware.
+- **Fast, comprehensive unit test suite:** We built 285 unit tests across 36 test files in pytest. The full suite completes in under 25 seconds. It exercises the state machine, tool registry (22 base tools, 23 with profile switching), loop breaker, rate limiter, and safety confinement without requiring live network APIs or physical desktop hardware.
 - **Tamper-evident SHA-256 chained audit log:** Every model prompt, tool invocation, human intervention gate, and exit code is recorded in `audit.jsonl`. Each record includes a SHA-256 hash pointer to the previous entry, creating an immutable audit trail. API keys (Gemini, OpenAI, GitHub tokens) and authorization headers are scrubbed before writing to disk.
 - **In-memory simulated desktop mode (`--demo`):** Testing desktop GUI agents typically requires physical screens or fragile headless X servers. We built a synthetic desktop engine that produces 1280x720 PNG screenshots and mock window hierarchies in memory. This enables full end-to-end evaluation of loop execution, screenshot downsampling, and tool dispatch in headless CI.
 - **Self-contained showcase web app:** We engineered an interactive showcase site and audit log replay viewer. The site builds into static assets with zero external runtime dependencies and deploys directly to GitHub Pages.

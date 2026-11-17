@@ -195,3 +195,13 @@ def test_lazy_import_no_module_level_genai() -> None:
     import core.model_client as mc_mod
 
     assert "genai" not in mc_mod.__dict__
+
+
+def test_init_raises_on_invalid_model_name() -> None:
+    """Verify initialization raises ValueError if model_name is empty or whitespace."""
+    fake_client = MagicMock()
+    with pytest.raises(ValueError, match="model_name must be a non-empty string"):
+        ModelClient(model_name="", tools=[], client=fake_client)
+    with pytest.raises(ValueError, match="model_name must be a non-empty string"):
+        ModelClient(model_name="   ", tools=[], client=fake_client)
+

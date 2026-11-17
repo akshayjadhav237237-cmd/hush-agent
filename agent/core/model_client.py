@@ -78,6 +78,8 @@ class ModelClient:
         audit: Optional[Any] = None,
     ) -> None:
         """Initialize ModelClient with model name, tools, client, and retry settings."""
+        if not model_name or not isinstance(model_name, str) or not model_name.strip():
+            raise ValueError("model_name must be a non-empty string.")
         self.model_name = model_name
         self.fallback_model = fallback_model
         self.tools = tools

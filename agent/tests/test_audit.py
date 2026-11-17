@@ -289,3 +289,25 @@ def test_clock_timing_and_events_set(
     assert ok is False
     assert count == 0
     assert err is not None and "File not found" in err
+
+
+def test_deterministic_session_seeded_genesis_digest(tmp_path: pytest.TempPathFactory) -> None:
+    """Verify session-seeded deterministic genesis digest initialization and chain verification (I-013)."""
+    from core.audit import compute_genesis_hash
+
+    seed = "session-unique-seed-12345"
+    expected_genesis = hashlib.sha256(seed.encode("utf-8")).hexdigest()
+    assert compute_genesis_hash(seed) == expected_genesis
+    assert compute_genesis_hash(None) == INITIAL_PREV_HASH
+
+    run_dir = str(tmp_path / "seeded_run")
+    log = AuditLog(run_dir, run_id="run-seeded", mode="demo", genesis_seed=seed)
+    e1 = log.log("run_start", user="developer")
+    e2 = log.log("finish", summary="done")
+
+    assert e1["prev"] == expected_genesis
+    ok, count, err = verify_chain(log.path, genesis_seed=seed)
+    assert ok is True
+    assert count == 2
+    assert err is None
+

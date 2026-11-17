@@ -21,16 +21,21 @@ def test_real_desktop_ntfy_push() -> None:
     notifier = Notifier(topic=topic)
     probe_msg = "Hush real desktop probe alert: Testing push notification channel."
     success = notifier.push(probe_msg)
+    if not success:
+        time.sleep(1.0)
+        success = notifier.push(probe_msg)
 
     assert success is True, f"Failed to deliver push notification to ntfy.sh/{topic}"
 
-    confirmed = True
-    if not using_probe_topic and sys.stdin.isatty():
+    confirmed = False
+    if sys.stdin.isatty():
         try:
             ans = input(f"\n[?] Push sent to https://ntfy.sh/{topic}. Did it arrive on your device? [Y/n]: ").strip().lower()
             confirmed = (ans in ("y", "yes", ""))
         except Exception:
-            confirmed = True
+            confirmed = False
+    else:
+        pytest.skip("Non-interactive session: physical operator confirmation required for safety-human-notify-gate")
 
     record_result(
         feature_id="safety-human-notify-gate",
@@ -38,3 +43,4 @@ def test_real_desktop_ntfy_push() -> None:
         detail=f"Push notification gate verified via ntfy.sh/{topic} (HTTP status 200 confirmed by broker).",
         evidence_hash=sha256_text(probe_msg),
     )
+    assert confirmed is True, "Push notification delivery was not confirmed by operator"

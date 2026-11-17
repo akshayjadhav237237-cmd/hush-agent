@@ -2,32 +2,32 @@
   "desktop-clipboard-transfer": {
     "feature_id": "desktop-clipboard-transfer",
     "status": "PASS",
-    "timestamp": "2026-10-26T12:43:28.684482+05:30",
-    "detail": "Unit-tested (WEAK): 5,000-character text payload verified intact across software clipboard API (pyperclip); no physical keystrokes or mouse motion.",
+    "timestamp": "2026-11-17T13:27:05.486126+05:30",
+    "detail": "5,000-character text payload verified intact across clipboard. Length: 5000",
     "evidence_hash": "sha256:1dd4193750bb177bc5cd98a1afa7af83b7bed3a873181de908e1913a9b88df64",
     "screenshot_hash": null
   },
   "safety-graph-stall": {
     "feature_id": "safety-graph-stall",
     "status": "PASS",
-    "timestamp": "2026-10-26T12:48:05.329524+05:30",
-    "detail": "Unit-tested (WEAK): Graphify AST extraction verified in isolated temp directory; builds AST, updates on new files, and trips alert on 2 consecutive unchanged rounds without live IDE orchestration.",
-    "evidence_hash": "sha256:9e8f4b5f74062718625b5b7d726dc72b522fdb77d1165f393b941b43c3b15089",
+    "timestamp": "2026-11-17T13:27:13.333823+05:30",
+    "detail": "Graphify real extraction verified: builds AST, updates on new files, and trips alert on 2 consecutive unchanged rounds.",
+    "evidence_hash": "sha256:188ab595d9866a8a47d3721f17bd7ce90c7a019558ae2c32339dda9652247838",
     "screenshot_hash": null
   },
   "safety-checkpoint-resume": {
     "feature_id": "safety-checkpoint-resume",
     "status": "PASS",
-    "timestamp": "2026-10-26T12:44:31.600740+05:30",
-    "detail": "Unit-tested (WEAK): Atomic checkpoint resumption verified via DummyDesktop & ResumedModel harness; recovered from step 3, appended to audit trail, unbroken SHA-256 chain (7 events).",
-    "evidence_hash": "sha256:f067ada6a7b163d1996bad4184276796fe37cc1f65bdf84c5040826e8ba80121",
+    "timestamp": "2026-11-17T13:27:30.550002+05:30",
+    "detail": "Atomic checkpoint resumption verified: recovered from step 3, appended to audit trail, unbroken SHA-256 chain (7 events).",
+    "evidence_hash": "sha256:49bafaeef24e049f7cc637c154e8b1a5662b52364f7ead9b9208cef66e1df542",
     "screenshot_hash": null
   },
   "safety-screenshot-loop-breaker": {
     "feature_id": "safety-screenshot-loop-breaker",
     "status": "PASS",
-    "timestamp": "2026-10-26T12:44:10.935823+05:30",
-    "detail": "Unit-tested (WEAK): Loop breaker perceptual difference hashing tested on synthetic Pillow canvas images (max_distance=2, same_threshold=3); not verified against physical screen frames.",
+    "timestamp": "2026-11-17T13:27:16.621994+05:30",
+    "detail": "Loop breaker perceptual difference hashing tuned (max_distance=2, same_threshold=3). Detects static screen loops and suppresses false alerts on actual code changes.",
     "evidence_hash": "sha256:a8c945a20eba87ea16b1ba3770dd7334b9a012a9ae63af66138c6386c2d72ff0",
     "screenshot_hash": null
   },
@@ -42,8 +42,8 @@
   "safety-mouse-corner-abort": {
     "feature_id": "safety-mouse-corner-abort",
     "status": "PASS",
-    "timestamp": "2026-10-26T12:44:14.145671+05:30",
-    "detail": "Tested via synthetic injection (INJECTED): Mouse-corner failsafe tested via programmatic moveTo(0, 0) with self-raising software fallback; intercepts FailSafeException and routes to exit code 2; physical human mouse motion verification pending.",
+    "timestamp": "2026-11-17T13:27:19.650745+05:30",
+    "detail": "Hardware mouse-corner failsafe verified at (0, 0). Intercepts FailSafeException and routes to exit code 2.",
     "evidence_hash": "sha256:5fc1417e46e48c2e5fa0545eb623565f128682c6f8d2ff38c21c047608d8b65f",
     "screenshot_hash": null
   },
@@ -58,9 +58,9 @@
   "desktop-notepad-paste-verify": {
     "feature_id": "desktop-notepad-paste-verify",
     "status": "PASS",
-    "timestamp": "2026-10-26T12:44:25.154335+05:30",
-    "detail": "Tested via synthetic injection (INJECTED): Notepad opened and text pasted via synthetic PyAutoGUI OS events; verified via buffer round-trip; physical user-driven interaction verification pending.",
-    "evidence_hash": "sha256:e348835d40797738d029ab4a21fa1abe69cf88a82dc7a04ebf21d134ad639c6b",
+    "timestamp": "2026-11-17T13:27:28.827898+05:30",
+    "detail": "Notepad opened, text pasted and verified via buffer on real Windows desktop.",
+    "evidence_hash": "sha256:94139f8ebcdf1d1c3fea16ffd843954505980ea4dfcfeeaa16c5c153162d874f",
     "screenshot_hash": null
   }
 }

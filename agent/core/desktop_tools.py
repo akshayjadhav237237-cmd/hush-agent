@@ -14,6 +14,18 @@ MAX_PASTE_TEXT_CHARS: int = 2000
 MAX_WAIT_SECONDS: int = 120
 
 
+def check_safety_policy(text: str) -> Optional[str]:
+    """Check text against human escalation guardrail; return rejection if escalation required (I-007)."""
+    from core.prompts import requires_human_escalation
+
+    if requires_human_escalation(text):
+        return (
+            "BLOCKED: Action involves login, credentials, or destructive behavior. "
+            "Operator intervention required: call notify_human."
+        )
+    return None
+
+
 class DesktopTools:
     """Desktop interaction implementation using GUI automation tools."""
 
@@ -24,6 +36,8 @@ class DesktopTools:
         gw: Optional[Any] = None,
         webbrowser: Optional[Any] = None,
         sleep: Callable[[float], None] = time.sleep,
+        kill: Optional[Any] = None,
+        enforce_escalation: bool = False,
     ) -> None:
         """Initialize desktop tools with optional injected dependencies."""
         if pyautogui is None:
@@ -65,6 +79,8 @@ class DesktopTools:
         self.gw = gw
         self.webbrowser = webbrowser
         self.sleep = sleep
+        self.kill = kill
+        self.enforce_escalation = enforce_escalation
         self._scale: float = 1.0
 
     def clipboard_full(self) -> str:
@@ -138,7 +154,11 @@ class DesktopTools:
             return f"Could not focus window: {exc}"
 
     def paste_text(self, text: str, press_enter: bool = False) -> str:
-        """Paste text within limit or reject if too long."""
+        """Paste text within limit or reject if too long or requires escalation."""
+        if self.enforce_escalation:
+            blocked = check_safety_policy(text)
+            if blocked:
+                return blocked
         if len(text) > MAX_PASTE_TEXT_CHARS:
             return "Too long: use paste_artifact"
         return self.paste_any(text, press_enter=press_enter)
@@ -172,10 +192,19 @@ class DesktopTools:
         return self.clipboard_full()[:MAX_READ_CLIPBOARD_CHARS]
 
     def wait(self, seconds: int) -> str:
-        """Sleep for specified seconds capped at MAX_WAIT_SECONDS."""
+        """Sleep for specified seconds capped at MAX_WAIT_SECONDS in responsive chunks (A-008)."""
         duration = min(int(seconds), MAX_WAIT_SECONDS)
-        self.sleep(duration)
-        return f"Waited {duration}s"
+        remaining = float(duration)
+        chunk = 0.5
+        elapsed = 0.0
+        while remaining > 0:
+            if self.kill is not None and getattr(self.kill, "is_set", lambda: False)():
+                break
+            step = min(remaining, chunk)
+            self.sleep(step)
+            remaining -= step
+            elapsed += step
+        return f"Waited {int(elapsed)}s"
 
     def funcs(self) -> dict[str, ToolFunc]:
         """Return dictionary of exposed desktop tool functions."""

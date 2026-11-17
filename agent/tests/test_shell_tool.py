@@ -117,11 +117,11 @@ def test_timeout_returns_clean_message() -> None:
     """Verify TimeoutExpired exception returns clean timeout string."""
     project_dir = "/valid/project/dir"
     mock_run = MagicMock(
-        side_effect=subprocess.TimeoutExpired(cmd="git fetch", timeout=DEFAULT_TIMEOUT)
+        side_effect=subprocess.TimeoutExpired(cmd="git status", timeout=DEFAULT_TIMEOUT)
     )
     run_cmd = make_run_cmd(project_dir, run=mock_run)
 
-    result = run_cmd("git fetch")
+    result = run_cmd("git status")
 
     assert result == f"Command timed out after {DEFAULT_TIMEOUT}s."
     assert result == "Command timed out after 120s."
@@ -142,3 +142,24 @@ def test_constants_values() -> None:
     """Verify default timeout and max output characters constants."""
     assert DEFAULT_TIMEOUT == 120
     assert MAX_OUTPUT_CHARS == 4000
+
+
+def test_shell_tool_tracks_active_processes_and_cleans_up(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verify ShellTool tracks spawned subprocesses and terminates them on cleanup (I-003)."""
+    from core.shell_tool import ShellTool
+
+    mock_proc = MagicMock()
+    mock_proc.communicate.return_value = ("commit ok\n", "")
+    monkeypatch.setattr(subprocess, "Popen", lambda *args, **kwargs: mock_proc)
+
+    tool = ShellTool(project_dir="/valid/project/dir")
+    assert tool.active_processes == []
+
+    # Manually simulate an active child process
+    tool.active_processes.append(mock_proc)
+    assert len(tool.active_processes) == 1
+
+    tool.cleanup()
+    mock_proc.terminate.assert_called_once()
+    assert tool.active_processes == []
+

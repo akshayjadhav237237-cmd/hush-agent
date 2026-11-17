@@ -179,3 +179,31 @@ def test_loopbreaker_near_identical_tolerance() -> None:
     assert reason is None
     assert breaker.same_count == 1
     assert breaker.last_hash == 0b00000111
+
+
+def test_loopbreaker_alternating_cycle_detected() -> None:
+    """Verify two-step alternating cycles (H1 <-> H2) are detected via history buffer (I-004)."""
+    breaker = LoopBreaker(same_threshold=3, max_distance=2)
+    h1 = 0x0000000000000000
+    h2 = 0xFFFFFFFFFFFFFFFF
+
+    # H1
+    assert breaker.observe(h1, "act") is None
+    # H2 (dissimilar to H1, so no static loop, no alternating cycle yet)
+    assert breaker.observe(h2, "act") is None
+    assert breaker.cycle_count == 0
+
+    # H1 again (matches H1 from 2 steps ago -> cycle_count = 1)
+    assert breaker.observe(h1, "act") is None
+    assert breaker.cycle_count == 1
+
+    # H2 again (matches H2 from 2 steps ago -> cycle_count = 2)
+    assert breaker.observe(h2, "act") is None
+    assert breaker.cycle_count == 2
+
+    # H1 again (matches H1 from 2 steps ago -> cycle_count = 3 >= threshold)
+    reason = breaker.observe(h1, "act")
+    assert reason is not None
+    assert "Alternating screen cycle detected" in reason
+    assert breaker.cycle_count == 3
+

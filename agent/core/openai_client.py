@@ -222,6 +222,8 @@ class OpenAIModelClient:
         rand: Callable[[], float] = random.random,
         audit: Optional[Any] = None,
     ) -> None:
+        if not model_name or not isinstance(model_name, str) or not model_name.strip():
+            raise ValueError("model_name must be a non-empty string.")
         self.model_name = model_name
         self.tools = tools
         self.sleep = sleep

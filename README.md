@@ -36,14 +36,14 @@ Hush coordinates Claude for system architecture, Gemini Deep Research for invest
 - [Diagnostic CLI Commands](#-diagnostic-cli-commands)
 - [Dedicated Chrome Profile & First-Run Setup](#-dedicated-chrome-profile--first-run-setup)
 - [Quickstart: Run It Yourself](#-quickstart-run-it-yourself)
-  - [1. Simulated Demo Mode (No Live Keys Required)](#1-simulated-demo-mode-no-live-keys-required)
+  - [1. Simulated Desktop Demo (Requires GEMINI_API_KEY for model inference)](#1-simulated-desktop-demo-requires-gemini_api_key-for-model-inference)
   - [2. Live Desktop Execution](#2-live-desktop-execution)
   - [3. Resuming Interrupted Runs](#3-resuming-interrupted-runs)
   - [4. Comparing Runs & Token Usage](#4-comparing-runs--token-usage)
   - [5. Verifying Cryptographic Audit Trail](#5-verifying-cryptographic-audit-trail)
 - [Emergency Kill Controls](#-emergency-kill-controls)
 - [Troubleshooting & Real-Desktop Edge Cases](#-troubleshooting--real-desktop-edge-cases)
-- [Tool Registry (22 + 23 Tools)](#-tool-registry-22--23-tools)
+- [Tool Registry (22 Base Tools / 23 with Account Switching)](#-tool-registry-22-base-tools--23-with-account-switching)
 - [Web Showcase](#-web-showcase)
 - [Known Limitations & Truth in Engineering](#-known-limitations--truth-in-engineering)
 - [License](#-license)
@@ -177,7 +177,7 @@ Hush includes **13 defense-in-depth safety gates** implemented across [`agent/co
 | 3 | **Hard Step Ceiling** | `MAX_STEPS = 80` terminates loop execution to avoid runaway billing or unbounded execution ([`core/constants.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/constants.py#L8), [`core/loop.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/loop.py#L126)). | *Implemented, unit-tested* |
 | 4 | **Global Kill Hotkey** | Background daemon thread polls Win32 `GetAsyncKeyState` at 20 Hz for `Ctrl+Alt+K`, exiting immediately with exit code 3 ([`core/killswitch.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/killswitch.py#L49)). | *Implemented, tested via synthetic injection (INJECTED); physical hardware verification pending* |
 | 5 | **Hardware Mouse-Corner Abort** | Instant PyAutoGUI hardware failsafe trips when pointer reaches `(0, 0)`, intercepted and routed to exit code 2 ([`core/desktop_tools.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/desktop_tools.py#L33)). | *Implemented, tested via synthetic injection (INJECTED); physical hardware verification pending* |
-| 6 | **Perceptual Loop Breaker** | Difference hashing (`dhash`) tuned (`max_distance=2`, `same_threshold=3`) detects visual loops and suppresses false alerts on actual code changes ([`core/loopbreaker.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/loopbreaker.py#L34)). | *Implemented, unit-tested (WEAK); physical hardware verification pending* |
+| 6 | **Perceptual Loop Breaker** | Difference hashing (`dhash`) tuned (`max_distance=4`, `same_threshold=3`) detects visual loops and suppresses false alerts on actual code changes ([`core/loopbreaker.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/loopbreaker.py#L34)). | *Implemented, unit-tested (WEAK); physical hardware verification pending* |
 | 7 | **Cryptographic Audit Log** | Tamper-evident JSONL audit record with SHA-256 hash chaining (`prev` field) verifiable via `verify_chain()` ([`core/audit.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/audit.py#L44)). | *Implemented, unit-tested* |
 | 8 | **Automated Secret Redaction** | Strips API keys (`AIza...`, `sk-...`, `ghp_...`, `github_pat_...`) and `Bearer` tokens from all logs and console output ([`core/audit.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/audit.py#L20)). | *Implemented, unit-tested* |
 | 9 | **Atomic Checkpoints & Resume** | Clean atomic serialization (`checkpoint.json.tmp` -> `checkpoint.json`) after every step allows resuming with `--resume latest` ([`core/checkpoint.py`](file:///c:/Users/aksha/Documents/antigravity/jolly-hawking/agent/core/checkpoint.py#L42)). | *Implemented, unit-tested (WEAK); physical hardware verification pending* |
@@ -289,14 +289,21 @@ cd hush-agent/agent
 
 # Install dependencies
 pip install -r requirements.txt
+
+# Install development & test dependencies (required for pytest)
+pip install -r requirements-dev.txt
+
+# Run unit test suite
+python -m pytest tests/ -q
 ```
 
 ---
 
-### 1. Simulated Demo Mode (No Live Keys Required)
-Run a complete, deterministic multi-agent build without touching your real mouse, keyboard, or API credentials:
+### 1. Simulated Desktop Demo (Requires GEMINI_API_KEY for model inference)
+Run a simulated multi-agent build without touching your physical mouse or keyboard (requires `GEMINI_API_KEY` for model inference):
 
 ```bash
+set GEMINI_API_KEY=your_gemini_api_key
 python orchestrator.py --demo --demo-answer "SQLite" "a modern task board application"
 ```
 
@@ -374,7 +381,6 @@ You maintain total physical control over Hush at all times:
 
 1. **Global Keyboard Kill Hotkey**: Press **`Ctrl + Alt + K`** at any moment. The 20 Hz polling thread immediately aborts the orchestrator and all child tasks (**Exit Code 3**).
 2. **Mouse-Corner Failsafe**: Slam your physical mouse into the **top-left corner of your display `(0, 0)`**. PyAutoGUI trips the hardware failsafe and halts immediately (**Exit Code 2**).
-3. **Console Break**: Standard **`Ctrl + C`** cleanly closes windows and serializes an atomic checkpoint before exiting.
 
 ---
 
@@ -389,7 +395,7 @@ For comprehensive resolution steps on real-desktop failure modes, see [**docs/TR
 
 ---
 
-## 🧰 Tool Registry (22 + 23 Tools)
+## 🧰 Tool Registry (22 Base Tools / 23 with Account Switching)
 
 | Category | Native Function Names | Description |
 |:---|:---|:---|
@@ -405,7 +411,7 @@ For comprehensive resolution steps on real-desktop failure modes, see [**docs/TR
 ## 🌐 Web Showcase
 
 The interactive showcase site features:
-- **Interactive Replay Player**: Step-by-step scrubbable execution timeline with speed controls (1x, 2x, 4x) and event filtering.
+- **Interactive Replay Player**: Step-by-step scrubbable execution timeline with speed controls (1x, 2x, 4x) and event filtering (displays simulated execution replay; `public/replay_real.json` is a placeholder stub while physical run capture is pending).
 - **Architecture Flow Diagram**: Animated SVG diagram illustrating data movement between agents.
 - **Red Team Command Matrix**: Empirical audit of 44 real shell commands testing allowlist security.
 - **Live Safety Audit**: Real-time status cards detailing verification state.

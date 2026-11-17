@@ -8,8 +8,23 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from core.checkpoint import RunState, save_checkpoint
-from core.cli import main, parse_args
-from core.constants import EXIT_ERROR, EXIT_OK
+from core.cli import (
+    EXIT_ERROR,
+    EXIT_FAILSAFE,
+    EXIT_HUMAN_TIMEOUT,
+    EXIT_KILL,
+    EXIT_MAX_STEPS,
+    EXIT_SUCCESS,
+    main,
+    parse_args,
+)
+from core.constants import EXIT_OK
+
+
+@pytest.fixture(autouse=True)
+def mock_build_tools_for_cli_tests(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Mock build_tools to isolate CLI logic from schema definitions."""
+    monkeypatch.setattr("core.tool_schema.build_tools", lambda **kw: MagicMock(name="mock_tools"))
 
 
 class FakeModel:
@@ -94,6 +109,15 @@ def test_main_help_exits_zero_without_api_key(monkeypatch: pytest.MonkeyPatch, c
     assert "--provider" in captured.out
 
 
+def test_demo_help_text_states_gemini_api_key_required(capsys: pytest.CaptureFixture[str]) -> None:
+    with pytest.raises(SystemExit) as exc_info:
+        main(["--help"])
+    assert exc_info.value.code == 0
+    captured = capsys.readouterr()
+    normalized_out = " ".join(captured.out.split())
+    assert "Simulate desktop environment; still requires GEMINI_API_KEY for model inference" in normalized_out
+
+
 def test_main_empty_idea_returns_error(capsys: pytest.CaptureFixture[str]) -> None:
     code = main([])
     assert code == EXIT_ERROR
@@ -174,6 +198,7 @@ def test_main_provider_routing_default_gemma(tmp_path: Any, monkeypatch: pytest.
     fake_runs = str(tmp_path / "runs")
     monkeypatch.setattr("core.cli.RUNS_DIR", fake_runs)
     monkeypatch.setattr("core.constants.RUNS_DIR", fake_runs)
+    monkeypatch.setenv("GEMINI_API_KEY", "mock-gemini-key")
 
     with patch("core.model_client.ModelClient", return_value=FakeModel()) as mock_client_cls, \
          patch("core.loop.run_loop", return_value=EXIT_OK) as mock_loop:
@@ -203,6 +228,7 @@ def test_main_provider_routing_openai(tmp_path: Any, monkeypatch: pytest.MonkeyP
     fake_runs = str(tmp_path / "runs")
     monkeypatch.setattr("core.cli.RUNS_DIR", fake_runs)
     monkeypatch.setattr("core.constants.RUNS_DIR", fake_runs)
+    monkeypatch.setenv("OPENAI_API_KEY", "mock-openai-key")
 
     with patch("core.openai_client.OpenAIModelClient", return_value=FakeModel()) as mock_openai_cls, \
          patch("core.loop.run_loop", return_value=EXIT_OK) as mock_loop:
@@ -231,6 +257,8 @@ def test_main_demo_mode_prints_provider(tmp_path: Any, monkeypatch: pytest.Monke
     fake_runs = str(tmp_path / "runs")
     monkeypatch.setattr("core.cli.RUNS_DIR", fake_runs)
     monkeypatch.setattr("core.constants.RUNS_DIR", fake_runs)
+    monkeypatch.setenv("GEMINI_API_KEY", "mock-gemini-key")
+    monkeypatch.setenv("OPENAI_API_KEY", "mock-openai-key")
 
     with patch("core.model_client.ModelClient", return_value=FakeModel()), \
          patch("core.loop.run_loop", return_value=EXIT_OK):
@@ -246,3 +274,111 @@ def test_main_demo_mode_prints_provider(tmp_path: Any, monkeypatch: pytest.Monke
     captured = capsys.readouterr()
     assert "DEMO MODE: simulated desktop, real openai calls" in captured.out
 
+
+# --- J-001 Regression Tests ---
+
+def test_main_demo_missing_gemini_api_key_exits_error(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    code = main(["--demo", "--demo-answer", "SQLite", "a modern task board application"])
+    assert code == EXIT_ERROR
+    captured = capsys.readouterr()
+    assert (
+        "Error: GEMINI_API_KEY environment variable is required "
+        "(even in --demo mode, which simulates the desktop environment while querying the model). "
+        "Please set GEMINI_API_KEY and retry."
+    ) in captured.out
+
+
+def test_main_demo_bare_missing_gemini_api_key_exits_error(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    code = main(["--demo"])
+    assert code == EXIT_ERROR
+    captured = capsys.readouterr()
+    assert (
+        "Error: GEMINI_API_KEY environment variable is required "
+        "(even in --demo mode, which simulates the desktop environment while querying the model). "
+        "Please set GEMINI_API_KEY and retry."
+    ) in captured.out
+
+
+def test_main_real_missing_gemini_api_key_exits_error(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    code = main(["build", "something"])
+    assert code == EXIT_ERROR
+    captured = capsys.readouterr()
+    assert (
+        "Error: GEMINI_API_KEY environment variable is required "
+        "(even in --demo mode, which simulates the desktop environment while querying the model). "
+        "Please set GEMINI_API_KEY and retry."
+    ) in captured.out
+
+
+def test_main_openai_missing_api_key_exits_error(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    code = main(["build", "something", "--provider", "openai"])
+    assert code == EXIT_ERROR
+    captured = capsys.readouterr()
+    assert (
+        "Error: OPENAI_API_KEY environment variable is required "
+        "(even in --demo mode, which simulates the desktop environment while querying the model). "
+        "Please set OPENAI_API_KEY and retry."
+    ) in captured.out
+
+
+# --- A-018 Regression Tests ---
+
+def test_exit_code_constants() -> None:
+    import core.constants as constants
+
+    assert EXIT_SUCCESS == 0
+    assert EXIT_ERROR == 1
+    assert EXIT_FAILSAFE == 2
+    assert EXIT_KILL == 3
+    assert EXIT_MAX_STEPS == 4
+    assert EXIT_HUMAN_TIMEOUT == 5
+
+    assert getattr(constants, "EXIT_SUCCESS") == 0
+    assert getattr(constants, "EXIT_HUMAN_TIMEOUT") == 5
+
+
+def test_main_maps_exit_codes_consistently(tmp_path: Any, monkeypatch: pytest.MonkeyPatch) -> None:
+    fake_runs = str(tmp_path / "runs")
+    monkeypatch.setattr("core.cli.RUNS_DIR", fake_runs)
+    monkeypatch.setattr("core.constants.RUNS_DIR", fake_runs)
+
+    for exit_code in (EXIT_SUCCESS, EXIT_FAILSAFE, EXIT_KILL, EXIT_MAX_STEPS, EXIT_HUMAN_TIMEOUT):
+        with patch("core.loop.run_loop", return_value=exit_code):
+            code = main(
+                ["test", "idea"],
+                model_factory=lambda **kw: FakeModel(),
+                desktop_factory=lambda **kw: FakeDesktop(),
+            )
+            assert code == exit_code
+
+
+# --- Provider and Model Validation Tests ---
+
+def test_main_unknown_provider_cli_exits_error() -> None:
+    code = main(["some", "idea", "--provider", "unsupported"])
+    assert code == EXIT_ERROR
+
+
+def test_main_unknown_provider_bypassing_parse_args(tmp_path: Any, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    fake_runs = str(tmp_path / "runs")
+    monkeypatch.setattr("core.cli.RUNS_DIR", fake_runs)
+    fake_args = MagicMock(
+        demo=False,
+        provider="invalid_provider",
+        model=None,
+        doctor=False,
+        doctor_ui=False,
+        calibrate=False,
+        resume=None,
+        idea=["test"],
+        log_text=False,
+    )
+    with patch("core.cli.parse_args", return_value=fake_args):
+        code = main(["test"])
+        assert code == EXIT_ERROR
+        captured = capsys.readouterr()
+        assert "Error: Unknown provider 'invalid_provider'" in captured.out
